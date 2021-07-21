@@ -7,6 +7,7 @@ MapWorker::MapWorker()
 
 void MapWorker::processMap(QByteArray mapData)
 {
+	m_mapData = mapData;
 	m_map.clear();
 
 	QList<QByteArray> rows = mapData.split('\n');
@@ -68,9 +69,21 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 	return QByteArray("Я не особо понимаю: что мне нужно делать?");
 }
 
+void MapWorker::updateMapData(int x, int y, char object)
+{
+	int offset = 0;
+	for (int row=0; row<y; row++) {
+		offset += m_map[row].size() + 1;
+	}
+	offset += x;
+	m_mapData[offset] = object;
+	log ("Updated map");
+}
+
 QByteArray MapWorker::formatMapChange(int x, int y, char object)
 {
 	m_map[y][x] = object;
+	updateMapData(x, y, object);
 	return QByteArray("CHG" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object);
 }
 
@@ -95,4 +108,10 @@ playerMovements MapWorker::getSideFromString(QString side)
 	if (side == "DOWN") return playerMovements::down;
 	if (side == "LEFT") return playerMovements::left;
 	if (side == "RIGHT") return playerMovements::right;
+	return playerMovements::up;
+}
+
+void MapWorker::log(QString msg)
+{
+	qDebug() << "[MapWorker]: " << msg;
 }

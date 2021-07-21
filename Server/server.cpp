@@ -53,5 +53,5 @@ void Server::incomingConnection(qintptr handle)
 	connect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	connect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
-	client->write("MAP_DATA" + m_mapFileLoader->getMap());
+	client->write("MAP_DATA" + m_mapWorker->getMap());
 }
