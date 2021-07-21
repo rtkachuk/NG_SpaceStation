@@ -8,9 +8,6 @@
 
 #include "mapworker.h"
 #include "actionwindow.h"
-#include "inventorywindow.h"
-#include "statuswindow.h"
-#include "chatwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -35,8 +32,5 @@ private:
 	MapWorker *m_mapWorker;
 
 	ActionWindow *m_actionWindow;
-	InventoryWindow *m_inventoryWindow;
-	StatusWindow *m_statusWindow;
-	ChatWindow *m_chatWindow;
 };
 #endif // SPACESTATION_H

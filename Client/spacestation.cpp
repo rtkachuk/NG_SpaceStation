@@ -15,7 +15,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	m_mapWorker->setCellsColumns(wSize);
 	m_mapWorker->setCellSizePixels(30);
 
-	m_mapWorker->dummyMapInit();
+	m_mapWorker->mapInit();
 
 	m_scene = new QGraphicsScene(0, 0, wSize, hSize);
 	ui->graphicsView->setScene(m_scene);
@@ -24,15 +24,6 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
-
-	m_inventoryWindow = new InventoryWindow();
-	m_inventoryWindow->show();
-
-	m_statusWindow = new StatusWindow();
-	m_statusWindow->show();
-
-	m_chatWindow = new ChatWindow();
-	m_chatWindow->show();
 }
 
 SpaceStation::~SpaceStation()

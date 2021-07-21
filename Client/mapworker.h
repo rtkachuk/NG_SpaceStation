@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QThread>
 
+#include "mapfileloader.h"
+
 // This class should load map from file like map.config
 //
 
@@ -27,6 +29,7 @@ public:
 	void setCellsRows(int cellsRows) { m_cellsRows = cellsRows; }
 	void setCellSizePixels(int size) { m_cellSizePixels = size; }
 
+	void mapInit();
 	void dummyMapInit();
 
 public slots:
@@ -35,6 +38,8 @@ public slots:
 
 private:
 	void log(QString message);
+
+	MapFileLoader *m_fileLoader;
 
 
 	int m_cellsColumns;

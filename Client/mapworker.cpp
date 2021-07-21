@@ -2,6 +2,12 @@
 
 MapWorker::MapWorker()
 {
+	m_fileLoader = new MapFileLoader();
+}
+
+void MapWorker::mapInit()
+{
+	m_map = m_fileLoader->getMap();
 }
 
 void MapWorker::updatePlayerPosition(playerMovements move)

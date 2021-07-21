@@ -10,27 +10,20 @@ CONFIG += c++11
 
 SOURCES += \
     actionwindow.cpp \
-    chatwindow.cpp \
-    inventorywindow.cpp \
     main.cpp \
+    mapfileloader.cpp \
     mapworker.cpp \
-    spacestation.cpp \
-    statuswindow.cpp
+    spacestation.cpp
 
 HEADERS += \
     actionwindow.h \
-    chatwindow.h \
-    inventorywindow.h \
+    mapfileloader.h \
     mapworker.h \
-    spacestation.h \
-    statuswindow.h
+    spacestation.h
 
 FORMS += \
     actionwindow.ui \
-    chatwindow.ui \
-    inventorywindow.ui \
-    spacestation.ui \
-    statuswindow.ui
+    spacestation.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
