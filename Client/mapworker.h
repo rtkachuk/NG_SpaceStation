@@ -25,9 +25,6 @@ public:
 	MapWorker();
 	void setScene(QGraphicsScene *scene) { m_scene = scene; }
 
-	void setCellsColumns(int cellsColumns) { m_cellsColumns = cellsColumns; }
-	void setCellsRows(int cellsRows) { m_cellsRows = cellsRows; }
-
 	void setCellSizePixels(int size) { m_cellSizePixels = size; }
 	int getCellSizePixels() { return m_cellSizePixels; }
 
@@ -35,7 +32,9 @@ public:
 	int getPlayerPosY() { return m_currentPlayerPositionY; }
 
 	void mapInit();
-	void dummyMapInit();
+
+	int getMapSizeX() { return m_fileLoader->getMapXSize() * m_cellSizePixels; }
+	int getMapSizeY() { return m_fileLoader->getMapYSize() * m_cellSizePixels; }
 
 public slots:
 	void drawMap();
@@ -47,9 +46,6 @@ private:
 
 	MapFileLoader *m_fileLoader;
 
-
-	int m_cellsColumns;
-	int m_cellsRows;
 	int m_cellSizePixels; // Cell size in pixels;
 
 	QGraphicsScene *m_scene;

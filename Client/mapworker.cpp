@@ -28,19 +28,6 @@ bool MapWorker::checkPlayerCanMove(int x, int y)
 	return m_map[y][x] == '.';
 }
 
-void MapWorker::dummyMapInit()
-{
-	m_map.resize(m_cellsRows);
-	for (int i=0; i< m_cellsRows; i++) {
-		m_map[i].resize(m_cellsColumns);
-	}
-
-	for (int row = 0; row < m_map.size(); row++) {
-		for (int cell = 0; cell < m_map.at(row).size(); cell++)
-			m_map[row][cell] = '.';
-	}
-}
-
 void MapWorker::drawMap()
 {
 	int currentY = 0;

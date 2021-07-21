@@ -7,17 +7,15 @@ SpaceStation::SpaceStation(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	int wSize = 1000;
-	int hSize = 1000;
-
 	m_mapWorker = new MapWorker();
-	m_mapWorker->setCellsRows(hSize);
-	m_mapWorker->setCellsColumns(wSize);
 	m_mapWorker->setCellSizePixels(30);
 
 	m_mapWorker->mapInit();
 
-	m_scene = new QGraphicsScene(0, 0, wSize, hSize);
+	log (QString::number(m_mapWorker->getMapSizeX()));
+	log (QString::number(m_mapWorker->getMapSizeY()));
+
+	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
 	ui->graphicsView->setScene(m_scene);
 	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
 	m_mapWorker->setScene(m_scene);

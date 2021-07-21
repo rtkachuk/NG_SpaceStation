@@ -2,6 +2,9 @@
 
 MapFileLoader::MapFileLoader()
 {
+	m_sizeX = 0;
+	m_sizeY = 0;
+
 	readMap();
 }
 
@@ -18,7 +21,7 @@ void MapFileLoader::readMap()
 		return;
 	}
 
-	int lineNumber = 0;
+	int length = 0;
 
 	while (mapFile.atEnd() == false) {
 		QByteArray line = mapFile.readLine();
@@ -26,9 +29,11 @@ void MapFileLoader::readMap()
 		for (char cell : line) {
 			if (cell != '\n')
 				buffer.push_back(cell);
+				length++;
 		}
+		if (length > m_sizeX) m_sizeX = length;
 		m_data.push_back(buffer);
-		lineNumber++;
+		m_sizeY++;
 	}
 
 	mapFile.close();
