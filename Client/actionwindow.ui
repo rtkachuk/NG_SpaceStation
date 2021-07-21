@@ -435,7 +435,7 @@
      <string>STEAL</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_14">
+   <widget class="QPushButton" name="b_open">
     <property name="geometry">
      <rect>
       <x>0</x>

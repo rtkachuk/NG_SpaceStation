@@ -10,6 +10,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
 
+	ui->t_chat->setReadOnly(true);
+
 	initGraphics();
 	initMenus();
 	initConnectionManager();
@@ -18,6 +20,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
+	connect (m_connectionManager, &ConnectionManager::message, this, &SpaceStation::chatMessage);
+	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
 }
 
 SpaceStation::~SpaceStation()
@@ -67,15 +71,31 @@ void SpaceStation::setPlayerPosition(int x, int y)
 	m_mapWorker->updatePlayerPosition(x, y);
 }
 
-void SpaceStation::keyPressEvent(QKeyEvent *event)
+void SpaceStation::chatMessage(QString message)
 {
+	ui->t_chat->setText(ui->t_chat->toPlainText() + "\n" + message);
+}
+
+void SpaceStation::mapChanged(int x, int y, char object)
+{
+	m_mapWorker->updateMap(x, y, object);
+}
+
+void SpaceStation::keyPressEvent(QKeyEvent *event)
+{	
+	m_selectDirectionDialog = new SelectDirectionDialog();
+
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 	switch (keyEvent->key()) {
 		case Qt::Key_W: m_connectionManager->movePlayer(moveUp); break;
 		case Qt::Key_S: m_connectionManager->movePlayer(moveDown); break;
 		case Qt::Key_A: m_connectionManager->movePlayer(moveLeft); break;
 		case Qt::Key_D: m_connectionManager->movePlayer(moveRight); break;
+		case Qt::Key_O: m_connectionManager->actionPlayer("OPEN", m_selectDirectionDialog->exec()); break;
+		case Qt::Key_C: m_connectionManager->actionPlayer("CLOSE", m_selectDirectionDialog->exec()); break;
 	}
+
+	delete m_selectDirectionDialog;
 
 	if (m_followPlayer->isChecked()) actFindPlayer();
 }

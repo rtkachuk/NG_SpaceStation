@@ -16,6 +16,11 @@ enum playerMovements {
 	right
 };
 
+enum actions {
+	open,
+	close
+};
+
 class MapWorker
 {
 public:
@@ -28,8 +33,12 @@ public:
 
 	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);
 	void updatePlayerPos(QTcpSocket* socket, int x, int y);
+	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
 
 private:
+	QByteArray formatMapChange(int x, int y, char object);
+	position getCoordsBySide (int x, int y, playerMovements side);
+	playerMovements getSideFromString(QString side);
 	QByteArray formatResponce (int x, int y) { return "POS" + QByteArray::number(x) + ":" + QByteArray::number(y);}
 	QVector<QVector<char>> m_map;
 	QMap<QTcpSocket*,position> m_playerPositions;

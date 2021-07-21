@@ -20,6 +20,7 @@ public:
 	QByteArray getMap() { return m_map; }
 
 	void movePlayer(playerMovement side);
+	void actionPlayer(QString action, int side);
 
 private:
 	void log(QString msg);
@@ -33,6 +34,8 @@ signals:
 	void connected();
 	void gotMap();
 	void playerPosition(int x, int y);
+	void message(QString message);
+	void mapChanged(int x, int y, char object);
 
 private:
 	QTcpSocket *m_socket;

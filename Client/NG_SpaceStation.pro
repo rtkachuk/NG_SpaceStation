@@ -14,6 +14,7 @@ SOURCES += \
     connectionmanager.cpp \
     main.cpp \
     mapworker.cpp \
+    selectdirectiondialog.cpp \
     spacestation.cpp
 
 HEADERS += \
@@ -21,11 +22,13 @@ HEADERS += \
     connectdialog.h \
     connectionmanager.h \
     mapworker.h \
+    selectdirectiondialog.h \
     spacestation.h
 
 FORMS += \
     actionwindow.ui \
     connectdialog.ui \
+    selectdirectiondialog.ui \
     spacestation.ui
 
 # Default rules for deployment.

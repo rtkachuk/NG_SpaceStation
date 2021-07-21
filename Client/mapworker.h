@@ -37,9 +37,10 @@ public:
 public slots:
 	void drawMap();
 	void updatePlayerPosition(int x, int y);
+	void updateMap(int x, int y, char object);
 
 private:
-	bool checkPlayerCanMove(int x, int y);
+	void updateCell(int x, int y, char object);
 	void log(QString message);
 
 	int m_cellSizePixels; // Cell size in pixels;

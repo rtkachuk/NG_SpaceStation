@@ -6,11 +6,13 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include <QThread>
+#include <QScrollBar>
 
 #include "mapworker.h"
 #include "actionwindow.h"
 #include "connectdialog.h"
 #include "connectionmanager.h"
+#include "selectdirectiondialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -31,6 +33,8 @@ private slots:
 	void connectedToServer();
 	void mapReceived();
 	void setPlayerPosition(int x, int y);
+	void chatMessage(QString message);
+	void mapChanged(int x, int y, char object);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -58,6 +62,7 @@ private:
 	ActionWindow *m_actionWindow;
 	ConnectDialog *m_connectDialog;
 	ConnectionManager *m_connectionManager;
+	SelectDirectionDialog *m_selectDirectionDialog;
 
 	QThread *m_networkingThread;
 };

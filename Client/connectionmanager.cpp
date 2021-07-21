@@ -23,6 +23,19 @@ void ConnectionManager::movePlayer(playerMovement side)
 	}
 }
 
+void ConnectionManager::actionPlayer(QString action, int side)
+{
+	QByteArray direction = "UP";
+
+	switch (side) {
+		case 2: direction = "DOWN"; break;
+		case 3: direction = "LEFT"; break;
+		case 4: direction = "RIGHT"; break;
+	}
+
+	m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
+}
+
 void ConnectionManager::log(QString msg)
 {
 	qDebug() << "[ConnectionManager]: " << msg;
@@ -43,12 +56,21 @@ void ConnectionManager::socketReady()
 		data.remove(0, QByteArray("MAP_DATA").size());
 		m_map = data;
 		emit gotMap();
+		return;
 	}
 	if (data.indexOf("POS") != -1) {
 		log ("Received POS");
 		data.remove(0, QByteArray("POS").size());
 		QList<QByteArray> position = data.split(':');
 		emit playerPosition(position[0].toInt(), position[1].toInt());
-
+		return;
 	}
+	if (data.indexOf("CHG") != -1) {
+		log ("Map changed!");
+		data.remove(0, QByteArray("CHG").size());
+		QList<QByteArray> changed = data.split(':');
+		emit mapChanged(changed[0].toInt(), changed[1].toInt(), changed[2].toStdString()[0]);
+		return;
+	}
+	emit message(data);
 }

@@ -17,9 +17,11 @@ public:
 
 signals:
 	void askFindPlayer();
+	void openSomething();
 
 private slots:
 	void actFindPlayer();
+	void actOpen();
 
 private:
 	Ui::ActionWindow *ui;

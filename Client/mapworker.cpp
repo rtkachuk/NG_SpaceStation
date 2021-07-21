@@ -35,9 +35,27 @@ void MapWorker::updatePlayerPosition(int x, int y)
 	m_player->setPos(m_currentPlayerPositionX * 30, m_currentPlayerPositionY * 30);
 }
 
-bool MapWorker::checkPlayerCanMove(int x, int y)
+void MapWorker::updateMap(int x, int y, char object)
 {
-	return m_map[y][x] == '.';
+	m_map[y][x] = object;
+	QTransform deviceTransform;
+	QGraphicsItem *item = m_scene->itemAt(x * m_cellSizePixels, y * m_cellSizePixels, deviceTransform);
+	delete item;
+	log(QString(object));
+	updateCell(x * m_cellSizePixels, y * m_cellSizePixels, object);
+	m_player->setZValue(1000);
+}
+
+void MapWorker::updateCell(int x, int y, char object)
+{
+	switch (object) {
+		case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y); break;
+		case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(x, y); break;
+		case 'o': m_scene->addPixmap(QPixmap(":/buildings/door_open.png"))->setPos(x, y); break;
+		case 'c': m_scene->addPixmap(QPixmap(":/buildings/door_closed.png"))->setPos(x, y); break;
+		case 'b': m_scene->addPixmap(QPixmap(":/buildings/door_broken.png"))->setPos(x, y); break;
+		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
+	}
 }
 
 void MapWorker::drawMap()
@@ -46,11 +64,7 @@ void MapWorker::drawMap()
 	int currentX = 0;
 	for (QVector<char> row : m_map) {
 		for (char cell : row) {
-			switch (cell) {
-				case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(currentX, currentY); break;
-				case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(currentX, currentY); break;
-				default: m_scene->addRect(currentX, currentY, m_cellSizePixels, m_cellSizePixels);
-			}
+			updateCell(currentX, currentY, cell);
 			currentX += m_cellSizePixels;
 		}
 		currentX = 0;

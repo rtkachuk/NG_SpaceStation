@@ -4,5 +4,8 @@
         <file>players/player.png</file>
         <file>misc/loading.png</file>
         <file>buildings/wall.png</file>
+        <file>buildings/door_broken.png</file>
+        <file>buildings/door_closed.png</file>
+        <file>buildings/door_open.png</file>
     </qresource>
 </RCC>

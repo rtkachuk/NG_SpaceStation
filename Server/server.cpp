@@ -24,6 +24,8 @@ void Server::readyRead()
 	if (data == "DOWN") { client->write(m_mapWorker->getMovementResponse(client, down)); }
 	if (data == "LEFT") { client->write(m_mapWorker->getMovementResponse(client, left)); }
 	if (data == "RIGHT") { client->write(m_mapWorker->getMovementResponse(client, right)); }
+	if (data.indexOf("OPEN") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
+	if (data.indexOf("CLOSE") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 }
 
 void Server::disconnected()
