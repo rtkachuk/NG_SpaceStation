@@ -80,10 +80,10 @@ position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
 	pos.x = x;
 	pos.y = y;
 	switch (side) {
-		case up: pos.y--; break;
-		case down: pos.y++; break;
-		case left: pos.x--; break;
-		case right: pos.x++; break;
+		case playerMovements::up: pos.y--; break;
+		case playerMovements::down: pos.y++; break;
+		case playerMovements::left: pos.x--; break;
+		case playerMovements::right: pos.x++; break;
 	}
 
 	return pos;
@@ -91,8 +91,8 @@ position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
 
 playerMovements MapWorker::getSideFromString(QString side)
 {
-	if (side == "UP") return up;
-	if (side == "DOWN") return down;
-	if (side == "LEFT") return left;
-	if (side == "RIGHT") return right;
+	if (side == "UP") return playerMovements::up;
+	if (side == "DOWN") return playerMovements::down;
+	if (side == "LEFT") return playerMovements::left;
+	if (side == "RIGHT") return playerMovements::right;
 }
