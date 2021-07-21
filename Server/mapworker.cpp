@@ -65,6 +65,7 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 		case open: if (m_map[actPos.y][actPos.x] == 'c') { return formatMapChange(actPos.x, actPos.y, 'o'); } break;
 		case close: if (m_map[actPos.y][actPos.x] == 'o') { return formatMapChange(actPos.x, actPos.y, 'c'); } break;
 	}
+	return QByteArray("Я не особо понимаю: что мне нужно делать?");
 }
 
 QByteArray MapWorker::formatMapChange(int x, int y, char object)
