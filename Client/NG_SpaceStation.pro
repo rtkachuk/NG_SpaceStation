@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     actionwindow.cpp \
+    connectdialog.cpp \
     main.cpp \
     mapfileloader.cpp \
     mapworker.cpp \
@@ -17,12 +18,14 @@ SOURCES += \
 
 HEADERS += \
     actionwindow.h \
+    connectdialog.h \
     mapfileloader.h \
     mapworker.h \
     spacestation.h
 
 FORMS += \
     actionwindow.ui \
+    connectdialog.ui \
     spacestation.ui
 
 # Default rules for deployment.

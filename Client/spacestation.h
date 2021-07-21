@@ -8,6 +8,7 @@
 
 #include "mapworker.h"
 #include "actionwindow.h"
+#include "connectdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -23,6 +24,7 @@ public:
 
 private slots:
 	void actFindPlayer();
+	void getConnectionInfo();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -31,6 +33,9 @@ private:
 	void initMenus();
 	void log(QString message);
 
+	QString m_ip;
+	QString m_port;
+
 	Ui::SpaceStation *ui;
 	QGraphicsScene *m_scene;
 	MapWorker *m_mapWorker;
@@ -38,9 +43,11 @@ private:
 	QMenu *m_mFile;
 	QMenu *m_mSettings;
 
+	QAction *m_actConnect;
 	QAction *m_quit;
 	QAction *m_followPlayer;
 
 	ActionWindow *m_actionWindow;
+	ConnectDialog *m_connectDialog;
 };
 #endif // SPACESTATION_H

@@ -29,7 +29,7 @@ void MapFileLoader::readMap()
 		for (char cell : line) {
 			if (cell != '\n')
 				buffer.push_back(cell);
-				length++;
+			length++;
 		}
 		if (length > m_sizeX) m_sizeX = length;
 		m_data.push_back(buffer);

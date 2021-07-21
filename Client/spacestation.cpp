@@ -41,6 +41,19 @@ void SpaceStation::actFindPlayer()
 	ui->graphicsView->centerOn(posX, posY);
 }
 
+void SpaceStation::getConnectionInfo()
+{
+	m_connectDialog = new ConnectDialog();
+	m_connectDialog->exec();
+
+	m_ip = m_connectDialog->getIp();
+	m_port = m_connectDialog->getPort();
+	delete m_connectDialog;
+
+	log ("Get ip: " + m_ip);
+	log ("Get port: " + m_port);
+}
+
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -59,10 +72,12 @@ void SpaceStation::initMenus()
 	m_mFile = new QMenu("File");
 	m_mSettings = new QMenu("Settings");
 
+	m_actConnect = new QAction("Connect");
 	m_quit = new QAction("Quit");
 	m_followPlayer = new QAction("Follow player");
 	m_followPlayer->setCheckable(true);
 
+	m_mFile->addAction(m_actConnect);
 	m_mFile->addAction(m_quit);
 	m_mSettings->addAction(m_followPlayer);
 
@@ -70,6 +85,7 @@ void SpaceStation::initMenus()
 	ui->menubar->addMenu(m_mSettings);
 	ui->menubar->show();
 
+	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::getConnectionInfo);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
 }
