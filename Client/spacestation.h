@@ -28,11 +28,18 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
+	void initMenus();
 	void log(QString message);
 
 	Ui::SpaceStation *ui;
 	QGraphicsScene *m_scene;
 	MapWorker *m_mapWorker;
+
+	QMenu *m_mFile;
+	QMenu *m_mSettings;
+
+	QAction *m_quit;
+	QAction *m_followPlayer;
 
 	ActionWindow *m_actionWindow;
 };

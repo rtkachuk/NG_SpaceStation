@@ -12,9 +12,6 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	m_mapWorker->mapInit();
 
-	log (QString::number(m_mapWorker->getMapSizeX()));
-	log (QString::number(m_mapWorker->getMapSizeY()));
-
 	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
 	ui->graphicsView->setScene(m_scene);
 	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
@@ -23,6 +20,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
+
+	initMenus();
 
 	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
 }
@@ -51,6 +50,28 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_A: m_mapWorker->updatePlayerPosition(left); break;
 		case Qt::Key_D: m_mapWorker->updatePlayerPosition(right); break;
 	}
+
+	if (m_followPlayer->isChecked()) actFindPlayer();
+}
+
+void SpaceStation::initMenus()
+{
+	m_mFile = new QMenu("File");
+	m_mSettings = new QMenu("Settings");
+
+	m_quit = new QAction("Quit");
+	m_followPlayer = new QAction("Follow player");
+	m_followPlayer->setCheckable(true);
+
+	m_mFile->addAction(m_quit);
+	m_mSettings->addAction(m_followPlayer);
+
+	ui->menubar->addMenu(m_mFile);
+	ui->menubar->addMenu(m_mSettings);
+	ui->menubar->show();
+
+	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
+	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
 }
 
 void SpaceStation::log(QString message)
