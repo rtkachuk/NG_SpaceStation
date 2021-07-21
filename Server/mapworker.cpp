@@ -39,10 +39,10 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	position pos = m_playerPositions[socket];
 
 	switch (side) {
-		case up: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1); } break;
-		case down: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1); } break;
-		case left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y); } break;
-		case right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y); } break;
+		case playerMovements::up: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1); } break;
+		case playerMovements::down: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1); } break;
+		case playerMovements::left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y); } break;
+		case playerMovements::right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y); } break;
 	}
 	return "Ай, вы ударились головой. Больно";
 }

@@ -31,6 +31,7 @@ private slots:
 
 	void connectToServer();
 	void connectedToServer();
+
 	void mapReceived();
 	void setPlayerPosition(int x, int y);
 	void chatMessage(QString message);
