@@ -20,10 +20,10 @@ void Server::readyRead()
 	QTcpSocket *client = (QTcpSocket*)sender();
 	QByteArray data = client->readAll();
 
-	if (data == "UP") { client->write(m_mapWorker->getMovementResponse(client, up)); }
-	if (data == "DOWN") { client->write(m_mapWorker->getMovementResponse(client, down)); }
-	if (data == "LEFT") { client->write(m_mapWorker->getMovementResponse(client, left)); }
-	if (data == "RIGHT") { client->write(m_mapWorker->getMovementResponse(client, right)); }
+	if (data == "UP") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::up)); }
+	if (data == "DOWN") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::down)); }
+	if (data == "LEFT") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::left)); }
+	if (data == "RIGHT") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::right)); }
 	if (data.indexOf("OPEN") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 }
