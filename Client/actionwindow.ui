@@ -590,7 +590,7 @@
      <string>THROW</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_19">
+   <widget class="QPushButton" name="b_findMe">
     <property name="geometry">
      <rect>
       <x>20</x>

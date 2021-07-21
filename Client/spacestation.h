@@ -21,6 +21,9 @@ public:
 	SpaceStation(QWidget *parent = nullptr);
 	~SpaceStation();
 
+private slots:
+	void actFindPlayer();
+
 protected:
 	void keyPressEvent(QKeyEvent *event);
 

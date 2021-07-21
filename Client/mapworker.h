@@ -27,7 +27,12 @@ public:
 
 	void setCellsColumns(int cellsColumns) { m_cellsColumns = cellsColumns; }
 	void setCellsRows(int cellsRows) { m_cellsRows = cellsRows; }
+
 	void setCellSizePixels(int size) { m_cellSizePixels = size; }
+	int getCellSizePixels() { return m_cellSizePixels; }
+
+	int getPlayerPosX() { return m_currentPlayerPositionX; }
+	int getPlayerPosY() { return m_currentPlayerPositionY; }
 
 	void mapInit();
 	void dummyMapInit();
@@ -50,8 +55,8 @@ private:
 	QGraphicsScene *m_scene;
 	QGraphicsPixmapItem *m_player;
 
-	int m_initialPlayerPositionX = 1;
-	int m_initialPlayerPositionY = 1;
+	int m_currentPlayerPositionX = 1;
+	int m_currentPlayerPositionY = 1;
 	QVector <QVector<char>> m_map;
 };
 

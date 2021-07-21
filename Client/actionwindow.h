@@ -15,6 +15,12 @@ public:
 	explicit ActionWindow(QWidget *parent = nullptr);
 	~ActionWindow();
 
+signals:
+	void askFindPlayer();
+
+private slots:
+	void actFindPlayer();
+
 private:
 	Ui::ActionWindow *ui;
 };

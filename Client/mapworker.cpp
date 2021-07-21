@@ -13,14 +13,14 @@ void MapWorker::mapInit()
 void MapWorker::updatePlayerPosition(playerMovements move)
 {
 	switch (move) {
-		case up: if (checkPlayerCanMove(m_initialPlayerPositionX, m_initialPlayerPositionY-1)) m_initialPlayerPositionY--; break;
-		case down: if (checkPlayerCanMove(m_initialPlayerPositionX, m_initialPlayerPositionY+1)) m_initialPlayerPositionY++; break;
-		case left: if (checkPlayerCanMove(m_initialPlayerPositionX-1, m_initialPlayerPositionY)) m_initialPlayerPositionX--; break;
-		case right: if (checkPlayerCanMove(m_initialPlayerPositionX+1, m_initialPlayerPositionY)) m_initialPlayerPositionX++; break;
+		case up: if (checkPlayerCanMove(m_currentPlayerPositionX, m_currentPlayerPositionY-1)) m_currentPlayerPositionY--; break;
+		case down: if (checkPlayerCanMove(m_currentPlayerPositionX, m_currentPlayerPositionY+1)) m_currentPlayerPositionY++; break;
+		case left: if (checkPlayerCanMove(m_currentPlayerPositionX-1, m_currentPlayerPositionY)) m_currentPlayerPositionX--; break;
+		case right: if (checkPlayerCanMove(m_currentPlayerPositionX+1, m_currentPlayerPositionY)) m_currentPlayerPositionX++; break;
 		default: log("Player moved worng!");
 	}
 
-	m_player->setPos(m_initialPlayerPositionX * 30, m_initialPlayerPositionY * 30);
+	m_player->setPos(m_currentPlayerPositionX * 30, m_currentPlayerPositionY * 30);
 }
 
 bool MapWorker::checkPlayerCanMove(int x, int y)
@@ -58,7 +58,7 @@ void MapWorker::drawMap()
 		currentY += m_cellSizePixels;
 	}
 	m_player = m_scene->addPixmap(QPixmap(":/players/player.png"));
-	m_player->setPos(m_initialPlayerPositionX * m_cellSizePixels, m_initialPlayerPositionY * m_cellSizePixels);
+	m_player->setPos(m_currentPlayerPositionX * m_cellSizePixels, m_currentPlayerPositionY * m_cellSizePixels);
 }
 
 void MapWorker::log(QString message)

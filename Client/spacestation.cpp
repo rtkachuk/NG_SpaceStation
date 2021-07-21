@@ -19,11 +19,14 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	m_scene = new QGraphicsScene(0, 0, wSize, hSize);
 	ui->graphicsView->setScene(m_scene);
+	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
 	m_mapWorker->setScene(m_scene);
 	m_mapWorker->drawMap();
 
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
+
+	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
 }
 
 SpaceStation::~SpaceStation()
@@ -31,10 +34,19 @@ SpaceStation::~SpaceStation()
 	delete ui;
 }
 
+void SpaceStation::actFindPlayer()
+{
+	int pixelSize = m_mapWorker->getCellSizePixels();
+	int posX = m_mapWorker->getPlayerPosX() * pixelSize;
+	int posY = m_mapWorker->getPlayerPosY() * pixelSize;
+
+	log ("Moving view to: " + QString::number(posX) + ":::" + QString::number(posY));
+	ui->graphicsView->centerOn(posX, posY);
+}
+
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-	log("Catch: " + QString::number((int)keyEvent->key()));
 	switch (keyEvent->key()) {
 		case Qt::Key_W: m_mapWorker->updatePlayerPosition(up); break;
 		case Qt::Key_S: m_mapWorker->updatePlayerPosition(down); break;
