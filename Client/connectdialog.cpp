@@ -7,6 +7,9 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	ui->l_ip->setText("127.0.0.1");
+	ui->l_port->setText("4306");
+
 	connect (ui->b_connect, &QPushButton::clicked, this, &ConnectDialog::connectToHost);
 	connect (ui->b_cancel, &QPushButton::clicked, this, &ConnectDialog::reject);
 }

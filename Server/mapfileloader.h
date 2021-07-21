@@ -1,26 +1,22 @@
 #ifndef MAPFILELOADER_H
 #define MAPFILELOADER_H
 
-#include <QFile>
+#include <QVector>
 #include <QDebug>
+#include <QFile>
 
 class MapFileLoader
 {
 public:
 	MapFileLoader();
 	void readMap();
-	QVector<QVector<char>> getMap() { return m_data; }
-
-	int getMapYSize() { return m_sizeY; }
-	int getMapXSize() { return m_sizeX; }
+	QByteArray getMap() { return m_map; }
 
 private:
 	void log(QString message);
 	void clearMap();
 
-	QVector<QVector<char>> m_data;
-	int m_sizeY;
-	int m_sizeX;
+	QByteArray m_map;
 };
 
 #endif // MAPFILELOADER_H

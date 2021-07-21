@@ -7,29 +7,17 @@ SpaceStation::SpaceStation(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	m_mapWorker = new MapWorker();
-	m_mapWorker->setCellSizePixels(30);
-
-	m_mapWorker->mapInit();
-
-	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
-	ui->graphicsView->setScene(m_scene);
-	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
-	m_mapWorker->setScene(m_scene);
-	m_mapWorker->drawMap();
-
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
 
+	initGraphics();
 	initMenus();
-
-	m_connectionManager = new ConnectionManager();
-	m_networkingThread = new QThread();
-	m_connectionManager->moveToThread(m_networkingThread);
-	m_networkingThread->start();
+	initConnectionManager();
 
 	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
+	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
+	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
 }
 
 SpaceStation::~SpaceStation()
@@ -67,14 +55,26 @@ void SpaceStation::connectedToServer()
 	ui->statusbar->showMessage("Connected to " + m_ip);
 }
 
+void SpaceStation::mapReceived()
+{
+	ui->statusbar->showMessage("Loading map...");
+	m_mapWorker->mapInit(m_connectionManager->getMap());
+	m_mapWorker->drawMap();
+}
+
+void SpaceStation::setPlayerPosition(int x, int y)
+{
+	m_mapWorker->updatePlayerPosition(x, y);
+}
+
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 	switch (keyEvent->key()) {
-		case Qt::Key_W: m_mapWorker->updatePlayerPosition(up); break;
-		case Qt::Key_S: m_mapWorker->updatePlayerPosition(down); break;
-		case Qt::Key_A: m_mapWorker->updatePlayerPosition(left); break;
-		case Qt::Key_D: m_mapWorker->updatePlayerPosition(right); break;
+		case Qt::Key_W: m_connectionManager->movePlayer(moveUp); break;
+		case Qt::Key_S: m_connectionManager->movePlayer(moveDown); break;
+		case Qt::Key_A: m_connectionManager->movePlayer(moveLeft); break;
+		case Qt::Key_D: m_connectionManager->movePlayer(moveRight); break;
 	}
 
 	if (m_followPlayer->isChecked()) actFindPlayer();
@@ -101,6 +101,25 @@ void SpaceStation::initMenus()
 	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::connectToServer);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
+}
+
+void SpaceStation::initConnectionManager()
+{
+	m_connectionManager = new ConnectionManager();
+	m_networkingThread = new QThread();
+	m_connectionManager->moveToThread(m_networkingThread);
+	m_networkingThread->start();
+}
+
+void SpaceStation::initGraphics()
+{
+	m_mapWorker = new MapWorker();
+	m_mapWorker->setCellSizePixels(30);
+
+	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
+	ui->graphicsView->setScene(m_scene);
+	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
+	m_mapWorker->setScene(m_scene);
 }
 
 void SpaceStation::log(QString message)

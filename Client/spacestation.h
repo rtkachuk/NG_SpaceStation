@@ -26,14 +26,19 @@ public:
 
 private slots:
 	void actFindPlayer();
+
 	void connectToServer();
 	void connectedToServer();
+	void mapReceived();
+	void setPlayerPosition(int x, int y);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
 
 private:
 	void initMenus();
+	void initConnectionManager();
+	void initGraphics();
 	void log(QString message);
 
 	QString m_ip;

@@ -2,23 +2,35 @@
 
 MapWorker::MapWorker()
 {
-	m_fileLoader = new MapFileLoader();
 }
 
-void MapWorker::mapInit()
+void MapWorker::mapInit(QByteArray mapData)
 {
-	m_map = m_fileLoader->getMap();
-}
+	m_map.clear();
 
-void MapWorker::updatePlayerPosition(playerMovements move)
-{
-	switch (move) {
-		case up: if (checkPlayerCanMove(m_currentPlayerPositionX, m_currentPlayerPositionY-1)) m_currentPlayerPositionY--; break;
-		case down: if (checkPlayerCanMove(m_currentPlayerPositionX, m_currentPlayerPositionY+1)) m_currentPlayerPositionY++; break;
-		case left: if (checkPlayerCanMove(m_currentPlayerPositionX-1, m_currentPlayerPositionY)) m_currentPlayerPositionX--; break;
-		case right: if (checkPlayerCanMove(m_currentPlayerPositionX+1, m_currentPlayerPositionY)) m_currentPlayerPositionX++; break;
-		default: log("Player moved worng!");
+	m_mapSizeHorz = 0;
+	m_mapSizeVert = 0;
+
+	QList<QByteArray> rows = mapData.split('\n');
+	log (QString::number(rows.size()));
+	for (QByteArray line : rows) {
+		int length = 0;
+		log ("ROW");
+		QVector<char> buffer;
+		for (char cell : line) {
+			buffer.push_back(cell);
+			length++;
+		}
+		if (length > m_mapSizeHorz) m_mapSizeHorz = length;
+		m_map.push_back(buffer);
+		m_mapSizeVert++;
 	}
+}
+
+void MapWorker::updatePlayerPosition(int x, int y)
+{
+	m_currentPlayerPositionX = x;
+	m_currentPlayerPositionY = y;
 
 	m_player->setPos(m_currentPlayerPositionX * 30, m_currentPlayerPositionY * 30);
 }

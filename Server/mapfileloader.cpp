@@ -2,9 +2,6 @@
 
 MapFileLoader::MapFileLoader()
 {
-	m_sizeX = 0;
-	m_sizeY = 0;
-
 	readMap();
 }
 
@@ -21,21 +18,7 @@ void MapFileLoader::readMap()
 		return;
 	}
 
-	int length = 0;
-
-	while (mapFile.atEnd() == false) {
-		QByteArray line = mapFile.readLine();
-		QVector<char> buffer;
-		for (char cell : line) {
-			if (cell != '\n')
-				buffer.push_back(cell);
-			length++;
-		}
-		if (length > m_sizeX) m_sizeX = length;
-		m_data.push_back(buffer);
-		m_sizeY++;
-	}
-
+	m_map = mapFile.readAll();
 	mapFile.close();
 	log ("File loaded!");
 }
@@ -47,7 +30,5 @@ void MapFileLoader::log(QString message)
 
 void MapFileLoader::clearMap()
 {
-	for (int row=0; row<m_data.size(); row++)
-		m_data[row].clear();
-	m_data.clear();
+	m_map.clear();
 }

@@ -5,6 +5,9 @@
 #include <QTcpSocket>
 #include <QDebug>
 
+#include "mapfileloader.h"
+#include "mapworker.h"
+
 class Server : public QTcpServer
 {
 	Q_OBJECT
@@ -15,6 +18,9 @@ private:
 	void log(QString msg);
 
 	QVector<QTcpSocket*> m_players;
+
+	MapFileLoader *m_mapFileLoader;
+	MapWorker *m_mapWorker;
 
 private slots:
 	void readyRead();

@@ -13,7 +13,6 @@ SOURCES += \
     connectdialog.cpp \
     connectionmanager.cpp \
     main.cpp \
-    mapfileloader.cpp \
     mapworker.cpp \
     spacestation.cpp
 
@@ -21,7 +20,6 @@ HEADERS += \
     actionwindow.h \
     connectdialog.h \
     connectionmanager.h \
-    mapfileloader.h \
     mapworker.h \
     spacestation.h
 

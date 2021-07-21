@@ -6,8 +6,6 @@
 #include <QDebug>
 #include <QThread>
 
-#include "mapfileloader.h"
-
 // This class should load map from file like map.config
 //
 
@@ -31,22 +29,22 @@ public:
 	int getPlayerPosX() { return m_currentPlayerPositionX; }
 	int getPlayerPosY() { return m_currentPlayerPositionY; }
 
-	void mapInit();
+	void mapInit(QByteArray m_mapData);
 
-	int getMapSizeX() { return m_fileLoader->getMapXSize() * m_cellSizePixels; }
-	int getMapSizeY() { return m_fileLoader->getMapYSize() * m_cellSizePixels; }
+	int getMapSizeX() { return m_mapSizeHorz * m_cellSizePixels; }
+	int getMapSizeY() { return m_mapSizeVert * m_cellSizePixels; }
 
 public slots:
 	void drawMap();
-	void updatePlayerPosition(playerMovements move);
+	void updatePlayerPosition(int x, int y);
 
 private:
 	bool checkPlayerCanMove(int x, int y);
 	void log(QString message);
 
-	MapFileLoader *m_fileLoader;
-
 	int m_cellSizePixels; // Cell size in pixels;
+	int m_mapSizeVert;
+	int m_mapSizeHorz;
 
 	QGraphicsScene *m_scene;
 	QGraphicsPixmapItem *m_player;
@@ -54,6 +52,7 @@ private:
 	int m_currentPlayerPositionX = 1;
 	int m_currentPlayerPositionY = 1;
 	QVector <QVector<char>> m_map;
+	QByteArray m_mapData;
 };
 
 #endif // MAPWORKER_H
