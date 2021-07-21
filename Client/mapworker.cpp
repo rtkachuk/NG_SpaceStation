@@ -13,14 +13,19 @@ void MapWorker::mapInit()
 void MapWorker::updatePlayerPosition(playerMovements move)
 {
 	switch (move) {
-		case up: m_initialPlayerPositionY--; break;
-		case down: m_initialPlayerPositionY++; break;
-		case left: m_initialPlayerPositionX--; break;
-		case right: m_initialPlayerPositionX++; break;
+		case up: if (checkPlayerCanMove(m_initialPlayerPositionX, m_initialPlayerPositionY-1)) m_initialPlayerPositionY--; break;
+		case down: if (checkPlayerCanMove(m_initialPlayerPositionX, m_initialPlayerPositionY+1)) m_initialPlayerPositionY++; break;
+		case left: if (checkPlayerCanMove(m_initialPlayerPositionX-1, m_initialPlayerPositionY)) m_initialPlayerPositionX--; break;
+		case right: if (checkPlayerCanMove(m_initialPlayerPositionX+1, m_initialPlayerPositionY)) m_initialPlayerPositionX++; break;
 		default: log("Player moved worng!");
 	}
 
 	m_player->setPos(m_initialPlayerPositionX * 30, m_initialPlayerPositionY * 30);
+}
+
+bool MapWorker::checkPlayerCanMove(int x, int y)
+{
+	return m_map[y][x] == '.';
 }
 
 void MapWorker::dummyMapInit()
@@ -44,6 +49,7 @@ void MapWorker::drawMap()
 		for (char cell : row) {
 			switch (cell) {
 				case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(currentX, currentY); break;
+				case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(currentX, currentY); break;
 				default: m_scene->addRect(currentX, currentY, m_cellSizePixels, m_cellSizePixels);
 			}
 			currentX += m_cellSizePixels;

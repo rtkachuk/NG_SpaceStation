@@ -3,5 +3,6 @@
         <file>buildings/floor.png</file>
         <file>players/player.png</file>
         <file>misc/loading.png</file>
+        <file>buildings/wall.png</file>
     </qresource>
 </RCC>

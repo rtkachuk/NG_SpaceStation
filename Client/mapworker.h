@@ -37,6 +37,7 @@ public slots:
 	void updatePlayerPosition(playerMovements move);
 
 private:
+	bool checkPlayerCanMove(int x, int y);
 	void log(QString message);
 
 	MapFileLoader *m_fileLoader;
