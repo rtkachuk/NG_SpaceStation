@@ -5,10 +5,12 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QThread>
 
 #include "mapworker.h"
 #include "actionwindow.h"
 #include "connectdialog.h"
+#include "connectionmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -24,7 +26,8 @@ public:
 
 private slots:
 	void actFindPlayer();
-	void getConnectionInfo();
+	void connectToServer();
+	void connectedToServer();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -49,5 +52,8 @@ private:
 
 	ActionWindow *m_actionWindow;
 	ConnectDialog *m_connectDialog;
+	ConnectionManager *m_connectionManager;
+
+	QThread *m_networkingThread;
 };
 #endif // SPACESTATION_H

@@ -23,7 +23,13 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	initMenus();
 
+	m_connectionManager = new ConnectionManager();
+	m_networkingThread = new QThread();
+	m_connectionManager->moveToThread(m_networkingThread);
+	m_networkingThread->start();
+
 	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
+	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 }
 
 SpaceStation::~SpaceStation()
@@ -41,7 +47,7 @@ void SpaceStation::actFindPlayer()
 	ui->graphicsView->centerOn(posX, posY);
 }
 
-void SpaceStation::getConnectionInfo()
+void SpaceStation::connectToServer()
 {
 	m_connectDialog = new ConnectDialog();
 	m_connectDialog->exec();
@@ -52,6 +58,13 @@ void SpaceStation::getConnectionInfo()
 
 	log ("Get ip: " + m_ip);
 	log ("Get port: " + m_port);
+
+	m_connectionManager->connectToServer(m_ip, m_port);
+}
+
+void SpaceStation::connectedToServer()
+{
+	ui->statusbar->showMessage("Connected to " + m_ip);
 }
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)
@@ -85,7 +98,7 @@ void SpaceStation::initMenus()
 	ui->menubar->addMenu(m_mSettings);
 	ui->menubar->show();
 
-	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::getConnectionInfo);
+	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::connectToServer);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
 }

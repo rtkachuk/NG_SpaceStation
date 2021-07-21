@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     actionwindow.cpp \
     connectdialog.cpp \
+    connectionmanager.cpp \
     main.cpp \
     mapfileloader.cpp \
     mapworker.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     actionwindow.h \
     connectdialog.h \
+    connectionmanager.h \
     mapfileloader.h \
     mapworker.h \
     spacestation.h
