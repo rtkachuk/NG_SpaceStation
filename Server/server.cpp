@@ -2,7 +2,7 @@
 
 Server::Server()
 {
-
+	log ("Server ready");
 }
 
 void Server::log(QString msg)
@@ -29,13 +29,14 @@ void Server::disconnected()
 	m_players.remove(m_players.indexOf(client));
 }
 
-void Server::incomingConnection(quintptr handle)
+void Server::incomingConnection(qintptr handle)
 {
 	QTcpSocket *client = new QTcpSocket();
 	client->setSocketDescriptor(handle);
 	m_players.append(client);
 
 	log ("New connection from: " + client->peerAddress().toString() + "!");
+
 
 	connect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	connect (client, &QTcpSocket::disconnected, this, &Server::disconnected);

@@ -21,7 +21,7 @@ private slots:
 	void disconnected();
 
 protected:
-	void incomingConnection(quintptr handle);
+	void incomingConnection(qintptr handle);
 };
 
 #endif // SERVER_H
