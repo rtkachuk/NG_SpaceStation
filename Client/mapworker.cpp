@@ -58,7 +58,7 @@ void MapWorker::drawMap()
 		currentY += m_cellSizePixels;
 	}
 	m_player = m_scene->addPixmap(QPixmap(":/players/player.png"));
-	m_player->setPos(m_initialPlayerPositionX * 30, m_initialPlayerPositionY * 30);
+	m_player->setPos(m_initialPlayerPositionX * m_cellSizePixels, m_initialPlayerPositionY * m_cellSizePixels);
 }
 
 void MapWorker::log(QString message)

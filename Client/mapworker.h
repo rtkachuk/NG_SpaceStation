@@ -50,8 +50,8 @@ private:
 	QGraphicsScene *m_scene;
 	QGraphicsPixmapItem *m_player;
 
-	int m_initialPlayerPositionX = 0;
-	int m_initialPlayerPositionY = 0;
+	int m_initialPlayerPositionX = 1;
+	int m_initialPlayerPositionY = 1;
 	QVector <QVector<char>> m_map;
 };
 
