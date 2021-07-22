@@ -29,6 +29,8 @@ public:
 private slots:
 	void actFindPlayer();
 
+	void actShowActionsMenu();
+
 	void connectToServer();
 	void connectedToServer();
 
@@ -56,10 +58,12 @@ private:
 
 	QMenu *m_mFile;
 	QMenu *m_mSettings;
+	QMenu *m_mToolBars;
 
 	QAction *m_actConnect;
 	QAction *m_quit;
 	QAction *m_followPlayer;
+	QAction *m_showActionsMenu;
 
 	ActionWindow *m_actionWindow;
 	ConnectDialog *m_connectDialog;

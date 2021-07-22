@@ -39,6 +39,11 @@ void SpaceStation::actFindPlayer()
 	ui->graphicsView->centerOn(posX, posY);
 }
 
+void SpaceStation::actShowActionsMenu()
+{
+	m_actionWindow->show();
+}
+
 void SpaceStation::connectToServer()
 {
 	m_connectDialog = new ConnectDialog();
@@ -110,23 +115,32 @@ void SpaceStation::initMenus()
 {
 	m_mFile = new QMenu("File");
 	m_mSettings = new QMenu("Settings");
+	m_mToolBars = new QMenu("Toolbars");
 
 	m_actConnect = new QAction("Connect");
 	m_quit = new QAction("Quit");
+
 	m_followPlayer = new QAction("Follow player");
 	m_followPlayer->setCheckable(true);
 
+	m_showActionsMenu = new QAction("Actions menu");
+
 	m_mFile->addAction(m_actConnect);
 	m_mFile->addAction(m_quit);
+
 	m_mSettings->addAction(m_followPlayer);
+
+	m_mToolBars->addAction(m_showActionsMenu);
 
 	ui->menubar->addMenu(m_mFile);
 	ui->menubar->addMenu(m_mSettings);
+	ui->menubar->addMenu(m_mToolBars);
 	ui->menubar->show();
 
 	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::connectToServer);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
+	connect (m_showActionsMenu, &QAction::triggered, this, &SpaceStation::actShowActionsMenu);
 }
 
 void SpaceStation::initConnectionManager()

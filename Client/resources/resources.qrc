@@ -7,5 +7,6 @@
         <file>buildings/door_broken.png</file>
         <file>buildings/door_closed.png</file>
         <file>buildings/door_open.png</file>
+        <file>players/player1.png</file>
     </qresource>
 </RCC>

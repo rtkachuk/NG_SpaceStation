@@ -36,7 +36,7 @@ void MapWorker::updatePlayerPosition(QByteArray id, int x, int y)
 		if (m_players.contains(id)) {
 			m_players[id]->setPos(x * m_cellSizePixels, y * m_cellSizePixels);
 		} else {
-			m_players[id] = m_scene->addPixmap(QPixmap(":/players/player.png"));
+			m_players[id] = m_scene->addPixmap(QPixmap(":/players/player1.png"));
 			m_players[id]->setZValue(10);
 		}
 	}

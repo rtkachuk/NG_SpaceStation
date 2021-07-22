@@ -46,7 +46,7 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 		case playerMovements::left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y, socket); } break;
 		case playerMovements::right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y, socket); } break;
 	}
-	return "Ай, вы ударились головой. Больно";
+	return "";
 }
 
 void MapWorker::updatePlayerPos(QTcpSocket* socket, int x, int y)
@@ -67,7 +67,7 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 		case open: if (m_map[actPos.y][actPos.x] == 'c') { return formatMapChange(actPos.x, actPos.y, 'o'); } break;
 		case close: if (m_map[actPos.y][actPos.x] == 'o') { return formatMapChange(actPos.x, actPos.y, 'c'); } break;
 	}
-	return QByteArray("Я не особо понимаю: что мне нужно делать?");
+	return QByteArray("");
 }
 
 QByteArray MapWorker::generateId()
