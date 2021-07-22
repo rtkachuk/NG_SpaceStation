@@ -9,13 +9,6 @@
 // This class should load map from file like map.config
 //
 
-enum playerMovements {
-	up,
-	down,
-	left,
-	right
-};
-
 class MapWorker : public QObject
 {
 	Q_OBJECT
