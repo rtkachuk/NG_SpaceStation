@@ -41,10 +41,10 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	position pos = m_playerPositions[socket];
 
 	switch (side) {
-		case playerMovements::up: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1, socket); } break;
-		case playerMovements::down: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1, socket); } break;
-		case playerMovements::left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y, socket); } break;
-		case playerMovements::right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y, socket); } break;
+		case playerMovements::sup: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1, socket); } break;
+		case playerMovements::sdown: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1, socket); } break;
+		case playerMovements::sleft: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y, socket); } break;
+		case playerMovements::sright: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y, socket); } break;
 	}
 	return "";
 }
@@ -106,10 +106,10 @@ position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
 	pos.x = x;
 	pos.y = y;
 	switch (side) {
-		case playerMovements::up: pos.y--; break;
-		case playerMovements::down: pos.y++; break;
-		case playerMovements::left: pos.x--; break;
-		case playerMovements::right: pos.x++; break;
+		case playerMovements::sup: pos.y--; break;
+		case playerMovements::sdown: pos.y++; break;
+		case playerMovements::sleft: pos.x--; break;
+		case playerMovements::sright: pos.x++; break;
 	}
 
 	return pos;
@@ -117,11 +117,11 @@ position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
 
 playerMovements MapWorker::getSideFromString(QString side)
 {
-	if (side == "UP") return playerMovements::up;
-	if (side == "DOWN") return playerMovements::down;
-	if (side == "LEFT") return playerMovements::left;
-	if (side == "RIGHT") return playerMovements::right;
-	return playerMovements::up;
+	if (side == "UP") return playerMovements::sup;
+	if (side == "DOWN") return playerMovements::sdown;
+	if (side == "LEFT") return playerMovements::sleft;
+	if (side == "RIGHT") return playerMovements::sright;
+	return playerMovements::sup;
 }
 
 QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)

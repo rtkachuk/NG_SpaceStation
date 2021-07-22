@@ -11,10 +11,10 @@ struct position {
 };
 
 enum playerMovements {
-	up,
-	down,
-	left,
-	right
+	sup,
+	sdown,
+	sleft,
+	sright
 };
 
 enum actions {

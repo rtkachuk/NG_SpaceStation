@@ -27,10 +27,10 @@ void Server::readyRead()
 	QTcpSocket *client = (QTcpSocket*)sender();
 	QByteArray data = client->readAll();
 
-	if (data == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::up)); }
-	if (data == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::down)); }
-	if (data == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::left)); }
-	if (data == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::right)); }
+	if (data == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
+	if (data == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
+	if (data == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sleft)); }
+	if (data == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data == "ASKID") { client->write("ID" + m_mapWorker->getUserId(client)); }
