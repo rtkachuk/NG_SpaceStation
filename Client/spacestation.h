@@ -33,9 +33,10 @@ private slots:
 	void connectedToServer();
 
 	void mapReceived();
-	void setPlayerPosition(int x, int y);
+	void setPlayerPosition(QByteArray id, int x, int y);
 	void chatMessage(QString message);
 	void mapChanged(int x, int y, char object);
+	void gotId(QByteArray id);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

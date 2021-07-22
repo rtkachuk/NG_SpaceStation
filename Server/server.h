@@ -16,6 +16,7 @@ public:
 
 private:
 	void sendToAll(QByteArray message);
+	QString generateId();
 
 	void log(QString msg);
 

@@ -15,7 +15,6 @@ void MapWorker::mapInit(QByteArray mapData)
 	log (QString::number(rows.size()));
 	for (QByteArray line : rows) {
 		int length = 0;
-		log ("ROW");
 		QVector<char> buffer;
 		for (char cell : line) {
 			buffer.push_back(cell);
@@ -27,12 +26,19 @@ void MapWorker::mapInit(QByteArray mapData)
 	}
 }
 
-void MapWorker::updatePlayerPosition(int x, int y)
+void MapWorker::updatePlayerPosition(QByteArray id, int x, int y)
 {
-	m_currentPlayerPositionX = x;
-	m_currentPlayerPositionY = y;
-
-	m_player->setPos(m_currentPlayerPositionX * 30, m_currentPlayerPositionY * 30);
+	if (id == m_playerId) {
+		m_currentPlayerPositionX = x;
+		m_currentPlayerPositionY = y;
+		m_player->setPos(m_currentPlayerPositionX * m_cellSizePixels, m_currentPlayerPositionY * m_cellSizePixels);
+	} else {
+		if (m_players.contains(id)) {
+			m_players[id]->setPos(x * m_cellSizePixels, y * m_cellSizePixels);
+		} else {
+			m_players[id] = m_scene->addPixmap(QPixmap(":/players/player.png"));
+		}
+	}
 }
 
 void MapWorker::updateMap(int x, int y, char object)

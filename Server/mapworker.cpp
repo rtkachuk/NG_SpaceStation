@@ -33,6 +33,7 @@ void MapWorker::addUser(QTcpSocket *socket)
 	pos.x = 1;
 	pos.y = 1;
 	m_playerPositions[socket] = pos;
+	m_playerIds[socket] = generateId();
 }
 
 QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements side)
@@ -40,10 +41,10 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	position pos = m_playerPositions[socket];
 
 	switch (side) {
-		case playerMovements::up: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1); } break;
-		case playerMovements::down: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1); } break;
-		case playerMovements::left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y); } break;
-		case playerMovements::right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y); } break;
+		case playerMovements::up: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1, socket); } break;
+		case playerMovements::down: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1, socket); } break;
+		case playerMovements::left: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y, socket); } break;
+		case playerMovements::right: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y, socket); } break;
 	}
 	return "Ай, вы ударились головой. Больно";
 }
@@ -67,6 +68,18 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 		case close: if (m_map[actPos.y][actPos.x] == 'o') { return formatMapChange(actPos.x, actPos.y, 'c'); } break;
 	}
 	return QByteArray("Я не особо понимаю: что мне нужно делать?");
+}
+
+QByteArray MapWorker::generateId()
+{
+	QByteArray possibleChars("0123456789");
+	int randomStringLength = 6;
+	QByteArray id;
+
+	for (int symbol = 0; symbol < randomStringLength; symbol++) {
+		id += possibleChars.at(m_randomGenerator.bounded(0,possibleChars.length()));
+	}
+	return id;
 }
 
 void MapWorker::updateMapData(int x, int y, char object)
@@ -109,6 +122,11 @@ playerMovements MapWorker::getSideFromString(QString side)
 	if (side == "LEFT") return playerMovements::left;
 	if (side == "RIGHT") return playerMovements::right;
 	return playerMovements::up;
+}
+
+QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)
+{
+	return "POS" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y);
 }
 
 void MapWorker::log(QString msg)

@@ -22,6 +22,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
 	connect (m_connectionManager, &ConnectionManager::message, this, &SpaceStation::chatMessage);
 	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
+	connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
 }
 
 SpaceStation::~SpaceStation()
@@ -64,11 +65,12 @@ void SpaceStation::mapReceived()
 	ui->statusbar->showMessage("Loading map...");
 	m_mapWorker->mapInit(m_connectionManager->getMap());
 	m_mapWorker->drawMap();
+	m_connectionManager->askForId();
 }
 
-void SpaceStation::setPlayerPosition(int x, int y)
+void SpaceStation::setPlayerPosition(QByteArray id, int x, int y)
 {
-	m_mapWorker->updatePlayerPosition(x, y);
+	m_mapWorker->updatePlayerPosition(id, x, y);
 }
 
 void SpaceStation::chatMessage(QString message)
@@ -79,6 +81,12 @@ void SpaceStation::chatMessage(QString message)
 void SpaceStation::mapChanged(int x, int y, char object)
 {
 	m_mapWorker->updateMap(x, y, object);
+}
+
+void SpaceStation::gotId(QByteArray id)
+{
+	m_mapWorker->setPlayerId(id);
+	log ("Player ID: " + id);
 }
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)

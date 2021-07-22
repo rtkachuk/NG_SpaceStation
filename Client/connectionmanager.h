@@ -21,6 +21,7 @@ public:
 
 	void movePlayer(playerMovement side);
 	void actionPlayer(QString action, int side);
+	void askForId() { m_socket->write("ASKID");};
 
 private:
 	void log(QString msg);
@@ -33,9 +34,10 @@ signals:
 	void dataReady();
 	void connected();
 	void gotMap();
-	void playerPosition(int x, int y);
+	void playerPosition(QByteArray id, int x, int y);
 	void message(QString message);
 	void mapChanged(int x, int y, char object);
+	void gotId(QByteArray id);
 
 private:
 	QTcpSocket *m_socket;

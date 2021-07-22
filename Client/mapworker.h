@@ -21,6 +21,8 @@ class MapWorker : public QObject
 	Q_OBJECT
 public:
 	MapWorker();
+
+	void setPlayerId(QByteArray id) { m_playerId = id; }
 	void setScene(QGraphicsScene *scene) { m_scene = scene; }
 
 	void setCellSizePixels(int size) { m_cellSizePixels = size; }
@@ -36,7 +38,7 @@ public:
 
 public slots:
 	void drawMap();
-	void updatePlayerPosition(int x, int y);
+	void updatePlayerPosition(QByteArray id, int x, int y);
 	void updateMap(int x, int y, char object);
 
 private:
@@ -44,11 +46,13 @@ private:
 	void log(QString message);
 
 	int m_cellSizePixels; // Cell size in pixels;
-	int m_mapSizeVert;
-	int m_mapSizeHorz;
+	int m_mapSizeVert = 1000;
+	int m_mapSizeHorz = 1000;
 
 	QGraphicsScene *m_scene;
 	QGraphicsPixmapItem *m_player;
+	QByteArray m_playerId;
+	QMap<QByteArray, QGraphicsPixmapItem*> m_players;
 
 	int m_currentPlayerPositionX = 1;
 	int m_currentPlayerPositionY = 1;

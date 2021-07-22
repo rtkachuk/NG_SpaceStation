@@ -62,7 +62,7 @@ void ConnectionManager::socketReady()
 		log ("Received POS");
 		data.remove(0, QByteArray("POS").size());
 		QList<QByteArray> position = data.split(':');
-		emit playerPosition(position[0].toInt(), position[1].toInt());
+		emit playerPosition(position[0], position[1].toInt(), position[2].toInt());
 		return;
 	}
 	if (data.indexOf("CHG") != -1) {
@@ -70,6 +70,13 @@ void ConnectionManager::socketReady()
 		data.remove(0, QByteArray("CHG").size());
 		QList<QByteArray> changed = data.split(':');
 		emit mapChanged(changed[0].toInt(), changed[1].toInt(), changed[2].toStdString()[0]);
+		return;
+	}
+
+	if (data.indexOf("ID") != -1) {
+		log ("Received ID");
+		data.remove(0, QByteArray("ID").size());
+		emit gotId(data);
 		return;
 	}
 	emit message(data);
