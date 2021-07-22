@@ -466,7 +466,7 @@
      <string>OPEN</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_15">
+   <widget class="QPushButton" name="b_close">
     <property name="geometry">
      <rect>
       <x>50</x>

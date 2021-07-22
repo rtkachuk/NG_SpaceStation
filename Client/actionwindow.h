@@ -18,8 +18,8 @@ public:
 signals:
 	void askFindPlayer();
 
-	void openSomething();
-	void closeSomething();
+	void openSomething(QString data);
+	void closeSomething(QString data);
 
 	void moveUp();
 	void moveDown();
@@ -28,8 +28,8 @@ signals:
 
 private slots:
 	void actFindPlayer() { emit askFindPlayer(); }
-	void actOpen() { emit openSomething(); }
-	void actClose() { emit closeSomething(); }
+	void actOpen() { emit openSomething("OPEN"); }
+	void actClose() { emit closeSomething("CLOSE"); }
 
 	void actMoveUp() { emit moveUp(); }
 	void actMoveDown() { emit moveDown(); }
