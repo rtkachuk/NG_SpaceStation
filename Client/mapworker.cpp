@@ -60,12 +60,18 @@ void MapWorker::updateMap(int x, int y, char object)
 
 void MapWorker::updateCell(int x, int y, char object)
 {
+	if (object != ' ') // it's not space
+		m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y);
 	switch (object) {
 		case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y); break;
 		case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(x, y); break;
 		case 'o': m_scene->addPixmap(QPixmap(":/buildings/door_open.png"))->setPos(x, y); break;
 		case 'c': m_scene->addPixmap(QPixmap(":/buildings/door_closed.png"))->setPos(x, y); break;
 		case 'b': m_scene->addPixmap(QPixmap(":/buildings/door_broken.png"))->setPos(x, y); break;
+		case 't': m_scene->addPixmap(QPixmap(":/furniture/trash_can.png"))->setPos(x, y); break;
+		case 'T': m_scene->addPixmap(QPixmap(":/furniture/trash_can_open.png"))->setPos(x, y); break;
+		case 's': m_scene->addPixmap(QPixmap(":/furniture/box.png"))->setPos(x, y); break;
+		case 'S': m_scene->addPixmap(QPixmap(":/furniture/open_box.png"))->setPos(x, y); break;
 		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
 	}
 }

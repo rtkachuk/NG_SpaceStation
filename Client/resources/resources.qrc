@@ -8,5 +8,9 @@
         <file>buildings/door_closed.png</file>
         <file>buildings/door_open.png</file>
         <file>players/player1.png</file>
+        <file>furniture/box.png</file>
+        <file>furniture/open_box.png</file>
+        <file>furniture/trash_can_open.png</file>
+        <file>furniture/trash_can.png</file>
     </qresource>
 </RCC>
