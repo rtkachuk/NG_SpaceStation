@@ -17,11 +17,24 @@ public:
 
 signals:
 	void askFindPlayer();
+
 	void openSomething();
+	void closeSomething();
+
+	void moveUp();
+	void moveDown();
+	void moveLeft();
+	void moveRight();
 
 private slots:
-	void actFindPlayer();
-	void actOpen();
+	void actFindPlayer() { emit askFindPlayer(); }
+	void actOpen() { emit openSomething(); }
+	void actClose() { emit closeSomething(); }
+
+	void actMoveUp() { emit moveUp(); }
+	void actMoveDown() { emit moveDown(); }
+	void actMoveLeft() { emit moveLeft(); }
+	void actMoveRight() { emit moveRight(); }
 
 private:
 	Ui::ActionWindow *ui;

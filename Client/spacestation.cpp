@@ -17,6 +17,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	initConnectionManager();
 
 	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
+
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
@@ -100,18 +101,28 @@ void SpaceStation::playerDisconnected(QByteArray id)
 	m_mapWorker->removePlayer(id);
 }
 
+void SpaceStation::movePlayer(playerMovement side)
+{
+	m_connectionManager->movePlayer(side);
+}
+
+void SpaceStation::actPlayerOpenClose(QString action)
+{
+	m_connectionManager->actionPlayer(action, m_selectDirectionDialog->exec());
+}
+
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {	
 	m_selectDirectionDialog = new SelectDirectionDialog();
 
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 	switch (keyEvent->key()) {
-		case Qt::Key_W: m_connectionManager->movePlayer(moveUp); break;
-		case Qt::Key_S: m_connectionManager->movePlayer(moveDown); break;
-		case Qt::Key_A: m_connectionManager->movePlayer(moveLeft); break;
-		case Qt::Key_D: m_connectionManager->movePlayer(moveRight); break;
-		case Qt::Key_O: m_connectionManager->actionPlayer("OPEN", m_selectDirectionDialog->exec()); break;
-		case Qt::Key_C: m_connectionManager->actionPlayer("CLOSE", m_selectDirectionDialog->exec()); break;
+		case Qt::Key_W: movePlayer(moveUp); break;
+		case Qt::Key_S: movePlayer(moveDown); break;
+		case Qt::Key_A: movePlayer(moveLeft); break;
+		case Qt::Key_D: movePlayer(moveRight); break;
+		case Qt::Key_O: actPlayerOpenClose("OPEN"); break;
+		case Qt::Key_C: actPlayerOpenClose("CLOSE"); break;
 	}
 
 	delete m_selectDirectionDialog;

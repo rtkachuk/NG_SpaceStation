@@ -14,13 +14,3 @@ ActionWindow::~ActionWindow()
 {
 	delete ui;
 }
-
-void ActionWindow::actFindPlayer()
-{
-	emit askFindPlayer();
-}
-
-void ActionWindow::actOpen()
-{
-	emit openSomething();
-}
