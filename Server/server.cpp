@@ -10,6 +10,13 @@ Server::Server()
 	log ("Server ready");
 }
 
+void Server::sendToAll(QByteArray message)
+{
+	for (QTcpSocket* client : m_players) {
+		client->write(message);
+	}
+}
+
 void Server::log(QString msg)
 {
 	qDebug() << "[Server]: " << msg;
@@ -24,8 +31,8 @@ void Server::readyRead()
 	if (data == "DOWN") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::down)); }
 	if (data == "LEFT") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::left)); }
 	if (data == "RIGHT") { client->write(m_mapWorker->getMovementResponse(client, playerMovements::right)); }
-	if (data.indexOf("OPEN") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
-	if (data.indexOf("CLOSE") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
+	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
+	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 }
 
 void Server::disconnected()

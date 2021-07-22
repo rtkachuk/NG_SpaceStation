@@ -15,6 +15,8 @@ public:
 	Server();
 
 private:
+	void sendToAll(QByteArray message);
+
 	void log(QString msg);
 
 	QVector<QTcpSocket*> m_players;
