@@ -36,7 +36,6 @@ void SpaceStation::actFindPlayer()
 	int posX = m_mapWorker->getPlayerPosX() * pixelSize;
 	int posY = m_mapWorker->getPlayerPosY() * pixelSize;
 
-	log ("Moving view to: " + QString::number(posX) + ":::" + QString::number(posY));
 	ui->graphicsView->centerOn(posX, posY);
 }
 
@@ -70,6 +69,7 @@ void SpaceStation::mapReceived()
 
 void SpaceStation::setPlayerPosition(QByteArray id, int x, int y)
 {
+	if (m_followPlayer->isChecked() && id == m_mapWorker->getPlayerId()) actFindPlayer();
 	m_mapWorker->updatePlayerPosition(id, x, y);
 }
 
@@ -104,8 +104,6 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 	}
 
 	delete m_selectDirectionDialog;
-
-	if (m_followPlayer->isChecked()) actFindPlayer();
 }
 
 void SpaceStation::initMenus()

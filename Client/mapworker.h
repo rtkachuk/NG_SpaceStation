@@ -28,6 +28,8 @@ public:
 	void setCellSizePixels(int size) { m_cellSizePixels = size; }
 	int getCellSizePixels() { return m_cellSizePixels; }
 
+	QByteArray getPlayerId() { return m_playerId; }
+
 	int getPlayerPosX() { return m_currentPlayerPositionX; }
 	int getPlayerPosY() { return m_currentPlayerPositionY; }
 

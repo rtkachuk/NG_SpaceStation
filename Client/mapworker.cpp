@@ -37,6 +37,7 @@ void MapWorker::updatePlayerPosition(QByteArray id, int x, int y)
 			m_players[id]->setPos(x * m_cellSizePixels, y * m_cellSizePixels);
 		} else {
 			m_players[id] = m_scene->addPixmap(QPixmap(":/players/player.png"));
+			m_players[id]->setZValue(10);
 		}
 	}
 }
@@ -49,7 +50,6 @@ void MapWorker::updateMap(int x, int y, char object)
 	delete item;
 	log(QString(object));
 	updateCell(x * m_cellSizePixels, y * m_cellSizePixels, object);
-	m_player->setZValue(1000);
 }
 
 void MapWorker::updateCell(int x, int y, char object)
@@ -78,6 +78,7 @@ void MapWorker::drawMap()
 	}
 	m_player = m_scene->addPixmap(QPixmap(":/players/player.png"));
 	m_player->setPos(m_currentPlayerPositionX * m_cellSizePixels, m_currentPlayerPositionY * m_cellSizePixels);
+	m_player->setZValue(10);
 }
 
 void MapWorker::log(QString message)
