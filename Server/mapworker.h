@@ -47,6 +47,9 @@ private:
 	playerMovements getSideFromString(QString side);
 	QByteArray formatResponce (int x, int y, QTcpSocket* socket);
 
+	char processOpen(int x, int y);
+	char processClose(int x, int y);
+
 	void log(QString msg);
 
 	QRandomGenerator m_randomGenerator;

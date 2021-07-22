@@ -64,8 +64,8 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 	position actPos = getCoordsBySide(pos.x, pos.y, side);
 
 	switch (act) {
-		case open: if (m_map[actPos.y][actPos.x] == 'c') { return formatMapChange(actPos.x, actPos.y, 'o'); } break;
-		case close: if (m_map[actPos.y][actPos.x] == 'o') { return formatMapChange(actPos.x, actPos.y, 'c'); } break;
+		case open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
+		case close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
 	}
 	return QByteArray("");
 }
@@ -127,6 +127,26 @@ playerMovements MapWorker::getSideFromString(QString side)
 QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)
 {
 	return "POS" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y);
+}
+
+char MapWorker::processOpen(int x, int y)
+{
+	switch(m_map[y][x]) {
+		case 'c': return 'o';
+		case 't': return 'T';
+		case 's': return 'S';
+		default: return m_map[y][x];
+	}
+}
+
+char MapWorker::processClose(int x, int y)
+{
+	switch(m_map[y][x]) {
+		case 'o': return 'c';
+		case 'T': return 't';
+		case 'S': return 's';
+		default: return m_map[y][x];
+	}
 }
 
 void MapWorker::log(QString msg)
