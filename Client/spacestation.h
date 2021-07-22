@@ -39,6 +39,7 @@ private slots:
 	void chatMessage(QString message);
 	void mapChanged(int x, int y, char object);
 	void gotId(QByteArray id);
+	void playerDisconnected(QByteArray id);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

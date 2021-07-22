@@ -38,6 +38,7 @@ signals:
 	void message(QString message);
 	void mapChanged(int x, int y, char object);
 	void gotId(QByteArray id);
+	void playerDisconnected(QByteArray id);
 
 private:
 	QTcpSocket *m_socket;

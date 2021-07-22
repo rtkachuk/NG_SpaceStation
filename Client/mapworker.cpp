@@ -26,6 +26,12 @@ void MapWorker::mapInit(QByteArray mapData)
 	}
 }
 
+void MapWorker::removePlayer(QByteArray id)
+{
+	delete m_players[id];
+	m_players.erase(m_players.find(id));
+}
+
 void MapWorker::updatePlayerPosition(QByteArray id, int x, int y)
 {
 	if (id == m_playerId) {

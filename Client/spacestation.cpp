@@ -23,6 +23,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::message, this, &SpaceStation::chatMessage);
 	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
 	connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
+	connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
 }
 
 SpaceStation::~SpaceStation()
@@ -92,6 +93,11 @@ void SpaceStation::gotId(QByteArray id)
 {
 	m_mapWorker->setPlayerId(id);
 	log ("Player ID: " + id);
+}
+
+void SpaceStation::playerDisconnected(QByteArray id)
+{
+	m_mapWorker->removePlayer(id);
 }
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)

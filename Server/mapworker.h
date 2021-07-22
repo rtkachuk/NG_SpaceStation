@@ -32,7 +32,7 @@ public:
 	bool checkMovementPosition(int x, int y);
 
 	void addUser(QTcpSocket* socket);
-	void removeUser(QTcpSocket* socket) { m_playerPositions.erase(m_playerPositions.find(socket)); }
+	void removeUser(QTcpSocket* socket) { m_playerPositions.erase(m_playerPositions.find(socket)); m_playerIds.erase(m_playerIds.find(socket)); }
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
 
 	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);

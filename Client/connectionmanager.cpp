@@ -79,5 +79,12 @@ void ConnectionManager::socketReady()
 		emit gotId(data);
 		return;
 	}
+
+	if (data.indexOf("DIS") != -1) {
+		log ("Some player disconnected...");
+		data.remove(0, QByteArray("DIS").size());
+		emit playerDisconnected(data);
+		return;
+	}
 	emit message(data);
 }

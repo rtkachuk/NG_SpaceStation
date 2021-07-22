@@ -45,6 +45,7 @@ void Server::disconnected()
 	disconnect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
 	m_players.remove(m_players.indexOf(client));
+	sendToAll("DIS" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
 }
 

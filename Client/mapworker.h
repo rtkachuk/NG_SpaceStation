@@ -38,6 +38,8 @@ public:
 	int getMapSizeX() { return m_mapSizeHorz * m_cellSizePixels; }
 	int getMapSizeY() { return m_mapSizeVert * m_cellSizePixels; }
 
+	void removePlayer(QByteArray id);
+
 public slots:
 	void drawMap();
 	void updatePlayerPosition(QByteArray id, int x, int y);
