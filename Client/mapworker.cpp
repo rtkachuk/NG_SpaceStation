@@ -54,7 +54,6 @@ void MapWorker::updateMap(int x, int y, char object)
 	QTransform deviceTransform;
 	QGraphicsItem *item = m_scene->itemAt(x * m_cellSizePixels, y * m_cellSizePixels, deviceTransform);
 	delete item;
-	log(QString(object));
 	updateCell(x * m_cellSizePixels, y * m_cellSizePixels, object);
 }
 

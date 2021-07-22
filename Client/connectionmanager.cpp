@@ -50,7 +50,6 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray data = m_socket->readAll();
-	log ("Received: " + QString::number(data.size()) + " bytes");
 	if (data.indexOf("MAP_DATA") != -1) {
 		log ("Received map!");
 		data.remove(0, QByteArray("MAP_DATA").size());
@@ -59,7 +58,6 @@ void ConnectionManager::socketReady()
 		return;
 	}
 	if (data.indexOf("POS") != -1) {
-		log ("Received POS");
 		data.remove(0, QByteArray("POS").size());
 		QList<QByteArray> position = data.split(':');
 		emit playerPosition(position[0], position[1].toInt(), position[2].toInt());
