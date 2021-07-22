@@ -41,12 +41,11 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	position pos = m_playerPositions[socket];
 
 	switch (side) {
-		case playerMovements::sup: if (checkMovementPosition(pos.x, pos.y-1)) { updatePlayerPos(socket, pos.x, pos.y-1); return formatResponce(pos.x, pos.y-1, socket); } break;
-		case playerMovements::sdown: if (checkMovementPosition(pos.x, pos.y+1)) { updatePlayerPos(socket, pos.x, pos.y+1); return formatResponce(pos.x, pos.y+1, socket); } break;
-		case playerMovements::sleft: if (checkMovementPosition(pos.x-1, pos.y)) { updatePlayerPos(socket, pos.x-1, pos.y); return formatResponce(pos.x-1, pos.y, socket); } break;
-		case playerMovements::sright: if (checkMovementPosition(pos.x+1, pos.y)) { updatePlayerPos(socket, pos.x+1, pos.y); return formatResponce(pos.x+1, pos.y, socket); } break;
+		case playerMovements::sup: return processPlayerMovement(pos.x, pos.y-1, socket); break;
+		case playerMovements::sdown: return processPlayerMovement(pos.x, pos.y+1, socket); break;
+		case playerMovements::sleft: return processPlayerMovement(pos.x-1, pos.y, socket); break;
+		case playerMovements::sright: return processPlayerMovement(pos.x+1, pos.y, socket); break;
 	}
-	return "";
 }
 
 void MapWorker::updatePlayerPos(QTcpSocket* socket, int x, int y)
@@ -68,6 +67,12 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 		case close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
 	}
 	return QByteArray("");
+}
+
+QByteArray MapWorker::processPlayerMovement(int x, int y, QTcpSocket *socket)
+{
+	if (checkMovementPosition(x, y)) { updatePlayerPos(socket, x, y); return formatResponce(x, y, socket); }
+	return "";
 }
 
 QByteArray MapWorker::generateId()

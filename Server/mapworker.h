@@ -40,6 +40,7 @@ public:
 	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
 
 private:
+	QByteArray processPlayerMovement(int x, int y, QTcpSocket* socket);
 	QByteArray generateId();
 	void updateMapData(int x, int y, char object);
 	QByteArray formatMapChange(int x, int y, char object);
