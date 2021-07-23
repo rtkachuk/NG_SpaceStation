@@ -43,12 +43,16 @@ public:
 	void setType(itemType type) { m_type = type; }
 	itemType getType() { return m_type; }
 
+	void setPixmap(QString path) { m_pixmap = path; }
+	QString getPixmap() { return m_pixmap; }
+
 	static playerWearable detectPlayerWearable(QString mode);
 
 private:
 	QByteArray m_id;
 	QString m_name;
 	QString m_description;
+	QString m_pixmap;
 	playerWearable m_mode;
 	itemType m_type;
 	int m_damage;
