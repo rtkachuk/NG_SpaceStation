@@ -73,6 +73,8 @@ void MapWorker::updateCell(int x, int y, char object)
 		case 'T': m_scene->addPixmap(QPixmap(":/furniture/trash_can_open.png"))->setPos(x, y); break;
 		case 's': m_scene->addPixmap(QPixmap(":/furniture/box.png"))->setPos(x, y); break;
 		case 'S': m_scene->addPixmap(QPixmap(":/furniture/open_box.png"))->setPos(x, y); break;
+		case 'r': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm.png")); item->setPos(x, y); item->setZValue(10); } break;
+		case 'R': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm_switch.png")); item->setPos(x, y); item->setZValue(10); } break;
 		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
 	}
 }

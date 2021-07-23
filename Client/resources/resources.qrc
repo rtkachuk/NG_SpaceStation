@@ -12,5 +12,7 @@
         <file>furniture/open_box.png</file>
         <file>furniture/trash_can_open.png</file>
         <file>furniture/trash_can.png</file>
+        <file>tech/server_rack_kvm.png</file>
+        <file>tech/server_rack_kvm_switch.png</file>
     </qresource>
 </RCC>
