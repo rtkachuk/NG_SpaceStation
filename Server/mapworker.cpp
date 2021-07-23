@@ -100,6 +100,10 @@ void MapWorker::updateMapData(int x, int y, char object)
 
 QByteArray MapWorker::formatMapChange(int x, int y, char object)
 {
+	if (m_map[y][x] == object) {
+		return "";
+	}
+
 	m_map[y][x] = object;
 	updateMapData(x, y, object);
 	return QByteArray("CHG" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object);
