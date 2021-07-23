@@ -24,6 +24,8 @@ void MapWorker::mapInit(QByteArray mapData)
 		m_map.push_back(buffer);
 		m_mapSizeVert++;
 	}
+
+	m_scene->setSceneRect(0, 0, m_mapSizeHorz * m_cellSizePixels, m_mapSizeVert * m_cellSizePixels);
 }
 
 void MapWorker::removePlayer(QByteArray id)
