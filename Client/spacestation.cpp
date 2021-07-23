@@ -17,6 +17,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 	initConnectionManager();
 
 	connect (m_actionWindow, &ActionWindow::askFindPlayer, this, &SpaceStation::actFindPlayer);
+	connect (m_actionWindow, &ActionWindow::openSomething, this, &SpaceStation::actPlayerOpenClose);
+	connect (m_actionWindow, &ActionWindow::closeSomething, this, &SpaceStation::actPlayerOpenClose);
 
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
@@ -109,13 +111,13 @@ void SpaceStation::movePlayer(playerMovement side)
 
 void SpaceStation::actPlayerOpenClose(QString action)
 {
+	m_selectDirectionDialog = new SelectDirectionDialog();
 	m_connectionManager->actionPlayer(action, m_selectDirectionDialog->exec());
+	delete m_selectDirectionDialog;
 }
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {	
-	m_selectDirectionDialog = new SelectDirectionDialog();
-
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 	switch (keyEvent->key()) {
 		case Qt::Key_W: movePlayer(moveUp); break;
@@ -125,8 +127,6 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_O: actPlayerOpenClose("OPEN"); break;
 		case Qt::Key_C: actPlayerOpenClose("CLOSE"); break;
 	}
-
-	delete m_selectDirectionDialog;
 }
 
 void SpaceStation::initMenus()
