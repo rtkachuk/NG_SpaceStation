@@ -9,6 +9,10 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ../sharedItemLoader/baseitem.cpp \
+        ../sharedItemLoader/basetool.cpp \
+        ../sharedItemLoader/baseweapon.cpp \
+        ../sharedItemLoader/itemloader.cpp \
         main.cpp \
         mapfileloader.cpp \
         mapworker.cpp \
@@ -20,6 +24,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ../sharedItemLoader/baseitem.h \
+    ../sharedItemLoader/basetool.h \
+    ../sharedItemLoader/baseweapon.h \
+    ../sharedItemLoader/itemloader.h \
     mapfileloader.h \
     mapworker.h \
     server.h

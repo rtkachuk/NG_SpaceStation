@@ -20,6 +20,8 @@ void MapWorker::processMap(QByteArray mapData)
 		}
 		m_map.push_back(buffer);
 	}
+
+	log ("Map loading done! (" + QByteArray::number(mapData.size()) + " bytes)");
 }
 
 bool MapWorker::checkMovementPosition(int x, int y)

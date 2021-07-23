@@ -4,8 +4,10 @@ Server::Server()
 {
 	m_mapFileLoader = new MapFileLoader();
 	m_mapWorker = new MapWorker();
+	m_itemLoader = new ItemLoader();
 
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
+	m_itemLoader->loadItems();
 
 	log ("Server ready");
 }

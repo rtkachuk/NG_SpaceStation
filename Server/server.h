@@ -7,6 +7,7 @@
 
 #include "mapfileloader.h"
 #include "mapworker.h"
+#include "../sharedItemLoader/itemloader.h"
 
 class Server : public QTcpServer
 {
@@ -24,6 +25,7 @@ private:
 
 	MapFileLoader *m_mapFileLoader;
 	MapWorker *m_mapWorker;
+	ItemLoader *m_itemLoader;
 
 private slots:
 	void readyRead();
