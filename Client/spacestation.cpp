@@ -78,6 +78,7 @@ void SpaceStation::setPlayerPosition(QByteArray id, int x, int y)
 {
 	if (m_followPlayer->isChecked() && id == m_mapWorker->getPlayerId()) actFindPlayer();
 	m_mapWorker->updatePlayerPosition(id, x, y);
+	ui->graphicsView->viewport()->update();
 }
 
 void SpaceStation::chatMessage(QString message)
@@ -176,6 +177,9 @@ void SpaceStation::initGraphics()
 	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
 	ui->graphicsView->setScene(m_scene);
 	ui->graphicsView->setTransformationAnchor(QGraphicsView::NoAnchor);
+	ui->graphicsView->setRenderHints(QPainter::Antialiasing);
+	ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	ui->graphicsView->setCacheMode(QGraphicsView::CacheNone);
 	m_mapWorker->setScene(m_scene);
 }
 
