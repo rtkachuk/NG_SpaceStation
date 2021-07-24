@@ -13,6 +13,7 @@ SOURCES += \
         ../sharedItemLoader/basetool.cpp \
         ../sharedItemLoader/baseweapon.cpp \
         ../sharedItemLoader/itemloader.cpp \
+        inventorycontroller.cpp \
         main.cpp \
         mapfileloader.cpp \
         mapworker.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     ../sharedItemLoader/basetool.h \
     ../sharedItemLoader/baseweapon.h \
     ../sharedItemLoader/itemloader.h \
+    inventorycontroller.h \
     mapfileloader.h \
     mapworker.h \
     server.h

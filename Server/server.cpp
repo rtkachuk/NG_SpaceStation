@@ -5,6 +5,7 @@ Server::Server()
 	m_mapFileLoader = new MapFileLoader();
 	m_mapWorker = new MapWorker();
 	m_itemLoader = new ItemLoader();
+	m_inventoryController = new InventoryController();
 
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
 	m_itemLoader->loadItems();
@@ -49,6 +50,7 @@ void Server::disconnected()
 	m_players.remove(m_players.indexOf(client));
 	sendToAll("DIS" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
+	m_inventoryController->destroyPlayerInventory(client);
 }
 
 void Server::incomingConnection(qintptr handle)
@@ -58,6 +60,7 @@ void Server::incomingConnection(qintptr handle)
 
 	m_players.append(client);
 	m_mapWorker->addUser(client);
+	m_inventoryController->createPlayerInventory(client);
 
 	log ("New connection from: " + client->peerAddress().toString() + "!");
 
