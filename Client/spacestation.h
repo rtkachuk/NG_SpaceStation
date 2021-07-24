@@ -1,4 +1,4 @@
-#ifndef SPACESTATION_H
+﻿#ifndef SPACESTATION_H
 #define SPACESTATION_H
 
 #include <QMainWindow>
@@ -45,6 +45,8 @@ private slots:
 
 	void movePlayer(playerMovement side);
 	void processPlayerAction(QString action);
+
+	void sendMessage();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

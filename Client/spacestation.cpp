@@ -124,6 +124,11 @@ void SpaceStation::processPlayerAction(QString action)
 	delete m_selectDirectionDialog;
 }
 
+void SpaceStation::sendMessage()
+{
+	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
+}
+
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {	
 	QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -135,6 +140,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
+		case Qt::Key_Return: sendMessage();
 	}
 }
 

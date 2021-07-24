@@ -16,6 +16,7 @@ public:
 
 	void movePlayer(playerMovement side);
 	void actionPlayer(QString action, int side);
+	void sendMessage(QString message) { m_socket->write("SAY:" + message.toUtf8()); }
 	void askForId() { m_socket->write("ASKID");};
 
 private:
