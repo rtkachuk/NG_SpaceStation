@@ -157,7 +157,17 @@ char MapWorker::processClose(int x, int y)
 		case 'T': return 't';
 		case 'S': return 's';
 		default: return m_map[y][x];
-	}
+    }
+}
+
+void MapWorker::pickItem()
+{
+
+}
+
+void MapWorker::dropItem()
+{
+
 }
 
 void MapWorker::log(QString msg)

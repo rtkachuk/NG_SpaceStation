@@ -5,22 +5,10 @@
 #include <QTcpSocket>
 #include <QRandomGenerator>
 
-struct position {
-	int x;
-	int y;
-};
+#include "enums.h"
+#include "itemcontroller.h"
+#include "inventorycontroller.h"
 
-enum playerMovements {
-	sup,
-	sdown,
-	sleft,
-	sright
-};
-
-enum actions {
-	open,
-	close
-};
 
 class MapWorker
 {
@@ -50,6 +38,9 @@ private:
 
 	char processOpen(int x, int y);
 	char processClose(int x, int y);
+
+    void pickItem();
+    void dropItem();
 
 	void log(QString msg);
 

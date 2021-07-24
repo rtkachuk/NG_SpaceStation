@@ -14,6 +14,7 @@ SOURCES += \
         ../sharedItemLoader/baseweapon.cpp \
         ../sharedItemLoader/itemloader.cpp \
         inventorycontroller.cpp \
+        itemcontroller.cpp \
         main.cpp \
         mapfileloader.cpp \
         mapworker.cpp \
@@ -29,7 +30,9 @@ HEADERS += \
     ../sharedItemLoader/basetool.h \
     ../sharedItemLoader/baseweapon.h \
     ../sharedItemLoader/itemloader.h \
+    enums.h \
     inventorycontroller.h \
+    itemcontroller.h \
     mapfileloader.h \
     mapworker.h \
     server.h
