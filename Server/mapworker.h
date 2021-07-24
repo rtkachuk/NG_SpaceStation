@@ -50,6 +50,7 @@ private:
 	QByteArray m_mapData;
 	QMap<QTcpSocket*,position> m_playerPositions;
 	QMap<QTcpSocket*,QByteArray> m_playerIds;
+    ItemController* m_itemController;
 };
 
 #endif // MAPWORKER_H

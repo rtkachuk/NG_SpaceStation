@@ -44,6 +44,7 @@ void Server::readyRead()
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data == "ASKID") { client->write("ID" + m_mapWorker->getUserId(client)); }
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
+    if (data.indexOf("TAKE") != -1)
 }
 
 void Server::disconnected()

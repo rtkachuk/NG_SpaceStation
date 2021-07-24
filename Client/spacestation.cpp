@@ -141,6 +141,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_D: movePlayer(moveRight); break;
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
+        case Qt::Key_T: processPlayerAction("TAKE"); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 	}
 }

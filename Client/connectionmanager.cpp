@@ -31,7 +31,7 @@ void ConnectionManager::actionPlayer(QString action, int side)
 		case 2: direction = "DOWN"; break;
 		case 3: direction = "LEFT"; break;
 		case 4: direction = "RIGHT"; break;
-	}
+    }
 
 	m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
 }

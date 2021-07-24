@@ -162,7 +162,7 @@ char MapWorker::processClose(int x, int y)
 
 void MapWorker::pickItem()
 {
-
+    if(m_itemController->getItem() != "")
 }
 
 void MapWorker::dropItem()
