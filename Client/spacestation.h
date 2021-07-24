@@ -13,6 +13,7 @@
 #include "connectdialog.h"
 #include "connectionmanager.h"
 #include "selectdirectiondialog.h"
+#include "inventorymenu.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -30,6 +31,7 @@ private slots:
 	void actFindPlayer();
 
 	void actShowActionsMenu();
+    void actShowInventoryMenu();
 
 	void connectToServer();
 	void connectedToServer();
@@ -68,11 +70,13 @@ private:
 	QAction *m_quit;
 	QAction *m_followPlayer;
 	QAction *m_showActionsMenu;
+    QAction *m_showInventoryMenu;
 
 	ActionWindow *m_actionWindow;
 	ConnectDialog *m_connectDialog;
 	ConnectionManager *m_connectionManager;
 	SelectDirectionDialog *m_selectDirectionDialog;
+    InventoryMenu *m_inventory;
 
 	QThread *m_networkingThread;
 };

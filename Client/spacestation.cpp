@@ -9,6 +9,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
+    m_inventory = new InventoryMenu();
+    m_inventory->show();
 
 	ui->t_chat->setReadOnly(true);
 
@@ -45,7 +47,12 @@ void SpaceStation::actFindPlayer()
 
 void SpaceStation::actShowActionsMenu()
 {
-	m_actionWindow->show();
+    m_actionWindow->show();
+}
+
+void SpaceStation::actShowInventoryMenu()
+{
+    m_inventory->show();
 }
 
 void SpaceStation::connectToServer()
@@ -142,6 +149,7 @@ void SpaceStation::initMenus()
 	m_followPlayer->setCheckable(true);
 
 	m_showActionsMenu = new QAction("Actions menu");
+    m_showInventoryMenu = new QAction("Inventory");
 
 	m_mFile->addAction(m_actConnect);
 	m_mFile->addAction(m_quit);
@@ -149,6 +157,7 @@ void SpaceStation::initMenus()
 	m_mSettings->addAction(m_followPlayer);
 
 	m_mToolBars->addAction(m_showActionsMenu);
+    m_mToolBars->addAction(m_showInventoryMenu);
 
 	ui->menubar->addMenu(m_mFile);
 	ui->menubar->addMenu(m_mSettings);
@@ -159,6 +168,7 @@ void SpaceStation::initMenus()
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
 	connect (m_showActionsMenu, &QAction::triggered, this, &SpaceStation::actShowActionsMenu);
+    connect(m_showInventoryMenu, &QAction::triggered, this, &SpaceStation::actShowInventoryMenu);
 }
 
 void SpaceStation::initConnectionManager()
