@@ -30,6 +30,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
 	connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
 	connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
+
+	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
 
 SpaceStation::~SpaceStation()
@@ -140,7 +142,6 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
-		case Qt::Key_Return: sendMessage();
 	}
 }
 

@@ -20,6 +20,12 @@ void Server::sendToAll(QByteArray message)
 	}
 }
 
+void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
+{
+	QByteArray id = m_mapWorker->getUserId(player);
+	sendToAll("SAY:" + id + ":" + message.split(':')[1]);
+}
+
 void Server::log(QString msg)
 {
 	qDebug() << "[Server]: " << msg;
@@ -37,6 +43,7 @@ void Server::readyRead()
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data == "ASKID") { client->write("ID" + m_mapWorker->getUserId(client)); }
+	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
 }
 
 void Server::disconnected()

@@ -84,5 +84,12 @@ void ConnectionManager::socketReady()
 		emit playerDisconnected(data);
 		return;
 	}
+
+	if (data.indexOf("SAY") != -1) {
+		QList<QByteArray> messageInfo = data.split(':');
+		emit message(messageInfo[1] + ":" + messageInfo[2]);
+		return;
+	}
+
 	emit message(data);
 }
