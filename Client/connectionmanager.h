@@ -3,13 +3,8 @@
 
 #include <QTcpSocket>
 #include <QObject>
+#include "enums.h"
 
-enum playerMovement {
-	moveUp,
-	moveDown,
-	moveLeft,
-	moveRight
-};
 
 class ConnectionManager : public QObject
 {

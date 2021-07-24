@@ -2,6 +2,7 @@
 #define ACTIONWINDOW_H
 
 #include <QMainWindow>
+#include "enums.h"
 
 namespace Ui {
 class ActionWindow;
@@ -21,20 +22,17 @@ signals:
 	void openSomething(QString data);
 	void closeSomething(QString data);
 
-	void moveUp();
-	void moveDown();
-	void moveLeft();
-	void moveRight();
+	void movePlayer(playerMovement mov);
 
 private slots:
 	void actFindPlayer() { emit askFindPlayer(); }
 	void actOpen() { emit openSomething("OPEN"); }
 	void actClose() { emit closeSomething("CLOSE"); }
 
-	void actMoveUp() { emit moveUp(); }
-	void actMoveDown() { emit moveDown(); }
-	void actMoveLeft() { emit moveLeft(); }
-	void actMoveRight() { emit moveRight(); }
+	void actMoveUp() { emit movePlayer(playerMovement::moveUp); }
+	void actMoveDown() { emit movePlayer(playerMovement::moveDown); }
+	void actMoveLeft() { emit movePlayer(playerMovement::moveLeft); }
+	void actMoveRight() { emit movePlayer(playerMovement::moveRight); }
 
 private:
 	Ui::ActionWindow *ui;

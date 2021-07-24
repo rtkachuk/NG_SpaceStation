@@ -156,7 +156,7 @@
      <string>BUILD</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="b_left">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -187,7 +187,7 @@
      <string>LEFT</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="b_right">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -218,7 +218,7 @@
      <string>RIGHT</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_7">
+   <widget class="QPushButton" name="b_up">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -249,7 +249,7 @@
      <string>UP</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_8">
+   <widget class="QPushButton" name="b_down">
     <property name="geometry">
      <rect>
       <x>50</x>

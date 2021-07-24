@@ -29,6 +29,7 @@ HEADERS += \
     actionwindow.h \
     connectdialog.h \
     connectionmanager.h \
+    enums.h \
     mapworker.h \
     selectdirectiondialog.h \
     spacestation.h

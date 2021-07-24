@@ -42,7 +42,7 @@ private slots:
 	void playerDisconnected(QByteArray id);
 
 	void movePlayer(playerMovement side);
-	void actPlayerOpenClose(QString action);
+	void processPlayerAction(QString action);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
