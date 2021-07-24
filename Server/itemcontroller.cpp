@@ -7,8 +7,8 @@ ItemController::ItemController()
 
 QByteArray ItemController::getItem(position cords)
 {
-    if(ids.contains(cords))
-        return ids[cords];
+    if(m_ids.contains(cords))
+        return m_ids[cords];
     else
         return "";
 }
