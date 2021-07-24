@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QThread>
 #include <QScrollBar>
+#include <QMetaMethod>
 
 #include "mapworker.h"
 #include "actionwindow.h"
@@ -45,6 +46,9 @@ private slots:
 
 	void movePlayer(playerMovement side);
 	void processPlayerAction(QString action);
+
+	void processItem(QByteArray id);
+	void dropItem();
 
 	void sendMessage();
 

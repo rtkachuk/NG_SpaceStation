@@ -2,7 +2,10 @@
 
 MapWorker::MapWorker()
 {
+	m_itemController = new ItemController();
 
+	m_itemLoader = new ItemLoader();
+	m_itemLoader->loadItems();
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -65,10 +68,11 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 	position actPos = getCoordsBySide(pos.x, pos.y, side);
 
 	switch (act) {
-		case open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
-		case close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
+		case actions::open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
+		case actions::close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
+		case actions::pick: return pickItem(actPos.x, actPos.y, socket); break;
+		default: return QByteArray("");
 	}
-	return QByteArray("");
 }
 
 QByteArray MapWorker::processPlayerMovement(int x, int y, QTcpSocket *socket)
@@ -157,17 +161,51 @@ char MapWorker::processClose(int x, int y)
 		case 'T': return 't';
 		case 'S': return 's';
 		default: return m_map[y][x];
-    }
+	}
 }
 
-void MapWorker::pickItem()
+QByteArray MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
 {
-    if(m_itemController->getItem() != "")
+	QList<QByteArray> prefs = data.split(':');
+	position pos = m_playerPositions[socket];
+	playerMovements side = getSideFromString(prefs[2]);
+	position actPos = getCoordsBySide(pos.x, pos.y, side);
+	return dropItem(prefs[1], actPos.x, actPos.y, socket);
 }
 
-void MapWorker::dropItem()
+QByteArray MapWorker::pickItem(int x, int y, QTcpSocket *player)
 {
+	position coords;
+	coords.x = x;
+	coords.y = y;
+	QByteArray id = m_itemController->getItem(coords);
+	if (id.isEmpty())
+		return "";
 
+	m_inventoryController->addItemToInventory(player, id);
+	m_itemController->deleteItem(coords);
+
+	return "PITEM:" + id;
+}
+
+QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
+{
+	position coords;
+	coords.x = x;
+	coords.y = y;
+
+	log ("Item id to be dropped: " + id);
+
+	if (id.isEmpty())
+		return "";
+
+	if (m_itemLoader->checkIdExist(id) == false)
+		return "";
+
+	m_inventoryController->removeItemFromInventory(player, id);
+	m_itemController->addItem(coords, id);
+
+	return "DITEM:" + id;
 }
 
 void MapWorker::log(QString msg)

@@ -21,7 +21,9 @@ enum playerMovements {
 
 enum actions {
     open,
-    close
+	close,
+	pick,
+	drop
 };
 
 #endif // ENUMS_H

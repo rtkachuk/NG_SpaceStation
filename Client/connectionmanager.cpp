@@ -33,6 +33,7 @@ void ConnectionManager::actionPlayer(QString action, int side)
 		case 4: direction = "RIGHT"; break;
     }
 
+	log (action.toUtf8() + ":" + direction);
 	m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
 }
 
@@ -88,6 +89,16 @@ void ConnectionManager::socketReady()
 	if (data.indexOf("SAY") != -1) {
 		QList<QByteArray> messageInfo = data.split(':');
 		emit message(messageInfo[1] + ":" + messageInfo[2]);
+		return;
+	}
+
+	if (data.indexOf("PITEM") != -1) {
+		emit pickItem(data.split(':')[1]);
+		return;
+	}
+
+	if (data.indexOf("DITEM") != -1) {
+		emit dropItem(data.split(':')[1]);
 		return;
 	}
 

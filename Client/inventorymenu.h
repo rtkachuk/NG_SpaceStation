@@ -15,6 +15,10 @@ public:
     explicit InventoryMenu(QWidget *parent = nullptr);
     ~InventoryMenu();
 
+	QByteArray getSelectedItem();
+	void addItem(QByteArray item);
+	void removeItem(QByteArray item);
+
 private:
     Ui::InventoryMenu *ui;
 };

@@ -20,6 +20,7 @@ public:
 	BaseWeapon parseWeapon(QString line);
 	BaseTool getToolById(QByteArray id);
 	BaseWeapon getWeaponById(QByteArray id);
+	bool checkIdExist(QByteArray id);
 
 private:
 	void log(QString msg);

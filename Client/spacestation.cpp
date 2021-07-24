@@ -30,6 +30,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
 	connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
 	connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
+	connect (m_connectionManager, &ConnectionManager::pickItem, this, &SpaceStation::processItem);
+	connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
@@ -126,6 +128,25 @@ void SpaceStation::processPlayerAction(QString action)
 	delete m_selectDirectionDialog;
 }
 
+void SpaceStation::processItem(QByteArray id)
+{
+	QMetaMethod signal = sender()->metaObject()->method(senderSignalIndex());
+	QString name = signal.name();
+
+	if (name == "pickItem") m_inventory->addItem(id);
+	if (name == "dropItem") m_inventory->removeItem(id);
+}
+
+void SpaceStation::dropItem()
+{
+	QByteArray item = m_inventory->getSelectedItem();
+	if (item.isEmpty()) return;
+	QByteArray message = "DROP:" + item;
+	m_selectDirectionDialog = new SelectDirectionDialog();
+	m_connectionManager->actionPlayer(message, m_selectDirectionDialog->exec());
+	delete m_selectDirectionDialog;
+}
+
 void SpaceStation::sendMessage()
 {
 	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
@@ -141,7 +162,8 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_D: movePlayer(moveRight); break;
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
-        case Qt::Key_T: processPlayerAction("TAKE"); break;
+		case Qt::Key_P: processPlayerAction("PICK"); break;
+		case Qt::Key_T: dropItem(); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 	}
 }
@@ -177,8 +199,9 @@ void SpaceStation::initMenus()
 	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::connectToServer);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
+	connect (m_quit, &QAction::triggered, m_inventory, &InventoryMenu::close);
 	connect (m_showActionsMenu, &QAction::triggered, this, &SpaceStation::actShowActionsMenu);
-    connect(m_showInventoryMenu, &QAction::triggered, this, &SpaceStation::actShowInventoryMenu);
+	connect (m_showInventoryMenu, &QAction::triggered, this, &SpaceStation::actShowInventoryMenu);
 }
 
 void SpaceStation::initConnectionManager()

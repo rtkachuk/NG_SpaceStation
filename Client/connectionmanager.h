@@ -36,6 +36,9 @@ signals:
 	void gotId(QByteArray id);
 	void playerDisconnected(QByteArray id);
 
+	void pickItem(QByteArray id);
+	void dropItem(QByteArray id);
+
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
