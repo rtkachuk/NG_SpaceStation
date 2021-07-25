@@ -3,6 +3,7 @@
 MapFileLoader::MapFileLoader()
 {
 	readMap();
+	readPlayerPosition();
 }
 
 void MapFileLoader::readMap()
@@ -21,6 +22,20 @@ void MapFileLoader::readMap()
 	m_map = mapFile.readAll();
 	mapFile.close();
 	log ("File loaded!");
+}
+
+void MapFileLoader::readPlayerPosition()
+{
+	log ("Loading player positions");
+	QFile positionFile("playerPos.txt");
+
+	if (positionFile.open(QIODevice::ReadOnly) == false) {
+		log ("Error opening file: " + positionFile.errorString());
+		return;
+	}
+	QList<QByteArray> data = positionFile.readLine().split(':');
+	m_playerPos.x = data[0].toInt();
+	m_playerPos.y = data[1].toInt();
 }
 
 void MapFileLoader::log(QString message)

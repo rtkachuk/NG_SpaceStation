@@ -31,9 +31,9 @@ void ConnectionManager::actionPlayer(QString action, int side)
 		case 2: direction = "DOWN"; break;
 		case 3: direction = "LEFT"; break;
 		case 4: direction = "RIGHT"; break;
-	}
-
-    m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
+    }
+	log (action.toUtf8() + ":" + direction);
+	m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
 }
 
 void ConnectionManager::log(QString msg)
@@ -50,13 +50,14 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray data = m_socket->readAll();
-	if (data.indexOf("MAP_DATA") != -1) {
-		log ("Received map!");
-		data.remove(0, QByteArray("MAP_DATA").size());
-		m_map = data;
-		emit gotMap();
-		return;
-	}
+	log (data);
+//	if (data.indexOf("MAP_DATA") != -1) {
+//		log ("Received map!");
+//		data.remove(0, QByteArray("MAP_DATA").size());
+//		m_map = data;
+//		emit gotMap();
+//		return;
+//	}
 	if (data.indexOf("POS") != -1) {
 		data.remove(0, QByteArray("POS").size());
 		QList<QByteArray> position = data.split(':');
@@ -84,5 +85,39 @@ void ConnectionManager::socketReady()
 		emit playerDisconnected(data);
 		return;
 	}
+
+	if (data.indexOf("SAY") != -1) {
+		QList<QByteArray> messageInfo = data.split(':');
+		emit message(messageInfo[1] + ":" + messageInfo[2]);
+		return;
+	}
+
+	if (data.indexOf("PITEM") != -1) {
+		emit pickItem(data.split(':')[1]);
+		return;
+	}
+
+	if (data.indexOf("DITEM") != -1) {
+		emit dropItem(data.split(':')[1]);
+		return;
+	}
+
+	if (data.indexOf("INIT") != -1) {
+		log ("Got init player position");
+		position pos;
+		QList<QByteArray> dataInit = data.split(':');
+
+		pos.x = dataInit[1].toInt();
+		pos.y = dataInit[2].toInt();
+
+		emit initPlayerPosition(pos);
+
+		log ("Received map!");
+		m_map = dataInit[4];
+		emit gotMap();
+
+		return;
+	}
+
 	emit message(data);
 }

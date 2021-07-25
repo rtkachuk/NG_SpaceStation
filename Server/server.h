@@ -8,7 +8,6 @@
 #include "mapfileloader.h"
 #include "mapworker.h"
 #include "inventorycontroller.h"
-#include "../sharedItemLoader/itemloader.h"
 
 class Server : public QTcpServer
 {
@@ -19,6 +18,8 @@ public:
 private:
 	void sendToAll(QByteArray message);
 	QString generateId();
+	void chatMessageReceived(QTcpSocket *player, QByteArray message);
+	void processNewPlayer(QTcpSocket *socket);
 
 	void log(QString msg);
 
@@ -26,7 +27,6 @@ private:
 
 	MapFileLoader *m_mapFileLoader;
 	MapWorker *m_mapWorker;
-	ItemLoader *m_itemLoader;
 	InventoryController *m_inventoryController;
 
 private slots:

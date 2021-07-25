@@ -4,11 +4,11 @@ Server::Server()
 {
 	m_mapFileLoader = new MapFileLoader();
 	m_mapWorker = new MapWorker();
-	m_itemLoader = new ItemLoader();
 	m_inventoryController = new InventoryController();
 
+	m_mapWorker->setInventoryController(m_inventoryController);
+
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
-	m_itemLoader->loadItems();
 
 	log ("Server ready");
 }
@@ -18,6 +18,23 @@ void Server::sendToAll(QByteArray message)
 	for (QTcpSocket* client : m_players) {
 		client->write(message);
 	}
+}
+
+void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
+{
+	QByteArray id = m_mapWorker->getUserId(player);
+	sendToAll("SAY:" + id + ":" + message.split(':')[1]);
+}
+
+void Server::processNewPlayer(QTcpSocket* socket)
+{
+	position pos = m_mapFileLoader->getPlayerPosition();
+
+	m_players.append(socket);
+	m_mapWorker->addUser(socket, pos);
+	m_inventoryController->createPlayerInventory(socket);
+
+	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":MAP_DATA:" + m_mapWorker->getMap());
 }
 
 void Server::log(QString msg)
@@ -38,6 +55,9 @@ void Server::readyRead()
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data == "ASKID") { client->write("ID" + m_mapWorker->getUserId(client)); }
+	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
+	if (data.indexOf("PICK") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::pick, data.split(':')[1]));
+	if (data.indexOf("DROP") != -1) client->write(m_mapWorker->processDrop(client, data));
 }
 
 void Server::disconnected()
@@ -59,14 +79,10 @@ void Server::incomingConnection(qintptr handle)
 	QTcpSocket *client = new QTcpSocket();
 	client->setSocketDescriptor(handle);
 
-	m_players.append(client);
-	m_mapWorker->addUser(client);
-	m_inventoryController->createPlayerInventory(client);
-
 	log ("New connection from: " + client->peerAddress().toString() + "!");
 
 	connect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	connect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
-	client->write("MAP_DATA" + m_mapWorker->getMap());
+	processNewPlayer(client);
 }

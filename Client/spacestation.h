@@ -1,4 +1,4 @@
-#ifndef SPACESTATION_H
+﻿#ifndef SPACESTATION_H
 #define SPACESTATION_H
 
 #include <QMainWindow>
@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QThread>
 #include <QScrollBar>
+#include <QMetaMethod>
 
 #include "mapworker.h"
 #include "actionwindow.h"
@@ -46,6 +47,13 @@ private slots:
 	void movePlayer(playerMovement side);
 	void processPlayerAction(QString action);
 
+	void processItem(QByteArray id);
+	QByteArray getDropItemCommand();
+
+	void gotInitPlayerPosition(position pos);
+
+	void sendMessage();
+
 protected:
 	void keyPressEvent(QKeyEvent *event);
 
@@ -53,6 +61,7 @@ private:
 	void initMenus();
 	void initConnectionManager();
 	void initGraphics();
+	int askDirection();
 	void log(QString message);
 
 	QString m_ip;

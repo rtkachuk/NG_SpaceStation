@@ -30,6 +30,11 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
 	connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
 	connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
+	connect (m_connectionManager, &ConnectionManager::pickItem, this, &SpaceStation::processItem);
+	connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
+	connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
+
+	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
 
 SpaceStation::~SpaceStation()
@@ -119,9 +124,35 @@ void SpaceStation::movePlayer(playerMovement side)
 
 void SpaceStation::processPlayerAction(QString action)
 {
-	m_selectDirectionDialog = new SelectDirectionDialog();
-	m_connectionManager->actionPlayer(action, m_selectDirectionDialog->exec());
-    delete m_selectDirectionDialog;
+
+	m_connectionManager->actionPlayer(action, askDirection());
+}
+
+void SpaceStation::processItem(QByteArray id)
+{
+	QMetaMethod signal = sender()->metaObject()->method(senderSignalIndex());
+	QString name = signal.name();
+
+	if (name == "pickItem") m_inventory->addItem(id);
+	if (name == "dropItem") m_inventory->removeItem(id);
+}
+
+QByteArray SpaceStation::getDropItemCommand()
+{
+	QByteArray item = m_inventory->getSelectedItem();
+	if (item.isEmpty()) return "";
+	return "DROP:" + item;
+}
+
+void SpaceStation::gotInitPlayerPosition(position pos)
+{
+	m_mapWorker->setBasicPlayerPosition(pos);
+}
+
+void SpaceStation::sendMessage()
+{
+	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
+
 }
 
 
@@ -135,6 +166,8 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_D: movePlayer(moveRight); break;
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
+		case Qt::Key_P: processPlayerAction("PICK"); break;
+		case Qt::Key_T: processPlayerAction(getDropItemCommand()); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 	}
 }
@@ -170,8 +203,9 @@ void SpaceStation::initMenus()
 	connect (m_actConnect, &QAction::triggered, this, &SpaceStation::connectToServer);
 	connect (m_quit, &QAction::triggered, this, &SpaceStation::close);
 	connect (m_quit, &QAction::triggered, m_actionWindow, &ActionWindow::close);
+	connect (m_quit, &QAction::triggered, m_inventory, &InventoryMenu::close);
 	connect (m_showActionsMenu, &QAction::triggered, this, &SpaceStation::actShowActionsMenu);
-    connect(m_showInventoryMenu, &QAction::triggered, this, &SpaceStation::actShowInventoryMenu);
+	connect (m_showInventoryMenu, &QAction::triggered, this, &SpaceStation::actShowInventoryMenu);
 }
 
 void SpaceStation::initConnectionManager()
@@ -185,7 +219,7 @@ void SpaceStation::initConnectionManager()
 void SpaceStation::initGraphics()
 {
 	m_mapWorker = new MapWorker();
-	m_mapWorker->setCellSizePixels(30);
+	m_mapWorker->setCellSizePixels(40);
 
 	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
 	ui->graphicsView->setScene(m_scene);
@@ -194,6 +228,14 @@ void SpaceStation::initGraphics()
 	ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	ui->graphicsView->setCacheMode(QGraphicsView::CacheNone);
 	m_mapWorker->setScene(m_scene);
+}
+
+int SpaceStation::askDirection()
+{
+	m_selectDirectionDialog = new SelectDirectionDialog();
+	int direction = m_selectDirectionDialog->exec();
+	delete m_selectDirectionDialog;
+	return direction;
 }
 
 void SpaceStation::log(QString message)

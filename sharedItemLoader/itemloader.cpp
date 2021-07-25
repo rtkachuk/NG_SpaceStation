@@ -84,6 +84,13 @@ BaseWeapon ItemLoader::getWeaponById(QByteArray id)
 	return BaseWeapon();
 }
 
+bool ItemLoader::checkIdExist(QByteArray id)
+{
+	if (getWeaponById(id).getId() != "-1" || getToolById(id).getId() != "-1")
+		return true;
+	return false;
+}
+
 void ItemLoader::log(QString msg)
 {
 	qDebug() << "[ItemLoader]: " << msg;

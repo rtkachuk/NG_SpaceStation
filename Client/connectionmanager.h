@@ -16,6 +16,7 @@ public:
 
 	void movePlayer(playerMovement side);
 	void actionPlayer(QString action, int side);
+	void sendMessage(QString message) { m_socket->write("SAY:" + message.toUtf8()); }
 	void askForId() { m_socket->write("ASKID");};
 
 private:
@@ -34,11 +35,14 @@ signals:
 	void mapChanged(int x, int y, char object);
 	void gotId(QByteArray id);
 	void playerDisconnected(QByteArray id);
+	void initPlayerPosition(position pos);
+
+	void pickItem(QByteArray id);
+	void dropItem(QByteArray id);
 
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
-
 };
 
 #endif // CONNECTIONMANAGER_H

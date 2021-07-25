@@ -5,6 +5,8 @@
 #include <QGraphicsPixmapItem>
 #include <QDebug>
 #include <QThread>
+#include <QRandomGenerator>
+#include "enums.h"
 
 // This class should load map from file like map.config
 //
@@ -33,6 +35,8 @@ public:
 
 	void removePlayer(QByteArray id);
 
+	void setBasicPlayerPosition(position pos) { m_currentPlayerPositionX = pos.x; m_currentPlayerPositionY = pos.y; }
+
 public slots:
 	void drawMap();
 	void updatePlayerPosition(QByteArray id, int x, int y);
@@ -40,6 +44,7 @@ public slots:
 
 private:
 	void updateCell(int x, int y, char object);
+	QPixmap selectSpacePixmap();
 	void log(QString message);
 
 	int m_cellSizePixels; // Cell size in pixels;
@@ -51,10 +56,14 @@ private:
 	QByteArray m_playerId;
 	QMap<QByteArray, QGraphicsPixmapItem*> m_players;
 
-	int m_currentPlayerPositionX = 1;
-	int m_currentPlayerPositionY = 1;
+	int m_currentPlayerPositionX = 0;
+	int m_currentPlayerPositionY = 0;
 	QVector <QVector<char>> m_map;
 	QByteArray m_mapData;
+	bool side = false;
+
+	QVector<QString> m_spacePixmaps;
+	QRandomGenerator m_randomGenerator;
 };
 
 #endif // MAPWORKER_H
