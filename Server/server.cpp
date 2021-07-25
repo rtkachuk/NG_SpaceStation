@@ -26,6 +26,11 @@ void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 	sendToAll("SAY:" + id + ":" + message.split(':')[1]);
 }
 
+void Server::processNewPlayer(QTcpSocket* socket)
+{
+	socket->write("MAP_DATA" + m_mapWorker->getMap());
+}
+
 void Server::log(QString msg)
 {
 	qDebug() << "[Server]: " << msg;
@@ -76,5 +81,5 @@ void Server::incomingConnection(qintptr handle)
 	connect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	connect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
-	client->write("MAP_DATA" + m_mapWorker->getMap());
+	processNewPlayer(client);
 }

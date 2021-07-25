@@ -19,6 +19,7 @@ private:
 	void sendToAll(QByteArray message);
 	QString generateId();
 	void chatMessageReceived(QTcpSocket *player, QByteArray message);
+	void processNewPlayer(QTcpSocket *socket);
 
 	void log(QString msg);
 
