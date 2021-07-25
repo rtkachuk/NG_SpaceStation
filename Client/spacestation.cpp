@@ -22,7 +22,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_actionWindow, &ActionWindow::openSomething, this, &SpaceStation::processPlayerAction);
 	connect (m_actionWindow, &ActionWindow::closeSomething, this, &SpaceStation::processPlayerAction);
 	connect (m_actionWindow, &ActionWindow::movePlayer, this, &SpaceStation::movePlayer);
-
+    connect (m_actionWindow, &ActionWindow::getRequestPush, this, &SpaceStation::processPlayerAction);
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
@@ -121,8 +121,9 @@ void SpaceStation::processPlayerAction(QString action)
 {
 	m_selectDirectionDialog = new SelectDirectionDialog();
 	m_connectionManager->actionPlayer(action, m_selectDirectionDialog->exec());
-	delete m_selectDirectionDialog;
+    delete m_selectDirectionDialog;
 }
+
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {	

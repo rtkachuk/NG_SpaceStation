@@ -28,8 +28,9 @@ void Server::log(QString msg)
 void Server::readyRead()
 {
 	QTcpSocket *client = (QTcpSocket*)sender();
-	QByteArray data = client->readAll();
-
+    QByteArray data = client->readAll();
+    log(data);
+    if (data.indexOf("PUSH")!=-1) sendToAll(m_mapWorker->processPlayerPush(client,actions::push,data.split(':')[1]));
 	if (data == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
 	if (data == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
 	if (data == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sleft)); }

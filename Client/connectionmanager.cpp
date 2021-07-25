@@ -33,7 +33,7 @@ void ConnectionManager::actionPlayer(QString action, int side)
 		case 4: direction = "RIGHT"; break;
 	}
 
-	m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
+    m_socket->write(QByteArray(action.toUtf8()) + ":" + direction);
 }
 
 void ConnectionManager::log(QString msg)

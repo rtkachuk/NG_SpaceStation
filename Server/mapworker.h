@@ -19,7 +19,8 @@ enum playerMovements {
 
 enum actions {
 	open,
-	close
+    close,
+    push
 };
 
 class MapWorker
@@ -28,17 +29,17 @@ public:
 	MapWorker();
 	void processMap(QByteArray mapData);
 	QByteArray getMap() { return m_mapData; }
-
+    QByteArray processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
 	bool checkMovementPosition(int x, int y);
-
+    QTcpSocket* checkPlayer(position pos);
+    QByteArray getMovementPush(playerMovements side,QTcpSocket* buffer);
+    QString getSide(QString data);
 	void addUser(QTcpSocket* socket);
 	void removeUser(QTcpSocket* socket) { m_playerPositions.erase(m_playerPositions.find(socket)); m_playerIds.erase(m_playerIds.find(socket)); }
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
-
 	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);
 	void updatePlayerPos(QTcpSocket* socket, int x, int y);
-	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
-
+    QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
 private:
 	QByteArray processPlayerMovement(int x, int y, QTcpSocket* socket);
 	QByteArray generateId();

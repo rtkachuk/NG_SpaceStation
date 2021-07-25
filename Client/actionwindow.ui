@@ -63,7 +63,7 @@
      <string>USE</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="b_kick">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -342,7 +342,7 @@
      <string>POINT</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_11">
+   <widget class="QPushButton" name="b_push">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -628,7 +628,7 @@
      <x>0</x>
      <y>0</y>
      <width>100</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
