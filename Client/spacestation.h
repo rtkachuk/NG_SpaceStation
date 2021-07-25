@@ -50,6 +50,8 @@ private slots:
 	void processItem(QByteArray id);
 	QByteArray getDropItemCommand();
 
+	void gotInitPlayerPosition(position pos);
+
 	void sendMessage();
 
 protected:

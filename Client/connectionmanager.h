@@ -35,6 +35,7 @@ signals:
 	void mapChanged(int x, int y, char object);
 	void gotId(QByteArray id);
 	void playerDisconnected(QByteArray id);
+	void initPlayerPosition(position pos);
 
 	void pickItem(QByteArray id);
 	void dropItem(QByteArray id);
@@ -42,7 +43,6 @@ signals:
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
-
 };
 
 #endif // CONNECTIONMANAGER_H

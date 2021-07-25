@@ -51,13 +51,14 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray data = m_socket->readAll();
-	if (data.indexOf("MAP_DATA") != -1) {
-		log ("Received map!");
-		data.remove(0, QByteArray("MAP_DATA").size());
-		m_map = data;
-		emit gotMap();
-		return;
-	}
+	log (data);
+//	if (data.indexOf("MAP_DATA") != -1) {
+//		log ("Received map!");
+//		data.remove(0, QByteArray("MAP_DATA").size());
+//		m_map = data;
+//		emit gotMap();
+//		return;
+//	}
 	if (data.indexOf("POS") != -1) {
 		data.remove(0, QByteArray("POS").size());
 		QList<QByteArray> position = data.split(':');
@@ -99,6 +100,23 @@ void ConnectionManager::socketReady()
 
 	if (data.indexOf("DITEM") != -1) {
 		emit dropItem(data.split(':')[1]);
+		return;
+	}
+
+	if (data.indexOf("INIT") != -1) {
+		log ("Got init player position");
+		position pos;
+		QList<QByteArray> dataInit = data.split(':');
+
+		pos.x = dataInit[1].toInt();
+		pos.y = dataInit[2].toInt();
+
+		emit initPlayerPosition(pos);
+
+		log ("Received map!");
+		m_map = dataInit[4];
+		emit gotMap();
+
 		return;
 	}
 

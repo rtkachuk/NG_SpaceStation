@@ -32,6 +32,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
 	connect (m_connectionManager, &ConnectionManager::pickItem, this, &SpaceStation::processItem);
 	connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
+	connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
@@ -140,6 +141,11 @@ QByteArray SpaceStation::getDropItemCommand()
 	QByteArray item = m_inventory->getSelectedItem();
 	if (item.isEmpty()) return "";
 	return "DROP:" + item;
+}
+
+void SpaceStation::gotInitPlayerPosition(position pos)
+{
+	m_mapWorker->setBasicPlayerPosition(pos);
 }
 
 void SpaceStation::sendMessage()

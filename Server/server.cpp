@@ -28,7 +28,13 @@ void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 
 void Server::processNewPlayer(QTcpSocket* socket)
 {
-	socket->write("MAP_DATA" + m_mapWorker->getMap());
+	position pos = m_mapFileLoader->getPlayerPosition();
+
+	m_players.append(socket);
+	m_mapWorker->addUser(socket, pos);
+	m_inventoryController->createPlayerInventory(socket);
+
+	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":MAP_DATA:" + m_mapWorker->getMap());
 }
 
 void Server::log(QString msg)
@@ -71,10 +77,6 @@ void Server::incomingConnection(qintptr handle)
 {
 	QTcpSocket *client = new QTcpSocket();
 	client->setSocketDescriptor(handle);
-
-	m_players.append(client);
-	m_mapWorker->addUser(client);
-	m_inventoryController->createPlayerInventory(client);
 
 	log ("New connection from: " + client->peerAddress().toString() + "!");
 

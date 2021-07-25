@@ -16,5 +16,9 @@
         <file>tech/server_rack_kvm_switch.png</file>
         <file>players/fox_left.png</file>
         <file>players/fox_right.png</file>
+        <file>misc/space1.png</file>
+        <file>misc/space2.png</file>
+        <file>misc/space3.png</file>
+        <file>misc/space4.png</file>
     </qresource>
 </RCC>

@@ -32,11 +32,8 @@ bool MapWorker::checkMovementPosition(int x, int y)
 	return m_map[y][x] == '.' || m_map[y][x] == 'o';
 }
 
-void MapWorker::addUser(QTcpSocket *socket)
+void MapWorker::addUser(QTcpSocket *socket, position pos)
 {
-	position pos;
-	pos.x = 1;
-	pos.y = 1;
 	m_playerPositions[socket] = pos;
 	m_playerIds[socket] = generateId();
 }

@@ -8,4 +8,9 @@ enum playerMovement {
 	moveRight
 };
 
+struct position {
+	int x;
+	int y;
+};
+
 #endif // ENUMS_H

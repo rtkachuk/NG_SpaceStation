@@ -2,6 +2,8 @@
 
 MapWorker::MapWorker()
 {
+	for (int current=1; current<5; current++)
+		m_spacePixmaps.push_back(":/misc/space" + QString::number(current) + ".png");
 }
 
 void MapWorker::mapInit(QByteArray mapData)
@@ -81,8 +83,14 @@ void MapWorker::updateCell(int x, int y, char object)
 		case 'S': m_scene->addPixmap(QPixmap(":/furniture/open_box.png"))->setPos(x, y); break;
 		case 'r': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm.png")); item->setPos(x, y); item->setZValue(10); } break;
 		case 'R': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm_switch.png")); item->setPos(x, y); item->setZValue(10); } break;
+		case '*': m_scene->addPixmap(selectSpacePixmap())->setPos(x, y); break;
 		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
 	}
+}
+
+QPixmap MapWorker::selectSpacePixmap()
+{
+	return QPixmap(m_spacePixmaps[m_randomGenerator.bounded(0,4)]);
 }
 
 void MapWorker::drawMap()
