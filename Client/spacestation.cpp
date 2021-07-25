@@ -123,9 +123,7 @@ void SpaceStation::movePlayer(playerMovement side)
 
 void SpaceStation::processPlayerAction(QString action)
 {
-	m_selectDirectionDialog = new SelectDirectionDialog();
-	m_connectionManager->actionPlayer(action, m_selectDirectionDialog->exec());
-	delete m_selectDirectionDialog;
+	m_connectionManager->actionPlayer(action, askDirection());
 }
 
 void SpaceStation::processItem(QByteArray id)
@@ -142,9 +140,7 @@ void SpaceStation::dropItem()
 	QByteArray item = m_inventory->getSelectedItem();
 	if (item.isEmpty()) return;
 	QByteArray message = "DROP:" + item;
-	m_selectDirectionDialog = new SelectDirectionDialog();
-	m_connectionManager->actionPlayer(message, m_selectDirectionDialog->exec());
-	delete m_selectDirectionDialog;
+	m_connectionManager->actionPlayer(message, askDirection());
 }
 
 void SpaceStation::sendMessage()
@@ -224,6 +220,14 @@ void SpaceStation::initGraphics()
 	ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	ui->graphicsView->setCacheMode(QGraphicsView::CacheNone);
 	m_mapWorker->setScene(m_scene);
+}
+
+int SpaceStation::askDirection()
+{
+	m_selectDirectionDialog = new SelectDirectionDialog();
+	int direction = m_selectDirectionDialog->exec();
+	delete m_selectDirectionDialog;
+	return direction;
 }
 
 void SpaceStation::log(QString message)

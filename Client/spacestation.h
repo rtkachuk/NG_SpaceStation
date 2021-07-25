@@ -59,6 +59,7 @@ private:
 	void initMenus();
 	void initConnectionManager();
 	void initGraphics();
+	int askDirection();
 	void log(QString message);
 
 	QString m_ip;
