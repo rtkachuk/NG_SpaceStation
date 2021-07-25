@@ -147,7 +147,7 @@ QByteArray MapWorker::formatMapChange(int x, int y, char object)
 
 	m_map[y][x] = object;
 	updateMapData(x, y, object);
-	return QByteArray("CHG" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object);
+	return QByteArray("CHG" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object + "|");
 }
 
 position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
@@ -176,7 +176,7 @@ playerMovements MapWorker::getSideFromString(QString side)
 
 QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)
 {
-	return "POS" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y);
+	return "POS" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y) + "|";
 }
 
 char MapWorker::processOpen(int x, int y)
@@ -220,7 +220,7 @@ QByteArray MapWorker::pickItem(int x, int y, QTcpSocket *player)
 	m_inventoryController->addItemToInventory(player, id);
 	m_itemController->deleteItem(coords);
 
-	return "PITEM:" + id;
+	return "PITEM:" + id + "|";
 }
 
 QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
@@ -240,7 +240,7 @@ QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
 	m_inventoryController->removeItemFromInventory(player, id);
 	m_itemController->addItem(coords, id);
 
-	return "DITEM:" + id;
+	return "DITEM:" + id + "|";
 }
 
 void MapWorker::log(QString msg)
