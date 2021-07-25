@@ -135,12 +135,11 @@ void SpaceStation::processItem(QByteArray id)
 	if (name == "dropItem") m_inventory->removeItem(id);
 }
 
-void SpaceStation::dropItem()
+QByteArray SpaceStation::getDropItemCommand()
 {
 	QByteArray item = m_inventory->getSelectedItem();
-	if (item.isEmpty()) return;
-	QByteArray message = "DROP:" + item;
-	m_connectionManager->actionPlayer(message, askDirection());
+	if (item.isEmpty()) return "";
+	return "DROP:" + item;
 }
 
 void SpaceStation::sendMessage()
@@ -159,7 +158,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_O: processPlayerAction("OPEN"); break;
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
 		case Qt::Key_P: processPlayerAction("PICK"); break;
-		case Qt::Key_T: dropItem(); break;
+		case Qt::Key_T: processPlayerAction(getDropItemCommand()); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 	}
 }

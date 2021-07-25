@@ -48,7 +48,7 @@ private slots:
 	void processPlayerAction(QString action);
 
 	void processItem(QByteArray id);
-	void dropItem();
+	QByteArray getDropItemCommand();
 
 	void sendMessage();
 
