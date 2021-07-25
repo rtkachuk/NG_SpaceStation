@@ -210,7 +210,7 @@ void SpaceStation::initConnectionManager()
 void SpaceStation::initGraphics()
 {
 	m_mapWorker = new MapWorker();
-	m_mapWorker->setCellSizePixels(30);
+	m_mapWorker->setCellSizePixels(40);
 
 	m_scene = new QGraphicsScene(0, 0, m_mapWorker->getMapSizeX(), m_mapWorker->getMapSizeY());
 	ui->graphicsView->setScene(m_scene);

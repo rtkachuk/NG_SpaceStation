@@ -55,6 +55,7 @@ private:
 	int m_currentPlayerPositionY = 1;
 	QVector <QVector<char>> m_map;
 	QByteArray m_mapData;
+	bool side = false;
 };
 
 #endif // MAPWORKER_H

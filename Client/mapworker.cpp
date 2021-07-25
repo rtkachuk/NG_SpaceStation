@@ -40,6 +40,12 @@ void MapWorker::updatePlayerPosition(QByteArray id, int x, int y)
 		m_currentPlayerPositionX = x;
 		m_currentPlayerPositionY = y;
 		m_player->setPos(m_currentPlayerPositionX * m_cellSizePixels, m_currentPlayerPositionY * m_cellSizePixels);
+		if (side)
+			m_player->setPixmap(QPixmap(":/players/fox_left.png"));
+		else
+			m_player->setPixmap(QPixmap(":/players/fox_right.png"));
+		side = !side;
+
 	} else {
 		if (m_players.contains(id)) {
 			m_players[id]->setPos(x * m_cellSizePixels, y * m_cellSizePixels);
@@ -91,7 +97,7 @@ void MapWorker::drawMap()
 		currentX = 0;
 		currentY += m_cellSizePixels;
 	}
-	m_player = m_scene->addPixmap(QPixmap(":/players/player.png"));
+	m_player = m_scene->addPixmap(QPixmap(":/players/fox_left.png"));
 	m_player->setPos(m_currentPlayerPositionX * m_cellSizePixels, m_currentPlayerPositionY * m_cellSizePixels);
 	m_player->setZValue(10);
 }

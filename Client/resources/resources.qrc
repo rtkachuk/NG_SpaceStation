@@ -14,5 +14,7 @@
         <file>furniture/trash_can.png</file>
         <file>tech/server_rack_kvm.png</file>
         <file>tech/server_rack_kvm_switch.png</file>
+        <file>players/fox_left.png</file>
+        <file>players/fox_right.png</file>
     </qresource>
 </RCC>
