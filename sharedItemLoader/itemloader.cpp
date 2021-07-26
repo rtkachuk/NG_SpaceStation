@@ -88,6 +88,20 @@ BaseWeapon ItemLoader::getWeaponById(QByteArray id)
 	return BaseWeapon();
 }
 
+QByteArray ItemLoader::getIdByName(QString name)
+{
+	for (BaseTool tool : m_tools) {
+		if (tool.getName() == name)
+			return tool.getId();
+	}
+
+	for (BaseWeapon weapon : m_weapons) {
+		if (weapon.getName() == name) {
+			return weapon.getId();
+		}
+	}
+}
+
 bool ItemLoader::checkIdExist(QByteArray id)
 {
 	if (getWeaponById(id).getId() != "-1" || getToolById(id).getId() != "-1")

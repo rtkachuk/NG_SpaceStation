@@ -16,7 +16,7 @@ InventoryMenu::~InventoryMenu()
 QByteArray InventoryMenu::getSelectedItem()
 {
     if (ui->list_inventory->currentItem() != nullptr)
-        return ui->list_inventory->currentItem()->text().toUtf8();
+		return m_itemLoader->getIdByName(ui->list_inventory->currentItem()->text().toUtf8());
     else
         return "";
 }
