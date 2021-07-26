@@ -13,8 +13,8 @@ class ItemController
 public:
     ItemController();
 
-	void addItem(position cords, QByteArray id) { m_ids[cords].push_back(id); }
-	void deleteItem(position cords, QByteArray id) { m_ids[cords].removeOne(id); }
+	void addItem(position cords, QByteArray id);
+	void deleteItem(position cords, QByteArray id);
 
 	void loadItems();
 

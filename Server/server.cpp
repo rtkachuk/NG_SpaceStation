@@ -77,8 +77,12 @@ void Server::disconnected()
 	disconnect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	disconnect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
-	//QVector<QByteArray> inventory = m_inventoryController->getPlayerInventory(client);
-	//position playerPos = m_mapWorker->getPlayerPosition(client);
+	QVector<QByteArray> inventory = m_inventoryController->getPlayerInventory(client);
+	position playerPos = m_mapWorker->getPlayerPosition(client);
+	for (QByteArray id : inventory) {
+		QVector<QByteArray> responce = m_mapWorker->dropItem(id, playerPos.x, playerPos.y, client);
+		sendToAll(responce[1]);
+	}
 
 	m_players.remove(m_players.indexOf(client));
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));

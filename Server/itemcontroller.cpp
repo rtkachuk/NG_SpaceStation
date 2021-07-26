@@ -5,6 +5,19 @@ ItemController::ItemController()
 	loadItems();
 }
 
+void ItemController::addItem(position cords, QByteArray id)
+{
+	m_ids[cords].push_back(id);
+}
+
+void ItemController::deleteItem(position cords, QByteArray id)
+{
+	if (m_ids.contains(cords))
+		m_ids[cords].removeOne(id);
+	if (m_ids[cords].size() == 0)
+		m_ids.remove(cords);
+}
+
 void ItemController::loadItems()
 {
 	m_amountOfItems = 0;

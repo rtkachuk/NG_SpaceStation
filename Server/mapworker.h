@@ -33,6 +33,8 @@ public:
 	QVector<QByteArray> processPick(QTcpSocket *socket, QString data);
 	position getPlayerPosition(QTcpSocket *socket) { return m_playerPositions[socket]; }
 	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }
+	QVector<QByteArray> pickItem(int x, int y, QTcpSocket *player);
+	QVector<QByteArray> dropItem(QByteArray id, int x, int y, QTcpSocket *player);
 private:
 	QByteArray processPlayerMovement(int x, int y, QTcpSocket* socket);
 	QByteArray generateId();
@@ -44,9 +46,6 @@ private:
 
 	char processOpen(int x, int y);
 	char processClose(int x, int y);
-
-	QVector<QByteArray> pickItem(int x, int y, QTcpSocket *player);
-	QVector<QByteArray> dropItem(QByteArray id, int x, int y, QTcpSocket *player);
 
 	void log(QString msg);
 
