@@ -22,9 +22,12 @@ public:
 
 	void setItemLoader(ItemLoader *loader) { m_itemLoader = loader; }
 
+
 private:
     Ui::InventoryMenu *ui;
 	ItemLoader* m_itemLoader;
+
+    void log(QString message);
 };
 
 #endif // INVENTORYMENU_H
