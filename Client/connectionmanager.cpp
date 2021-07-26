@@ -57,67 +57,62 @@ void ConnectionManager::socketReady()
 
 		log (data);
 
-		if (data.indexOf("POS") != -1) {
-			data.remove(0, QByteArray("POS").size());
-			QList<QByteArray> position = data.split(':');
-			emit playerPosition(position[0], position[1].toInt(), position[2].toInt());
+		QList<QByteArray> params = data.split(':');
+		QByteArray command = params[0];
+
+		if (command == "POS") {
+			emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
 			return;
 		}
-		if (data.indexOf("CHG") != -1) {
+		if (command == "CHG") {
 			log ("Map changed!");
-			data.remove(0, QByteArray("CHG").size());
-			QList<QByteArray> changed = data.split(':');
-			emit mapChanged(changed[0].toInt(), changed[1].toInt(), changed[2].toStdString()[0]);
+			emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
 			return;
 		}
 
-		if (data.indexOf("ID") != -1) {
+		if (command == "ID") {
 			log ("Received ID");
-			data.remove(0, QByteArray("ID").size());
-			emit gotId(data);
+			emit gotId(params[1]);
 			return;
 		}
 
-		if (data.indexOf("DIS") != -1) {
+		if (command == "DIS") {
 			log ("Some player disconnected...");
-			data.remove(0, QByteArray("DIS").size());
-			emit playerDisconnected(data);
+			emit playerDisconnected(params[1]);
 			return;
 		}
 
-		if (data.indexOf("SAY") != -1) {
-			QList<QByteArray> messageInfo = data.split(':');
-			emit message(messageInfo[1] + ":" + messageInfo[2]);
+		if (command == "SAY") {
+			emit message(params[1] + ":" + params[2]);
 			return;
 		}
 
-		if (data.indexOf("PITEM") != -1) {
-			emit pickItem(data.split(':')[1]);
+		if (command == "PITEM") {
+			emit pickItem(params[1]);
 			return;
 		}
 
-		if (data.indexOf("DITEM") != -1) {
-			emit dropItem(data.split(':')[1]);
+		if (command == "DITEM") {
+			emit dropItem(params[1]);
 			return;
 		}
 
-		if (data.indexOf("INIT") != -1) {
+		if (command == "INIT") {
 			log ("Got init player position");
 			position pos;
-			QList<QByteArray> dataInit = data.split(':');
 
-			pos.x = dataInit[1].toInt();
-			pos.y = dataInit[2].toInt();
+			pos.x = params[1].toInt();
+			pos.y = params[2].toInt();
 
 			emit initPlayerPosition(pos);
+		}
 
+		if (command == "MAP_DATA") {
 			log ("Received map!");
-			m_map = dataInit[4];
+			m_map = params[1];
 			emit gotMap();
 
 			return;
 		}
-
-		emit message(data);
 	}
 }

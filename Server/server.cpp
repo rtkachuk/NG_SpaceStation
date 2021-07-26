@@ -34,7 +34,8 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	m_mapWorker->addUser(socket, pos);
 	m_inventoryController->createPlayerInventory(socket);
 
-	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":MAP_DATA:" + m_mapWorker->getMap());
+	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
+	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
 }
 
 void Server::log(QString msg)
@@ -46,7 +47,6 @@ void Server::readyRead()
 {
 	QTcpSocket *client = (QTcpSocket*)sender();
     QByteArray data = client->readAll();
-    log(data);
     if (data.indexOf("PUSH")!=-1) sendToAll(m_mapWorker->processPlayerPush(client,actions::push,data.split(':')[1]));
 	if (data == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
 	if (data == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
@@ -54,7 +54,7 @@ void Server::readyRead()
 	if (data == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
-	if (data == "ASKID") { client->write("ID" + m_mapWorker->getUserId(client)); }
+	if (data == "ASKID") { client->write("ID:" + m_mapWorker->getUserId(client)); }
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
 	if (data.indexOf("PICK") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::pick, data.split(':')[1]));
 	if (data.indexOf("DROP") != -1) client->write(m_mapWorker->processDrop(client, data));
@@ -69,7 +69,7 @@ void Server::disconnected()
 	disconnect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
 	m_players.remove(m_players.indexOf(client));
-	sendToAll("DIS" + m_mapWorker->getUserId(client));
+	sendToAll("DIS:" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
 }
