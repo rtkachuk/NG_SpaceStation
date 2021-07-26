@@ -90,6 +90,13 @@ void MapWorker::updateCell(int x, int y, char object)
 
 QPixmap MapWorker::selectSpacePixmap()
 {
+	int random = m_randomGenerator.bounded(0, 40);
+	switch(random) {
+		case 1: return QPixmap(m_spacePixmaps[2]); break;
+		case 2: return QPixmap(m_spacePixmaps[0]); break;
+		default: return QPixmap(m_spacePixmaps[1]); break;
+	}
+
 	return QPixmap(m_spacePixmaps[m_randomGenerator.bounded(0,4)]);
 }
 
