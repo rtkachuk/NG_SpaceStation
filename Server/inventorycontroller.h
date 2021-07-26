@@ -16,6 +16,7 @@ public:
 	void removeItemFromInventory(QTcpSocket* player, QByteArray itemId) { m_inventories[player].removeOne(itemId); }
 
 	bool checkPlayerExist(QTcpSocket* player) { return m_inventories.contains(player); }
+	QVector<QByteArray> getPlayerInventory(QTcpSocket *player) { return m_inventories[player]; }
 
 private:
 	QMap<QTcpSocket*,QVector<QByteArray>> m_inventories;

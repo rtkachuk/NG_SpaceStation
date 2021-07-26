@@ -29,7 +29,9 @@ public:
 	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
 
 	void setInventoryController(InventoryController* inv) { m_inventoryController = inv; }
-	QByteArray processDrop(QTcpSocket *socket, QByteArray data);
+	QVector<QByteArray> processDrop(QTcpSocket *socket, QByteArray data);
+	QVector<QByteArray> processPick(QTcpSocket *socket, QString data);
+	position getPlayerPosition(QTcpSocket *socket) { return m_playerPositions[socket]; }
 	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }
 private:
 	QByteArray processPlayerMovement(int x, int y, QTcpSocket* socket);
@@ -43,8 +45,8 @@ private:
 	char processOpen(int x, int y);
 	char processClose(int x, int y);
 
-	QByteArray pickItem(int x, int y, QTcpSocket *player);
-	QByteArray dropItem(QByteArray id, int x, int y, QTcpSocket *player);
+	QVector<QByteArray> pickItem(int x, int y, QTcpSocket *player);
+	QVector<QByteArray> dropItem(QByteArray id, int x, int y, QTcpSocket *player);
 
 	void log(QString msg);
 

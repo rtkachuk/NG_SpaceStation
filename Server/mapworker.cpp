@@ -105,7 +105,6 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 	switch (act) {
 		case actions::open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
 		case actions::close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
-		case actions::pick: return pickItem(actPos.x, actPos.y, socket); break;
 		default: return QByteArray("");
 	}
 }
@@ -199,7 +198,7 @@ char MapWorker::processClose(int x, int y)
 	}
 }
 
-QByteArray MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
+QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
 {
 	QList<QByteArray> prefs = data.split(':');
 	position pos = m_playerPositions[socket];
@@ -208,39 +207,59 @@ QByteArray MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
 	return dropItem(prefs[1], actPos.x, actPos.y, socket);
 }
 
-QByteArray MapWorker::pickItem(int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
+{
+	QString direction = data.split(':')[1];
+	position pos = m_playerPositions[socket];
+	playerMovements side = getSideFromString(direction);
+	position actPos = getCoordsBySide(pos.x, pos.y, side);
+
+	return pickItem(actPos.x, actPos.y, socket);
+}
+
+QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
 {
 	position coords;
 	coords.x = x;
 	coords.y = y;
 	QByteArray id = m_itemController->getItem(coords);
+
+	QVector<QByteArray> responce;
+
 	if (id.isEmpty())
-		return "";
+	{
+		responce.push_back("");
+		responce.push_back("");
+	} else {
+		m_inventoryController->addItemToInventory(player, id);
+		m_itemController->deleteItem(coords, id);
+		responce.push_back("PITEM:" + id + "|");
+		responce.push_back("ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+	}
 
-	m_inventoryController->addItemToInventory(player, id);
-	m_itemController->deleteItem(coords, id);
-
-	return "PITEM:" + id + "|ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id;
+	return responce;
 }
 
-QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
 {
 	position coords;
 	coords.x = x;
 	coords.y = y;
 
+	QVector<QByteArray> responce;
 	log ("Item id to be dropped: " + id);
 
-	if (id.isEmpty())
-		return "";
+	if (id.isEmpty() || m_itemLoader->checkIdExist(id) == false) {
+		responce.push_back("");
+		responce.push_back("");
+	} else {
+		m_inventoryController->removeItemFromInventory(player, id);
+		m_itemController->addItem(coords, id);
+		responce.push_back("DITEM:" + id + "|");
+		responce.push_back("IPLACE:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+	}
 
-	if (m_itemLoader->checkIdExist(id) == false)
-		return "";
-
-	m_inventoryController->removeItemFromInventory(player, id);
-	m_itemController->addItem(coords, id);
-
-	return "DITEM:" + id + "|IPLACE:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id;
+	return responce;
 }
 
 void MapWorker::log(QString msg)

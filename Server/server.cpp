@@ -65,8 +65,8 @@ void Server::readyRead()
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
-	if (data.indexOf("PICK") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::pick, data.split(':')[1]));
-	if (data.indexOf("DROP") != -1) client->write(m_mapWorker->processDrop(client, data));
+	if (data.indexOf("PICK") != -1) { QVector<QByteArray> result = m_mapWorker->processPick(client, data); client->write(result[0]); sendToAll(result[1]); }
+	if (data.indexOf("DROP") != -1) { QVector<QByteArray> result = m_mapWorker->processDrop(client, data); client->write(result[0]); sendToAll(result[1]); }
 }
 
 void Server::disconnected()
@@ -76,6 +76,9 @@ void Server::disconnected()
 
 	disconnect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	disconnect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
+
+	//QVector<QByteArray> inventory = m_inventoryController->getPlayerInventory(client);
+	//position playerPos = m_mapWorker->getPlayerPosition(client);
 
 	m_players.remove(m_players.indexOf(client));
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));
