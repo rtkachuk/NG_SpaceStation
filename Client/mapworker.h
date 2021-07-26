@@ -44,6 +44,8 @@ public slots:
 	void drawMap();
 	void updatePlayerPosition(QByteArray id, int x, int y);
 	void updateMap(int x, int y, char object);
+	void placeItem(ItemInfo item);
+	void removeItem(ItemInfo item);
 
 private:
 	void updateCell(int x, int y, char object);
@@ -68,6 +70,8 @@ private:
 	QVector<QString> m_spacePixmaps;
 	QRandomGenerator m_randomGenerator;
 	ItemLoader* m_itemLoader;
+
+	QMap<ItemInfo, QGraphicsPixmapItem*> m_items;
 };
 
 #endif // MAPWORKER_H

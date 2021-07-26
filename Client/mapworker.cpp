@@ -14,7 +14,6 @@ void MapWorker::mapInit(QByteArray mapData)
 	m_mapSizeVert = 0;
 
 	QList<QByteArray> rows = mapData.split('\n');
-	log (QString::number(rows.size()));
 	for (QByteArray line : rows) {
 		int length = 0;
 		QVector<char> buffer;
@@ -65,6 +64,38 @@ void MapWorker::updateMap(int x, int y, char object)
 	QGraphicsItem *item = m_scene->itemAt(x * m_cellSizePixels, y * m_cellSizePixels, deviceTransform);
 	delete item;
 	updateCell(x * m_cellSizePixels, y * m_cellSizePixels, object);
+}
+
+void MapWorker::placeItem(ItemInfo itemInfo)
+{
+	BaseTool tool = m_itemLoader->getToolById(itemInfo.id);
+	BaseWeapon weapon = m_itemLoader->getWeaponById(itemInfo.id);
+
+	QPixmap image;
+
+	if (tool.getId() != "-1") {
+		image = QPixmap(":" + tool.getPixmap());
+		log (tool.getPixmap());
+	}
+
+	if (weapon.getId() != "-1") {
+		image = QPixmap(":" + weapon.getPixmap());
+		log (tool.getPixmap());
+	}
+
+	log(QString::number(itemInfo.pos.x) + ":" + QString::number(itemInfo.pos.y));
+
+	QGraphicsPixmapItem *item = m_scene->addPixmap(image);
+	item->setPos(itemInfo.pos.x * m_cellSizePixels, itemInfo.pos.y * m_cellSizePixels);
+	item->setZValue(5);
+
+	m_items[itemInfo] = item;
+}
+
+void MapWorker::removeItem(ItemInfo item)
+{
+	delete m_items[item];
+	m_items.remove(item);
 }
 
 void MapWorker::updateCell(int x, int y, char object)

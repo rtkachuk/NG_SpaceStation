@@ -15,6 +15,8 @@ void ItemLoader::loadItems()
 	}
 
 	m_amountOfItems = 0;
+	m_tools.clear();
+	m_weapons.clear();
 
 	while (itemFile.atEnd() == false) {
 		QString line = itemFile.readLine();
@@ -37,8 +39,9 @@ BaseTool ItemLoader::parseTool(QString line)
 	bufferTool.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
 	bufferTool.setToolMode(BaseTool::detectToolMode(paramethers[3]));
 	bufferTool.setDamage(paramethers[4].toInt());
-	bufferTool.setDescription(paramethers[5]);
-	bufferTool.setId(QByteArray::number(m_amountOfItems));
+	bufferTool.setPixmap(paramethers[5]);
+	bufferTool.setDescription(paramethers[6]);
+	bufferTool.setId(QByteArray::number(m_amountOfItems+1));
 
 	m_amountOfItems++;
 
@@ -55,7 +58,8 @@ BaseWeapon ItemLoader::parseWeapon(QString line)
 	bufferWeapon.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
 	bufferWeapon.setWeaponMode(BaseWeapon::detectWeaponMode(paramethers[3]));
 	bufferWeapon.setDamage(paramethers[4].toInt());
-	bufferWeapon.setDescription(paramethers[5]);
+	bufferWeapon.setPixmap(paramethers[5]);
+	bufferWeapon.setDescription(paramethers[6]);
 	bufferWeapon.setId(QByteArray::number(m_amountOfItems));
 	m_amountOfItems++;
 

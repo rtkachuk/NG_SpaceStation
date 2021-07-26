@@ -218,9 +218,9 @@ QByteArray MapWorker::pickItem(int x, int y, QTcpSocket *player)
 		return "";
 
 	m_inventoryController->addItemToInventory(player, id);
-	m_itemController->deleteItem(coords);
+	m_itemController->deleteItem(coords, id);
 
-	return "PITEM:" + id + "|";
+	return "PITEM:" + id + "|ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id;
 }
 
 QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
@@ -240,7 +240,7 @@ QByteArray MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
 	m_inventoryController->removeItemFromInventory(player, id);
 	m_itemController->addItem(coords, id);
 
-	return "DITEM:" + id + "|";
+	return "DITEM:" + id + "|IPLACE:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id;
 }
 
 void MapWorker::log(QString msg)

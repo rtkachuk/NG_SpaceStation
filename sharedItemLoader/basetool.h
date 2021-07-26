@@ -9,7 +9,8 @@ enum toolMode {
 	hammering,
 	cutting,
 	heating,
-	welding
+	welding,
+	wrenching
 };
 
 class BaseTool : public BaseItem

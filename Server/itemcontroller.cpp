@@ -25,7 +25,7 @@ void ItemController::loadItems()
 QByteArray ItemController::getItem(position cords)
 {
     if(m_ids.contains(cords))
-        return m_ids[cords];
+		return m_ids[cords].first();
     else
 		return "";
 }

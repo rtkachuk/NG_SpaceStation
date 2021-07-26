@@ -50,51 +50,63 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray received = m_socket->readAll();
+	log (received);
 
 	QList<QByteArray> gotData = received.split('|');
 
-	for (QByteArray data : gotData) {
+	log ("Got packets: " + QString::number(gotData.length()));
 
-		log (data);
+	for (QByteArray data : gotData) {
 
 		QList<QByteArray> params = data.split(':');
 		QByteArray command = params[0];
 
 		if (command == "POS") {
 			emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
-			return;
 		}
 		if (command == "CHG") {
 			log ("Map changed!");
 			emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
-			return;
+		}
+
+		if (command == "IPLACE") {
+			ItemInfo item;
+			item.pos.x = params[1].toInt();
+			item.pos.y = params[2].toInt();
+			item.id = params[3];
+
+			emit placeItem(item);
+		}
+
+		if (command == "ICLEAR") {
+			ItemInfo item;
+			item.pos.x = params[1].toInt();
+			item.pos.y = params[2].toInt();
+			item.id = params[3];
+
+			emit removeItem(item);
 		}
 
 		if (command == "ID") {
 			log ("Received ID");
 			emit gotId(params[1]);
-			return;
 		}
 
 		if (command == "DIS") {
 			log ("Some player disconnected...");
 			emit playerDisconnected(params[1]);
-			return;
 		}
 
 		if (command == "SAY") {
 			emit message(params[1] + ":" + params[2]);
-			return;
 		}
 
 		if (command == "PITEM") {
 			emit pickItem(params[1]);
-			return;
 		}
 
 		if (command == "DITEM") {
 			emit dropItem(params[1]);
-			return;
 		}
 
 		if (command == "INIT") {
@@ -111,8 +123,6 @@ void ConnectionManager::socketReady()
 			log ("Received map!");
 			m_map = params[1];
 			emit gotMap();
-
-			return;
 		}
 	}
 }

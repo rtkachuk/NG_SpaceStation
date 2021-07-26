@@ -20,5 +20,10 @@
         <file>misc/space2.png</file>
         <file>misc/space3.png</file>
         <file>misc/space4.png</file>
+        <file>items/adjustable_wrench.png</file>
+        <file>items/brush.png</file>
+        <file>items/hammer.png</file>
+        <file>items/noitem.png</file>
+        <file>items/screwdriver.png</file>
     </qresource>
 </RCC>

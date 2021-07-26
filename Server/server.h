@@ -21,6 +21,8 @@ private:
 	void chatMessageReceived(QTcpSocket *player, QByteArray message);
 	void processNewPlayer(QTcpSocket *socket);
 
+	void sendAllItemsPositions(QTcpSocket* socket);
+
 	void log(QString msg);
 
 	QVector<QTcpSocket*> m_players;

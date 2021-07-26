@@ -8,6 +8,7 @@ BaseItem::BaseItem()
 	m_mode = playerWearable::itemnomode;
 	m_damage = 0;
 	m_type = itemType::notype;
+	m_pixmap = "/items/noitem.png";
 }
 
 playerWearable BaseItem::detectPlayerWearable(QString mode)

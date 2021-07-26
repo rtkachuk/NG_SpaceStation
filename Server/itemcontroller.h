@@ -13,18 +13,19 @@ class ItemController
 public:
     ItemController();
 
-    void addItem(position cords, QByteArray id) { m_ids[cords] = id; }
-    void deleteItem(position cords) { m_ids.remove(cords); }
+	void addItem(position cords, QByteArray id) { m_ids[cords].push_back(id); }
+	void deleteItem(position cords, QByteArray id) { m_ids[cords].removeOne(id); }
 
 	void loadItems();
 
     QByteArray getItem(position cords);
+	QMap<position, QVector<QByteArray>>* getItems() { return &m_ids; }
 
 private:
 	void parseItem(QString line);
 	void log(QString msg);
 
-    QMap<position, QByteArray> m_ids;
+	QMap<position, QVector<QByteArray>> m_ids;
 	int m_amountOfItems;
 };
 

@@ -36,6 +36,16 @@ void Server::processNewPlayer(QTcpSocket* socket)
 
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
 	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
+	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
+	sendAllItemsPositions(socket);
+}
+
+void Server::sendAllItemsPositions(QTcpSocket *socket)
+{
+	QMap<position, QVector<QByteArray>> *items = m_mapWorker->getAllItems();
+	for (position pos : items->keys())
+		for (QByteArray id : (*items)[pos])
+			socket->write("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 }
 
 void Server::log(QString msg)
@@ -54,7 +64,6 @@ void Server::readyRead()
 	if (data == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
-	if (data == "ASKID") { client->write("ID:" + m_mapWorker->getUserId(client)); }
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
 	if (data.indexOf("PICK") != -1) client->write(m_mapWorker->processPlayerAction(client, actions::pick, data.split(':')[1]));
 	if (data.indexOf("DROP") != -1) client->write(m_mapWorker->processDrop(client, data));

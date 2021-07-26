@@ -38,6 +38,9 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
 	connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
 
+	connect (m_connectionManager, &ConnectionManager::placeItem, this, &SpaceStation::placeItem);
+	connect (m_connectionManager, &ConnectionManager::removeItem, this, &SpaceStation::removeItem);
+
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
 
@@ -90,7 +93,6 @@ void SpaceStation::mapReceived()
 	ui->statusbar->showMessage("Loading map...");
 	m_mapWorker->mapInit(m_connectionManager->getMap());
 	m_mapWorker->drawMap();
-	m_connectionManager->askForId();
 }
 
 void SpaceStation::setPlayerPosition(QByteArray id, int x, int y)
@@ -157,6 +159,16 @@ void SpaceStation::sendMessage()
 {
 	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
 
+}
+
+void SpaceStation::placeItem(ItemInfo item)
+{
+	m_mapWorker->placeItem(item);
+}
+
+void SpaceStation::removeItem(ItemInfo item)
+{
+	m_mapWorker->removeItem(item);
 }
 
 

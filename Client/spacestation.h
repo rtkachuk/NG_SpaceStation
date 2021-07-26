@@ -55,6 +55,9 @@ private slots:
 
 	void sendMessage();
 
+	void placeItem(ItemInfo item);
+	void removeItem(ItemInfo item);
+
 protected:
 	void keyPressEvent(QKeyEvent *event);
 

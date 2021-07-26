@@ -30,6 +30,7 @@ public:
 
 	void setInventoryController(InventoryController* inv) { m_inventoryController = inv; }
 	QByteArray processDrop(QTcpSocket *socket, QByteArray data);
+	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }
 private:
 	QByteArray processPlayerMovement(int x, int y, QTcpSocket* socket);
 	QByteArray generateId();
@@ -46,6 +47,7 @@ private:
 	QByteArray dropItem(QByteArray id, int x, int y, QTcpSocket *player);
 
 	void log(QString msg);
+
 
 	QRandomGenerator m_randomGenerator;
 

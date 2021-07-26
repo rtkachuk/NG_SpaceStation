@@ -12,6 +12,7 @@ toolMode BaseTool::detectToolMode(QString mode)
 	if (mode == "cutting") return toolMode::cutting;
 	if (mode == "heating") return toolMode::heating;
 	if (mode == "welding") return toolMode::welding;
+	if (mode == "wrenching") return toolMode::wrenching;
 
 	return toolMode::toolnomode;
 }
