@@ -2,6 +2,7 @@
 #define INVENTORYMENU_H
 
 #include <QMainWindow>
+#include "../sharedItemLoader/itemloader.h"
 
 namespace Ui {
 class InventoryMenu;
@@ -19,8 +20,11 @@ public:
 	void addItem(QByteArray item);
 	void removeItem(QByteArray item);
 
+	void setItemLoader(ItemLoader *loader) { m_itemLoader = loader; }
+
 private:
     Ui::InventoryMenu *ui;
+	ItemLoader* m_itemLoader;
 };
 
 #endif // INVENTORYMENU_H

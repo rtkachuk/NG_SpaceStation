@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QRandomGenerator>
 #include "enums.h"
+#include "../sharedItemLoader/itemloader.h"
 
 // This class should load map from file like map.config
 //
@@ -37,6 +38,8 @@ public:
 
 	void setBasicPlayerPosition(position pos) { m_currentPlayerPositionX = pos.x; m_currentPlayerPositionY = pos.y; }
 
+	void setItemLoader(ItemLoader* loader) { m_itemLoader = loader; }
+
 public slots:
 	void drawMap();
 	void updatePlayerPosition(QByteArray id, int x, int y);
@@ -64,6 +67,7 @@ private:
 
 	QVector<QString> m_spacePixmaps;
 	QRandomGenerator m_randomGenerator;
+	ItemLoader* m_itemLoader;
 };
 
 #endif // MAPWORKER_H

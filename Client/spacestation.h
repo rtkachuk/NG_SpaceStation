@@ -15,6 +15,7 @@
 #include "connectionmanager.h"
 #include "selectdirectiondialog.h"
 #include "inventorymenu.h"
+#include "../sharedItemLoader/itemloader.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -86,6 +87,7 @@ private:
 	ConnectionManager *m_connectionManager;
 	SelectDirectionDialog *m_selectDirectionDialog;
     InventoryMenu *m_inventory;
+	ItemLoader *m_itemLoader;
 
 	QThread *m_networkingThread;
 };

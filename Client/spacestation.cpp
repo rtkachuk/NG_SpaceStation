@@ -7,9 +7,13 @@ SpaceStation::SpaceStation(QWidget *parent)
 {
 	ui->setupUi(this);
 
+	m_itemLoader = new ItemLoader();
+	m_itemLoader->loadItems();
+
 	m_actionWindow = new ActionWindow();
 	m_actionWindow->show();
     m_inventory = new InventoryMenu();
+	m_inventory->setItemLoader(m_itemLoader);
     m_inventory->show();
 
 	ui->t_chat->setReadOnly(true);
@@ -229,6 +233,7 @@ void SpaceStation::initGraphics()
 	ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	ui->graphicsView->setCacheMode(QGraphicsView::CacheNone);
 	m_mapWorker->setScene(m_scene);
+	m_mapWorker->setItemLoader(m_itemLoader);
 }
 
 int SpaceStation::askDirection()
