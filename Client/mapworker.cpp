@@ -68,18 +68,12 @@ void MapWorker::updateMap(int x, int y, char object)
 
 void MapWorker::placeItem(ItemInfo itemInfo)
 {
-	BaseTool tool = m_itemLoader->getToolById(itemInfo.id);
-	BaseWeapon weapon = m_itemLoader->getWeaponById(itemInfo.id);
+	BaseItem tool = m_itemLoader->getItemById(itemInfo.id);
 
 	QPixmap image;
 
 	if (tool.getId() != "-1") {
 		image = QPixmap(":" + tool.getPixmap());
-		log (tool.getPixmap());
-	}
-
-	if (weapon.getId() != "-1") {
-		image = QPixmap(":" + weapon.getPixmap());
 		log (tool.getPixmap());
 	}
 

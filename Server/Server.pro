@@ -10,14 +10,13 @@ CONFIG -= app_bundle
 
 SOURCES += \
         ../sharedItemLoader/baseitem.cpp \
-        ../sharedItemLoader/basetool.cpp \
-        ../sharedItemLoader/baseweapon.cpp \
         ../sharedItemLoader/itemloader.cpp \
         inventorycontroller.cpp \
         itemcontroller.cpp \
         main.cpp \
         mapfileloader.cpp \
         mapworker.cpp \
+        playerwear.cpp \
         server.cpp
 
 # Default rules for deployment.
@@ -27,12 +26,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     ../sharedItemLoader/baseitem.h \
-    ../sharedItemLoader/basetool.h \
-    ../sharedItemLoader/baseweapon.h \
     ../sharedItemLoader/itemloader.h \
     enums.h \
     inventorycontroller.h \
     itemcontroller.h \
     mapfileloader.h \
     mapworker.h \
+    playerwear.h \
     server.h

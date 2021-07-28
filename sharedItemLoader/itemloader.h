@@ -7,8 +7,6 @@
 #include <QFile>
 
 #include "baseitem.h"
-#include "baseweapon.h"
-#include "basetool.h"
 
 class ItemLoader : public QObject
 {
@@ -16,10 +14,8 @@ class ItemLoader : public QObject
 public:
 	ItemLoader();
 	void loadItems();
-	BaseTool parseTool(QString line);
-	BaseWeapon parseWeapon(QString line);
-	BaseTool getToolById(QByteArray id);
-	BaseWeapon getWeaponById(QByteArray id);
+	BaseItem parseItem(QString line);
+	BaseItem getItemById(QByteArray id);
 	QByteArray getIdByName(QString name);
 	bool checkIdExist(QByteArray id);
 
@@ -27,8 +23,7 @@ private:
 	void log(QString msg);
 
 
-	QVector<BaseTool> m_tools;
-	QVector<BaseWeapon> m_weapons;
+	QVector<BaseItem> m_items;
 	QString m_data;
 	int m_amountOfItems;
 };

@@ -15,15 +15,11 @@ void ItemLoader::loadItems()
 	}
 
 	m_amountOfItems = 0;
-	m_tools.clear();
-	m_weapons.clear();
+	m_items.clear();
 
 	while (itemFile.atEnd() == false) {
 		QString line = itemFile.readLine();
-		if (line.indexOf("tool") == 0)
-			m_tools.push_back(parseTool(line));
-		if (line.indexOf("weapon") == 0)
-			m_weapons.push_back(parseWeapon(line));
+		m_items.push_back(parseItem(line));
 	}
 
 	itemFile.close();
@@ -31,80 +27,57 @@ void ItemLoader::loadItems()
 	log ("Loaded " + QString::number(m_amountOfItems) + " items");
 }
 
-BaseTool ItemLoader::parseTool(QString line)
+BaseItem ItemLoader::parseItem(QString line)
 {
 	QList<QString> paramethers = line.split(':');
-	BaseTool bufferTool;
-	bufferTool.setName(paramethers[1]);
-	bufferTool.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
-	bufferTool.setToolMode(BaseTool::detectToolMode(paramethers[3]));
-	bufferTool.setDamage(paramethers[4].toInt());
-	bufferTool.setPixmap(paramethers[5]);
-	bufferTool.setDescription(paramethers[6]);
-	bufferTool.setId(QByteArray::number(m_amountOfItems+1));
+	BaseItem bufferItem;
+
+	itemType type = itemType::notype;
+	if (paramethers[0] == "tool") type = itemType::tool;
+	if (paramethers[0] == "weapon") type = itemType::weapon;
+
+	bufferItem.setType(type);
+	bufferItem.setName(paramethers[1]);
+	bufferItem.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
+	bufferItem.setToolMode(BaseItem::detectToolMode(paramethers[3]));
+	bufferItem.setWeaponMode(BaseItem::detectWeaponMode(paramethers[4]));
+	bufferItem.setDamage(paramethers[5].toInt());
+	bufferItem.setPixmap(paramethers[6]);
+	bufferItem.setDescription(paramethers[7]);
+	bufferItem.setId(QByteArray::number(m_amountOfItems+1));
+
+	log ("=============================");
+	log ("Item name: " + bufferItem.getName());
+	log ("Item pixmap: " + bufferItem.getPixmap());
 
 	m_amountOfItems++;
 
-	log ("Loaded item: " + bufferTool.getName());
+	log ("Loaded item: " + bufferItem.getName());
 
-	return bufferTool;
+	return bufferItem;
 }
 
-BaseWeapon ItemLoader::parseWeapon(QString line)
+BaseItem ItemLoader::getItemById(QByteArray id)
 {
-	QList<QString> paramethers = line.split(':');
-	BaseWeapon bufferWeapon;
-	bufferWeapon.setName(paramethers[1]);
-	bufferWeapon.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
-	bufferWeapon.setWeaponMode(BaseWeapon::detectWeaponMode(paramethers[3]));
-	bufferWeapon.setDamage(paramethers[4].toInt());
-	bufferWeapon.setPixmap(paramethers[5]);
-	bufferWeapon.setDescription(paramethers[6]);
-	bufferWeapon.setId(QByteArray::number(m_amountOfItems));
-	m_amountOfItems++;
-
-	log ("Loaded weapon: " + bufferWeapon.getName());
-
-	return bufferWeapon;
-}
-
-BaseTool ItemLoader::getToolById(QByteArray id)
-{
-	for (BaseTool tool : m_tools) {
+	for (BaseItem tool : m_items) {
 		if (tool.getId() == id)
 			return tool;
 	}
 
-	return BaseTool();
-}
-
-BaseWeapon ItemLoader::getWeaponById(QByteArray id)
-{
-	for (BaseWeapon weapon : m_weapons) {
-		if (weapon.getId() == id)
-			return weapon;
-	}
-
-	return BaseWeapon();
+	return BaseItem();
 }
 
 QByteArray ItemLoader::getIdByName(QString name)
 {
-	for (BaseTool tool : m_tools) {
+	for (BaseItem tool : m_items)
 		if (tool.getName() == name)
 			return tool.getId();
-	}
-
-	for (BaseWeapon weapon : m_weapons) {
-		if (weapon.getName() == name) {
-			return weapon.getId();
-		}
-	}
+	return "";
 }
 
 bool ItemLoader::checkIdExist(QByteArray id)
 {
-	if (getWeaponById(id).getId() != "-1" || getToolById(id).getId() != "-1")
+	if (getItemById(id).getId() != "-1")
 		return true;
 	return false;
 }

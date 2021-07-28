@@ -10,8 +10,6 @@ CONFIG += c++11
 
 SOURCES += \
     ../sharedItemLoader/baseitem.cpp \
-    ../sharedItemLoader/basetool.cpp \
-    ../sharedItemLoader/baseweapon.cpp \
     ../sharedItemLoader/itemloader.cpp \
     actionwindow.cpp \
     connectdialog.cpp \
@@ -24,8 +22,6 @@ SOURCES += \
 
 HEADERS += \
     ../sharedItemLoader/baseitem.h \
-    ../sharedItemLoader/basetool.h \
-    ../sharedItemLoader/baseweapon.h \
     ../sharedItemLoader/itemloader.h \
     actionwindow.h \
     connectdialog.h \
