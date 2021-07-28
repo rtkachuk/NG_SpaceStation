@@ -6,6 +6,10 @@ InventoryMenu::InventoryMenu(QWidget *parent) :
 	ui(new Ui::InventoryMenu)
 {
 	ui->setupUi(this);
+
+	ui->text_description->setReadOnly(true);
+
+	connect (ui->list_inventory, &QListWidget::itemClicked, this, &InventoryMenu::selectedItem);
 }
 
 InventoryMenu::~InventoryMenu()
@@ -47,6 +51,11 @@ void InventoryMenu::removeItem(QByteArray id)
 	}
 	delete ui->list_inventory->findItems(item, Qt::MatchExactly)[0];
 
+}
+
+void InventoryMenu::selectedItem(QListWidgetItem(* item))
+{
+	ui->text_description->setText(m_itemLoader->getItemById(m_itemLoader->getIdByName(item->text())).getDescription());
 }
 
 void InventoryMenu::log(QString message)

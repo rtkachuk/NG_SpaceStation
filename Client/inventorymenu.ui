@@ -6,17 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
-    <height>253</height>
+    <width>503</width>
+    <height>316</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QListWidget" name="list_inventory"/>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Вещи:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="list_inventory"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Описание:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="text_description"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -25,7 +50,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>453</width>
+     <width>503</width>
      <height>19</height>
     </rect>
    </property>
