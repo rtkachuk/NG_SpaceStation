@@ -70,6 +70,7 @@ private:
 
 	QString m_ip;
 	QString m_port;
+	QString m_name;
 
 	Ui::SpaceStation *ui;
 	QGraphicsScene *m_scene;

@@ -18,6 +18,7 @@ public:
 
 	QString getIp() { return m_ip; }
 	QString getPort() { return m_port; }
+	QString getName() { return m_name; }
 
 private slots:
 	void connectToHost();
@@ -26,6 +27,7 @@ private:
 
 	QString m_ip;
 	QString m_port;
+	QString m_name;
 
 	Ui::ConnectDialog *ui;
 };

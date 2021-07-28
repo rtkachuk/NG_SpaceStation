@@ -26,6 +26,7 @@ private:
 	void log(QString msg);
 
 	QVector<QTcpSocket*> m_players;
+	QMap<QTcpSocket*, QString> m_playerNames;
 
 	MapFileLoader *m_mapFileLoader;
 	MapWorker *m_mapWorker;

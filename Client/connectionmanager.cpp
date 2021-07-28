@@ -50,11 +50,7 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray received = m_socket->readAll();
-	log (received);
-
 	QList<QByteArray> gotData = received.split('|');
-
-	log ("Got packets: " + QString::number(gotData.length()));
 
 	for (QByteArray data : gotData) {
 
@@ -65,7 +61,6 @@ void ConnectionManager::socketReady()
 			emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
 		}
 		if (command == "CHG") {
-			log ("Map changed!");
 			emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
 		}
 
@@ -88,12 +83,10 @@ void ConnectionManager::socketReady()
 		}
 
 		if (command == "ID") {
-			log ("Received ID");
 			emit gotId(params[1]);
 		}
 
 		if (command == "DIS") {
-			log ("Some player disconnected...");
 			emit playerDisconnected(params[1]);
 		}
 
@@ -110,7 +103,6 @@ void ConnectionManager::socketReady()
 		}
 
 		if (command == "INIT") {
-			log ("Got init player position");
 			position pos;
 
 			pos.x = params[1].toInt();
@@ -120,7 +112,6 @@ void ConnectionManager::socketReady()
 		}
 
 		if (command == "MAP_DATA") {
-			log ("Received map!");
 			m_map = params[1];
 			emit gotMap();
 		}

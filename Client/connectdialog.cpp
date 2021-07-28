@@ -9,6 +9,7 @@ ConnectDialog::ConnectDialog(QWidget *parent) :
 
 	ui->l_ip->setText("127.0.0.1");
 	ui->l_port->setText("4306");
+	ui->l_name->setText("Player");
 
 	connect (ui->b_connect, &QPushButton::clicked, this, &ConnectDialog::connectToHost);
 	connect (ui->b_cancel, &QPushButton::clicked, this, &ConnectDialog::reject);
@@ -28,6 +29,7 @@ void ConnectDialog::connectToHost()
 
 	m_ip = ui->l_ip->text();
 	m_port = ui->l_port->text();
+	m_name = ui->l_name->text();
 
 	accept();
 }

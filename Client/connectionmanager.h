@@ -17,6 +17,7 @@ public:
 	void movePlayer(playerMovement side);
 	void actionPlayer(QString action, int side);
 	void sendMessage(QString message) { m_socket->write("SAY:" + message.toUtf8()); }
+	void changeName(QString name) { m_socket->write("NAME:" + name.toUtf8()); }
 
 private:
 	void log(QString msg);

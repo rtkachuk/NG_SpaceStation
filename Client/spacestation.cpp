@@ -75,6 +75,7 @@ void SpaceStation::connectToServer()
 
 	m_ip = m_connectDialog->getIp();
 	m_port = m_connectDialog->getPort();
+	m_name = m_connectDialog->getName();
 	delete m_connectDialog;
 
 	log ("Get ip: " + m_ip);
@@ -86,6 +87,7 @@ void SpaceStation::connectToServer()
 void SpaceStation::connectedToServer()
 {
 	ui->statusbar->showMessage("Connected to " + m_ip);
+	m_connectionManager->changeName(m_name);
 }
 
 void SpaceStation::mapReceived()

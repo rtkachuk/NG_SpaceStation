@@ -22,8 +22,8 @@ void Server::sendToAll(QByteArray message)
 
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 {
-	QByteArray id = m_mapWorker->getUserId(player);
-	sendToAll("SAY:" + id + ":" + message.split(':')[1]);
+	QByteArray name = m_playerNames[player].toUtf8();
+	sendToAll("SAY:" + name + ":" + message.split(':')[1]);
 }
 
 void Server::processNewPlayer(QTcpSocket* socket)
@@ -67,6 +67,7 @@ void Server::readyRead()
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
 	if (data.indexOf("PICK") != -1) { QVector<QByteArray> result = m_mapWorker->processPick(client, data); client->write(result[0]); sendToAll(result[1]); }
 	if (data.indexOf("DROP") != -1) { QVector<QByteArray> result = m_mapWorker->processDrop(client, data); client->write(result[0]); sendToAll(result[1]); }
+	if (data.indexOf("NAME") != -1) { m_playerNames[client] = data.split(':')[1]; }
 }
 
 void Server::disconnected()
