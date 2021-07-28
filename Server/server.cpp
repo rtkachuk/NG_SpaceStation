@@ -2,13 +2,16 @@
 
 Server::Server()
 {
+	m_itemLoader = new ItemLoader();
+	m_itemLoader->loadItems();
+
 	m_mapFileLoader = new MapFileLoader();
-	m_mapWorker = new MapWorker();
-	m_inventoryController = new InventoryController();
+	m_mapWorker = new MapWorker(m_itemLoader);
+
+	m_inventoryController = new InventoryController(m_itemLoader);
     m_healthController = new HealthControl();
 
 	m_mapWorker->setInventoryController(m_inventoryController);
-
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
 
 	log ("Server ready");

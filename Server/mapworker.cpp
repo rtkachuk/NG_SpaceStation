@@ -1,11 +1,9 @@
 #include "mapworker.h"
 
-MapWorker::MapWorker()
+MapWorker::MapWorker(ItemLoader *loader)
 {
 	m_itemController = new ItemController();
-
-	m_itemLoader = new ItemLoader();
-	m_itemLoader->loadItems();
+	m_itemLoader = loader;
 }
 
 void MapWorker::processMap(QByteArray mapData)

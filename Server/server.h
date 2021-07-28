@@ -8,7 +8,7 @@
 #include "mapfileloader.h"
 #include "mapworker.h"
 #include "inventorycontroller.h"
-#include<healthcontrol.h>
+#include <healthcontrol.h>
 
 class Server : public QTcpServer
 {
@@ -33,6 +33,7 @@ private:
 	MapWorker *m_mapWorker;
 	InventoryController *m_inventoryController;
     HealthControl *m_healthController;
+	ItemLoader* m_itemLoader;
 
 private slots:
 	void readyRead();

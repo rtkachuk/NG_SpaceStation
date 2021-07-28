@@ -13,7 +13,7 @@
 class MapWorker
 {
 public:
-	MapWorker();
+	MapWorker(ItemLoader *loader);
 	void processMap(QByteArray mapData);
 	QByteArray getMap() { return m_mapData; }
     QByteArray processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
