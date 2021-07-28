@@ -11,6 +11,7 @@ CONFIG -= app_bundle
 SOURCES += \
         ../sharedItemLoader/baseitem.cpp \
         ../sharedItemLoader/itemloader.cpp \
+        healthcontrol.cpp \
         inventorycontroller.cpp \
         itemcontroller.cpp \
         main.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     ../sharedItemLoader/baseitem.h \
     ../sharedItemLoader/itemloader.h \
     enums.h \
+    healthcontrol.h \
     inventorycontroller.h \
     itemcontroller.h \
     mapfileloader.h \

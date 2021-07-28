@@ -5,6 +5,7 @@ Server::Server()
 	m_mapFileLoader = new MapFileLoader();
 	m_mapWorker = new MapWorker();
 	m_inventoryController = new InventoryController();
+    m_healthController = new HealthControl();
 
 	m_mapWorker->setInventoryController(m_inventoryController);
 
@@ -33,6 +34,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	m_players.append(socket);
 	m_mapWorker->addUser(socket, pos);
 	m_inventoryController->createPlayerInventory(socket);
+    m_healthController->createPlayerHealth(socket);
 
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
 	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
