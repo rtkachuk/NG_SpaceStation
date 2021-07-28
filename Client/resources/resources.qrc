@@ -25,5 +25,21 @@
         <file>items/hammer.png</file>
         <file>items/noitem.png</file>
         <file>items/screwdriver.png</file>
+        <file>books/book_cooking.png</file>
+        <file>books/book_engineering.png</file>
+        <file>books/book_history.png</file>
+        <file>books/book_magic.png</file>
+        <file>books/book_medicine.png</file>
+        <file>books/book_religion.png</file>
+        <file>books/book_science.png</file>
+        <file>books/book.png</file>
+        <file>buildings/table.png</file>
+        <file>items/axe.png</file>
+        <file>items/notebook.png</file>
+        <file>items/pliers.png</file>
+        <file>misc/blood.png</file>
+        <file>misc/space5.png</file>
+        <file>misc/space6.png</file>
+        <file>items/wirecutters.png</file>
     </qresource>
 </RCC>

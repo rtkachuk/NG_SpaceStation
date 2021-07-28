@@ -49,10 +49,10 @@ BaseItem ItemLoader::parseItem(QString line)
 	log ("=============================");
 	log ("Item name: " + bufferItem.getName());
 	log ("Item pixmap: " + bufferItem.getPixmap());
+	log ("Item id: " + bufferItem.getId());
 
 	m_amountOfItems++;
 
-	log ("Loaded item: " + bufferItem.getName());
 
 	return bufferItem;
 }
