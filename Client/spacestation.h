@@ -58,6 +58,9 @@ private slots:
 	void placeItem(ItemInfo item);
 	void removeItem(ItemInfo item);
 
+	void wearItem(QByteArray id);
+	void takeOffItem(QByteArray id);
+
 protected:
 	void keyPressEvent(QKeyEvent *event);
 

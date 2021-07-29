@@ -2,6 +2,7 @@
 #define PLAYERWEAR_H
 
 #include <QByteArray>
+#include <QMap>
 #include "enums.h"
 #include "../sharedItemLoader/itemloader.h"
 
@@ -12,21 +13,16 @@ public:
 	PlayerWear();
 	PlayerWear(ItemLoader *loader);
 
-	QByteArray getHead() { return m_head; }
-	QByteArray wearOn(QByteArray id, playerWearable place) { if (m_loader->getItemById(id).getWearableMode() == place) return wearDressing(id, place); return ""; }
-	QByteArray takeOff(playerWearable place) { return unwear (place); }
+	QByteArray getwear(playerWearable place) { return m_wears[place]; }
+	QByteArray wearOn(QByteArray id) { m_wears[detectPlace(id)] = id; return "WEAR:" + id + ":" + detectPlace(id);}
+	QByteArray takeOff(QByteArray id) { m_wears[detectPlace(id)] = ""; return "TAKEOFF:" + id;}
 
 private:
 
-	QByteArray wearDressing(QByteArray id, playerWearable place);
-	QByteArray unwear(playerWearable place);
+	playerWearable detectPlace(QByteArray id) { return m_loader->getItemById(id).getWearableMode(); }
 	void log(QString msg);
 
-	QByteArray m_head;
-	QByteArray m_hands;
-	QByteArray m_torso;
-	QByteArray m_legs;
-	QByteArray m_feet;
+	QMap<int, QByteArray> m_wears;
 
 	ItemLoader* m_loader;
 };

@@ -21,8 +21,8 @@ public:
 	bool checkPlayerExist(QTcpSocket* player) { return m_inventories.contains(player); }
 	QVector<QByteArray> getPlayerInventory(QTcpSocket *player) { return m_inventories[player]; }
 
-	QByteArray wearId(QByteArray id, playerWearable place, QTcpSocket *player);
-	QByteArray takeOff(playerWearable place, QTcpSocket *player) { return m_wear[player].takeOff(place); }
+	QByteArray wearId(QByteArray id, QTcpSocket *player);
+	QByteArray takeOff(QByteArray id, QTcpSocket *player);
 
 private:
 	QMap<QTcpSocket*,QVector<QByteArray>> m_inventories;

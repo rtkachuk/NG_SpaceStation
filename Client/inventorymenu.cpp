@@ -10,6 +10,8 @@ InventoryMenu::InventoryMenu(QWidget *parent) :
 	ui->text_description->setReadOnly(true);
 
 	connect (ui->list_inventory, &QListWidget::itemClicked, this, &InventoryMenu::selectedItem);
+	connect (ui->b_wear, &QPushButton::clicked, this, &InventoryMenu::wearItem);
+	connect (ui->b_takeoff, &QPushButton::clicked, this, &InventoryMenu::takeOffItem);
 }
 
 InventoryMenu::~InventoryMenu()
@@ -31,7 +33,6 @@ void InventoryMenu::addItem(QByteArray item)
 	tool = m_itemLoader->getItemById(item);
 	if(tool.getId() != "-1")
 	{
-		log("Item to be picked: " + tool.getName());
 		ui->list_inventory->addItem(tool.getName());
 	}
 }
@@ -43,19 +44,64 @@ void InventoryMenu::removeItem(QByteArray id)
 
 	QByteArray item;
 
-	log("Item id: " + tool.getId());
 	if(tool.getId() != "-1")
 	{
 		item = tool.getName().toUtf8();
-		log("Item to be dropped: " + item);
 	}
 	delete ui->list_inventory->findItems(item, Qt::MatchExactly)[0];
 
 }
 
+void InventoryMenu::clearWereable(QString name, QString text)
+{
+	if (ui->l_feet->text() == name) ui->l_feet->setText(text);
+	if (ui->l_hands->text() == name) ui->l_hands->setText(text);
+	if (ui->l_head->text() == name) ui->l_head->setText(text);
+	if (ui->l_hold->text() == name) ui->l_hold->setText(text);
+	if (ui->l_torso->text() == name) ui->l_torso->setText(text);
+	if (ui->l_trousers->text() == name) ui->l_trousers->setText(text);
+}
+
 void InventoryMenu::selectedItem(QListWidgetItem(* item))
 {
 	ui->text_description->setText(m_itemLoader->getItemById(m_itemLoader->getIdByName(item->text())).getDescription());
+}
+
+void InventoryMenu::wearItem()
+{
+	QByteArray id = getSelectedItem();
+	emit sendWearItem(id);
+}
+
+void InventoryMenu::takeOffItem()
+{
+	if (ui->list_inventory->currentItem() == nullptr) return;
+
+	QString name = ui->list_inventory->currentItem()->text();
+	QByteArray id = m_itemLoader->getIdByName(name);
+	emit sendTakeOffItem(id);
+}
+
+void InventoryMenu::processTakingOffItem(QByteArray id)
+{
+
+	clearWereable(m_itemLoader->getItemById(id).getName(), "Nothing");
+}
+
+void InventoryMenu::processWearingItem(QByteArray id)
+{
+	BaseItem tool = m_itemLoader->getItemById(id);
+	QString name = tool.getName();
+
+	switch(tool.getWearableMode()) {
+		case playerWearable::feet: ui->l_feet->setText(name); break;
+		case playerWearable::gloves: ui->l_hands->setText(name); break;
+		case playerWearable::head: ui->l_head->setText(name); break;
+		case playerWearable::holdable: ui->l_hold->setText(name); break;
+		case playerWearable::legs: ui->l_trousers->setText(name); break;
+		case playerWearable::torso: ui->l_torso->setText(name); break;
+		default: log ("Wrong wereable processed during wearing");
+	}
 }
 
 void InventoryMenu::log(QString message)

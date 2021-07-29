@@ -54,6 +54,7 @@ void ConnectionManager::socketReady()
 
 	for (QByteArray data : gotData) {
 
+		log (data);
 		QList<QByteArray> params = data.split(':');
 		QByteArray command = params[0];
 
@@ -114,6 +115,14 @@ void ConnectionManager::socketReady()
 		if (command == "MAP_DATA") {
 			m_map = params[1];
 			emit gotMap();
+		}
+
+		if (command == "WEAR") {
+			emit signalWearItem(params[1]);
+		}
+
+		if (command == "TAKEOFF") {
+			emit signalTakeOffItem(params[1]);
 		}
 	}
 }

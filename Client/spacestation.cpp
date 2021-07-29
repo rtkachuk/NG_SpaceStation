@@ -41,6 +41,11 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::placeItem, this, &SpaceStation::placeItem);
 	connect (m_connectionManager, &ConnectionManager::removeItem, this, &SpaceStation::removeItem);
 
+	connect (m_inventory, &InventoryMenu::sendWearItem, this, &SpaceStation::wearItem);
+	connect (m_inventory, &InventoryMenu::sendTakeOffItem, this, &SpaceStation::takeOffItem);
+	connect (m_connectionManager, &ConnectionManager::signalWearItem, m_inventory, &InventoryMenu::processWearingItem);
+	connect (m_connectionManager, &ConnectionManager::signalTakeOffItem, m_inventory, &InventoryMenu::processTakingOffItem);
+
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
 
@@ -160,7 +165,6 @@ void SpaceStation::gotInitPlayerPosition(position pos)
 void SpaceStation::sendMessage()
 {
 	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
-
 }
 
 void SpaceStation::placeItem(ItemInfo item)
@@ -171,6 +175,16 @@ void SpaceStation::placeItem(ItemInfo item)
 void SpaceStation::removeItem(ItemInfo item)
 {
 	m_mapWorker->removeItem(item);
+}
+
+void SpaceStation::wearItem(QByteArray id)
+{
+	m_connectionManager->wearItem(id);
+}
+
+void SpaceStation::takeOffItem(QByteArray id)
+{
+	m_connectionManager->takeOffItem(id);
 }
 
 

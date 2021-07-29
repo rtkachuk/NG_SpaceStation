@@ -27,11 +27,8 @@ void MapWorker::processMap(QByteArray mapData)
 
 QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
-    position pos = m_playerPositions[buffer];
     playerMovements side = getSideFromString(direction);
-    switch (act) {
-        case actions::push: return getMovementPush(side,buffer);
-    }
+	if (act == actions::push) return getMovementPush(side,buffer);
     return QByteArray("");
 }
 
@@ -66,6 +63,7 @@ QByteArray MapWorker::getMovementPush(playerMovements side, QTcpSocket* buffer)
         case playerMovements::sleft: return processPlayerMovement(playerToPushCords.x-1, playerToPushCords.y, playerToPush); break;
         case playerMovements::sright: return processPlayerMovement(playerToPushCords.x+1, playerToPushCords.y, playerToPush); break;
     }
+	return "";
 }
 
 void MapWorker::addUser(QTcpSocket *socket, position pos)
@@ -83,7 +81,8 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 		case playerMovements::sdown: return processPlayerMovement(pos.x, pos.y+1, socket); break;
 		case playerMovements::sleft: return processPlayerMovement(pos.x-1, pos.y, socket); break;
 		case playerMovements::sright: return processPlayerMovement(pos.x+1, pos.y, socket); break;
-	}   
+	}
+	return "";
 }
 
 void MapWorker::updatePlayerPos(QTcpSocket* socket, int x, int y)
