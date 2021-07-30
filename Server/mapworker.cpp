@@ -232,7 +232,6 @@ QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
 		m_itemController->deleteItem(coords, id);
 		responce.push_back("PITEM:" + id + "|");
 		responce.push_back("ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
-		responce.push_back(m_inventoryController->wearId(id, player));
 	}
 
 	return responce;
