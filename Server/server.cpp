@@ -70,8 +70,8 @@ void Server::readyRead()
 	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
 	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
 	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
-	if (data.indexOf("PICK") != -1) { QVector<QByteArray> result = m_mapWorker->processPick(client, data); client->write(result[0]); sendToAll(result[1]); }
-	if (data.indexOf("DROP") != -1) { QVector<QByteArray> result = m_mapWorker->processDrop(client, data); client->write(result[0]); sendToAll(result[1]); }
+	if (data.indexOf("PICK") != -1) { QVector<QByteArray> result = m_mapWorker->processPick(client, data); client->write(result[0]); client->write(result[2]); sendToAll(result[1]); }
+	if (data.indexOf("DROP") != -1) { QVector<QByteArray> result = m_mapWorker->processDrop(client, data); client->write(result[0]); client->write(result[2]); sendToAll(result[1]); }
 	if (data.indexOf("NAME") != -1) { m_playerNames[client] = data.split(':')[1]; }
 	if (data.indexOf("WEAR") != -1) { client->write(m_inventoryController->wearId(data.split(':')[1], client)); }
 	if (data.indexOf("TAKEOFF") != -1) { client->write(m_inventoryController->takeOff(data.split(':')[1], client)); }

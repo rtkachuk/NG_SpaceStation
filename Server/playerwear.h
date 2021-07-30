@@ -14,8 +14,8 @@ public:
 	PlayerWear(ItemLoader *loader);
 
 	QByteArray getwear(playerWearable place) { return m_wears[place]; }
-	QByteArray wearOn(QByteArray id) { m_wears[detectPlace(id)] = id; return "WEAR:" + id + ":" + detectPlace(id);}
-	QByteArray takeOff(QByteArray id) { m_wears[detectPlace(id)] = ""; return "TAKEOFF:" + id;}
+	QByteArray wearOn(QByteArray id) { m_wears[detectPlace(id)] = id; return "WEAR:" + id + ":" + detectPlace(id) + "|";}
+	QByteArray takeOff(QByteArray id) { m_wears[detectPlace(id)] = ""; return "TAKEOFF:" + id + "|";}
 
 private:
 
