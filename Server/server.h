@@ -39,6 +39,9 @@ private slots:
 	void readyRead();
 	void disconnected();
 
+private:
+	void processQuery(QTcpSocket *client, QByteArray query);
+
 protected:
 	void incomingConnection(qintptr handle);
 };

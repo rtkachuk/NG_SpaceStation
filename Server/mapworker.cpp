@@ -35,7 +35,9 @@ QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString
 
 bool MapWorker::checkMovementPosition(int x, int y)
 {
-    return m_map[y][x] == '.' || m_map[y][x] == 'o';
+	return m_map[y][x] == '.' ||
+			m_map[y][x] == 'o' ||
+			m_map[y][x] == '_';
 }
 
 QTcpSocket *MapWorker::checkPlayer(position pos)
@@ -195,20 +197,18 @@ char MapWorker::processClose(int x, int y)
 	}
 }
 
-QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
+QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside)
 {
-	QList<QByteArray> prefs = data.split(':');
 	position pos = m_playerPositions[socket];
-	playerMovements side = getSideFromString(prefs[2]);
+	playerMovements side = getSideFromString(bside);
 	position actPos = getCoordsBySide(pos.x, pos.y, side);
-	return dropItem(prefs[1], actPos.x, actPos.y, socket);
+	return dropItem(data, actPos.x, actPos.y, socket);
 }
 
 QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
 {
-	QString direction = data.split(':')[1];
 	position pos = m_playerPositions[socket];
-	playerMovements side = getSideFromString(direction);
+	playerMovements side = getSideFromString(data);
 	position actPos = getCoordsBySide(pos.x, pos.y, side);
 
 	return pickItem(actPos.x, actPos.y, socket);

@@ -29,7 +29,7 @@ public:
 	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
 
 	void setInventoryController(InventoryController* inv) { m_inventoryController = inv; }
-	QVector<QByteArray> processDrop(QTcpSocket *socket, QByteArray data);
+	QVector<QByteArray> processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside);
 	QVector<QByteArray> processPick(QTcpSocket *socket, QString data);
 	position getPlayerPosition(QTcpSocket *socket) { return m_playerPositions[socket]; }
 	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }

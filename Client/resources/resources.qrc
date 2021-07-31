@@ -41,5 +41,7 @@
         <file>misc/space5.png</file>
         <file>misc/space6.png</file>
         <file>items/wirecutters.png</file>
+        <file>buildings/floor1.png</file>
+        <file>items/rubber_gloves.png</file>
     </qresource>
 </RCC>

@@ -49,7 +49,7 @@ void ItemController::parseItem(QString line)
 
 	position pos;
 	pos.x = itemPrefs[1].toInt();
-	pos.y = itemPrefs[2].toInt();
+	pos.y = itemPrefs[2].toInt()+1; // Because there are bug in placing item on the map
 
 	addItem(pos, itemPrefs[0].toUtf8());
 	m_amountOfItems++;

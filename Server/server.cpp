@@ -27,7 +27,7 @@ void Server::sendToAll(QByteArray message)
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 {
 	QByteArray name = m_playerNames[player].toUtf8();
-	sendToAll("SAY:" + name + ":" + message.split(':')[1]);
+	sendToAll("SAY:" + name + ":" + message);
 }
 
 void Server::processNewPlayer(QTcpSocket* socket)
@@ -61,20 +61,10 @@ void Server::log(QString msg)
 void Server::readyRead()
 {
 	QTcpSocket *client = (QTcpSocket*)sender();
-    QByteArray data = client->readAll();
-    if (data.indexOf("PUSH")!=-1) sendToAll(m_mapWorker->processPlayerPush(client,actions::push,data.split(':')[1]));
-	if (data == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
-	if (data == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
-	if (data == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sleft)); }
-	if (data == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
-	if (data.indexOf("OPEN") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::open, data.split(':')[1]));
-	if (data.indexOf("CLOSE") != -1) sendToAll(m_mapWorker->processPlayerAction(client, actions::close, data.split(':')[1]));
-	if (data.indexOf("SAY") != -1) chatMessageReceived(client, data);
-	if (data.indexOf("PICK") != -1) { QVector<QByteArray> result = m_mapWorker->processPick(client, data); client->write(result[0]); sendToAll(result[1]); }
-	if (data.indexOf("DROP") != -1) { QVector<QByteArray> result = m_mapWorker->processDrop(client, data); client->write(result[0]); client->write(result[2]); sendToAll(result[1]); }
-	if (data.indexOf("NAME") != -1) { m_playerNames[client] = data.split(':')[1]; }
-	if (data.indexOf("WEAR") != -1) { client->write(m_inventoryController->wearId(data.split(':')[1], client)); }
-	if (data.indexOf("TAKEOFF") != -1) { client->write(m_inventoryController->takeOff(data.split(':')[1], client)); }
+	QByteArray recieved = client->readAll();
+	QList<QByteArray> queries = recieved.split('|');
+	for (QByteArray query : queries)
+		processQuery(client, query);
 }
 
 void Server::disconnected()
@@ -96,6 +86,26 @@ void Server::disconnected()
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
+}
+
+void Server::processQuery(QTcpSocket *client, QByteArray query)
+{
+	QList<QByteArray> parts = query.split(':');
+	QByteArray command = parts[0];
+
+	if (command == "PUSH") sendToAll(m_mapWorker->processPlayerPush(client,actions::push,parts[1]));
+	if (command == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
+	if (command == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
+	if (command == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sleft)); }
+	if (command == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
+	if (command == "OPEN") sendToAll(m_mapWorker->processPlayerAction(client, actions::open, parts[1]));
+	if (command == "CLOSE") sendToAll(m_mapWorker->processPlayerAction(client, actions::close, parts[1]));
+	if (command == "SAY") chatMessageReceived(client, parts[1]);
+	if (command == "PICK") { QVector<QByteArray> result = m_mapWorker->processPick(client, parts[1]); client->write(result[0]); sendToAll(result[1]); }
+	if (command == "DROP") { QVector<QByteArray> result = m_mapWorker->processDrop(client, parts[1], parts[2]); client->write(result[0]); client->write(result[2]); sendToAll(result[1]); }
+	if (command == "NAME") { m_playerNames[client] = parts[1]; }
+	if (command == "WEAR") { client->write(m_inventoryController->wearId(parts[1], client)); }
+	if (command == "TAKEOFF") { client->write(m_inventoryController->takeOff(parts[1], client)); }
 }
 
 void Server::incomingConnection(qintptr handle)
