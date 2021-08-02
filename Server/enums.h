@@ -24,7 +24,8 @@ enum actions {
 	close,
 	pick,
     drop,
-    push
+    push,
+    kick
 };
 
 #endif // ENUMS_H

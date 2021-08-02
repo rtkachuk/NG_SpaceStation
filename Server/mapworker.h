@@ -6,6 +6,7 @@
 #include <QRandomGenerator>
 
 #include "utilities.h"
+#include "healthcontrol.h"
 #include "enums.h"
 #include "itemcontroller.h"
 #include "inventorycontroller.h"
@@ -31,7 +32,9 @@ public:
 
 	QByteArray getMap() { return m_mapData; }
     QByteArray processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
+    QByteArray processPlayerKick(QTcpSocket* buffer, actions act, QString direction);
     QByteArray getMovementPush(playerMovements side,QTcpSocket* buffer);
+    QByteArray getMovementKick(playerMovements side,QTcpSocket* buffer);
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
 	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);
 	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
@@ -67,6 +70,7 @@ private:
     ItemController* m_itemController;
 	InventoryController* m_inventoryController;
 	ItemLoader* m_itemLoader;
+    HealthControl *m_healthControll;
 };
 
 #endif // MAPWORKER_H

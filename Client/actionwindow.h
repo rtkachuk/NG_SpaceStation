@@ -19,6 +19,7 @@ public:
 signals:
 	void askFindPlayer();
     void getRequestPush(QString data);
+    void getRequestKick(QString data);
 	void openSomething(QString data);
 	void closeSomething(QString data);
 	void movePlayer(playerMovement mov);
@@ -28,6 +29,7 @@ private slots:
 	void actOpen() { emit openSomething("OPEN"); }
 	void actClose() { emit closeSomething("CLOSE"); }
     void actPush() { emit  getRequestPush("PUSH"); }
+    void actKick() { emit  getRequestKick("KICK"); }
 	void actMoveUp() { emit movePlayer(playerMovement::moveUp); }
 	void actMoveDown() { emit movePlayer(playerMovement::moveDown); }
 	void actMoveLeft() { emit movePlayer(playerMovement::moveLeft); }

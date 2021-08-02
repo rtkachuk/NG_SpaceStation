@@ -32,6 +32,7 @@ public:
 
 public slots:
     void hpShow(int HP);
+    void hpUpdate(int HP);
 
 private slots:
 	void actFindPlayer();

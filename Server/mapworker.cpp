@@ -3,6 +3,7 @@
 MapWorker::MapWorker(ItemLoader *loader)
 {
 	m_itemController = new ItemController();
+    m_healthControll= new HealthControl();
 	m_itemLoader = loader;
 }
 
@@ -28,7 +29,17 @@ void MapWorker::processMap(QByteArray mapData)
 QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
 	playerMovements side = Utilities::getSideFromString(direction);
-	if (act == actions::push) return getMovementPush(side,buffer);
+    if (act == actions::push) return getMovementPush(side,buffer);
+    return QByteArray("");
+}
+
+QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, actions act, QString direction)
+{
+    playerMovements side = Utilities::getSideFromString(direction);
+    if (act == actions::kick){
+        m_healthControll->makeDamage(buffer,1);
+        return getMovementPush(side,buffer);
+    }
     return QByteArray("");
 }
 
@@ -60,7 +71,20 @@ QByteArray MapWorker::getMovementPush(playerMovements side, QTcpSocket* buffer)
 
 	if(playerToPush==nullptr) return "";
 
-	return getMovementResponse(playerToPush, side);
+    return getMovementResponse(playerToPush, side);
+}
+
+QByteArray MapWorker::getMovementKick(playerMovements side, QTcpSocket *buffer)
+{
+    if(buffer==nullptr) return "";
+
+    position pushes = m_playerPositions[buffer];
+    position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
+    QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
+
+    if(playerToPush==nullptr) return "";
+
+    return getMovementResponse(playerToPush, side);
 }
 
 void MapWorker::addUser(QTcpSocket *socket, position pos)
@@ -106,7 +130,6 @@ QByteArray MapWorker::processPlayerMovement(position pos, QTcpSocket *socket)
 		updatePlayerPos(socket, pos);
 		return formatResponce(pos, socket);
 	}
-
     return "";
 }
 

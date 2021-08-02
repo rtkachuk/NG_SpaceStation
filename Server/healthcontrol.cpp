@@ -6,7 +6,8 @@ HealthControl::HealthControl()
 
 }
 
-void HealthControl::setDamage(QTcpSocket *player, int damage)
+int HealthControl::makeDamage(QTcpSocket *player, int damage)
 {
-
+  m_healthPlayer[player]-=damage;
+  return getHealth(player);
 }

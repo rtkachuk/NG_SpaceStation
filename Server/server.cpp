@@ -94,7 +94,7 @@ void Server::processQuery(QTcpSocket *client, QByteArray query)
 {
 	QList<QByteArray> parts = query.split(':');
 	QByteArray command = parts[0];
-
+    if (command == "KICK") sendToAll(m_mapWorker->processPlayerKick(client,actions::kick,parts[1]));
 	if (command == "PUSH") sendToAll(m_mapWorker->processPlayerPush(client,actions::push,parts[1]));
 	if (command == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
 	if (command == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }

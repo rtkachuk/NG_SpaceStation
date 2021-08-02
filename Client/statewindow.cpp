@@ -15,5 +15,10 @@ StateWindow::~StateWindow()
 
 void StateWindow::showHP(int number)
 {
-   ui->healthState->display(number);
+    ui->healthState->display(number);
+}
+
+void StateWindow::updateHP(int number)
+{
+    ui->healthState->display(number);
 }
