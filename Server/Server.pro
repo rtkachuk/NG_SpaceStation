@@ -18,7 +18,8 @@ SOURCES += \
         mapfileloader.cpp \
         mapworker.cpp \
         playerwear.cpp \
-        server.cpp
+        server.cpp \
+        utilities.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -35,4 +36,5 @@ HEADERS += \
     mapfileloader.h \
     mapworker.h \
     playerwear.h \
-    server.h
+    server.h \
+    utilities.h
