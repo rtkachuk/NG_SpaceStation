@@ -44,12 +44,13 @@ public:
 
 
 private:
-	QByteArray processPlayerMovement(position pos, QTcpSocket* socket);
 	void updateMapData(position pos, char object);
+
+	QByteArray processPlayerMovement(position pos, QTcpSocket* socket);
 	QByteArray formatMapChange(position pos, char object);
+	QByteArray formatResponce (position pos, QTcpSocket* socket);
 
 	playerMovements getSideFromString(QString side);
-	QByteArray formatResponce (position pos, QTcpSocket* socket);
 
 	char processOpen(position pos);
 	char processClose(position pos);

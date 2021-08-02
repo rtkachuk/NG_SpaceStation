@@ -24,3 +24,12 @@ position Utilities::getCoordsBySide(position pos, playerMovements side)
 
 	return result;
 }
+
+playerMovements Utilities::getSideFromString(QString side)
+{
+	if (side == "UP") return playerMovements::sup;
+	if (side == "DOWN") return playerMovements::sdown;
+	if (side == "LEFT") return playerMovements::sleft;
+	if (side == "RIGHT") return playerMovements::sright;
+	return playerMovements::sup;
+}
