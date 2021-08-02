@@ -4,7 +4,6 @@
 #include <QMap>
 #include <QVector>
 #include <QTcpSocket>
-
 #include "playerwear.h"
 #include "../sharedItemLoader/itemloader.h"
 
