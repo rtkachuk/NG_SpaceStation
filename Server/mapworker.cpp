@@ -46,9 +46,17 @@ QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, actions act, QString
 
 bool MapWorker::checkMovementPosition(position pos)
 {
-	return m_map[pos.y][pos.x] == '.' ||
+	bool conditionIsFloor =
+			m_map[pos.y][pos.x] == '.' ||
 			m_map[pos.y][pos.x] == 'o' ||
 			m_map[pos.y][pos.x] == '_';
+
+	bool conditionNoItemsOnTheWay = m_itemLoader->getItemById(m_itemController->getItemIdByPos(pos)).getType() != itemType::furniture;
+
+	log (QString::number(conditionIsFloor) + ":::" + QString::number(conditionNoItemsOnTheWay));
+
+
+	return conditionIsFloor && conditionNoItemsOnTheWay;
 }
 
 QTcpSocket *MapWorker::getPlayerByPosition(position pos)
@@ -199,11 +207,20 @@ QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
 
 QVector<QByteArray> MapWorker::pickItem(position pos, QTcpSocket *player)
 {
-	QByteArray id = m_itemController->getItem(pos);
+	int itemNumber = 0;
+	itemType type;
+	QByteArray id;
+	do {
+		id = m_itemController->getItemIdByPos(pos, itemNumber);
+		if (id.isEmpty())
+			break;
+		type = m_itemLoader->getItemById(id).getType();
+		itemNumber++;
+	} while (type == itemType::furniture);
 
 	QVector<QByteArray> responce;
 
-	if (id.isEmpty())
+	if (id.isEmpty() || type == itemType::furniture)
 	{
 		responce.push_back("");
 		responce.push_back("");

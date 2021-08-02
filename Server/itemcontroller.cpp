@@ -35,12 +35,17 @@ void ItemController::loadItems()
 	log ("Placed " + QString::number(m_amountOfItems) + " items!");
 }
 
-QByteArray ItemController::getItem(position cords)
+QByteArray ItemController::getItemIdByPos(position cords)
 {
-    if(m_ids.contains(cords))
-		return m_ids[cords].first();
-    else
-		return "";
+	return getItemIdByPos(cords, 0);
+}
+
+QByteArray ItemController::getItemIdByPos(position cords, int elementNumber)
+{
+	if (m_ids.contains(cords))
+		if (m_ids[cords].size() > elementNumber)
+			return m_ids[cords].at(elementNumber);
+	return "";
 }
 
 void ItemController::parseItem(QString line)
