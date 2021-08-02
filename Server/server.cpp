@@ -78,7 +78,7 @@ void Server::disconnected()
 	QVector<QByteArray> inventory = m_inventoryController->getPlayerInventory(client);
 	position playerPos = m_mapWorker->getPlayerPosition(client);
 	for (QByteArray id : inventory) {
-		QVector<QByteArray> responce = m_mapWorker->dropItem(id, playerPos.x, playerPos.y, client);
+		QVector<QByteArray> responce = m_mapWorker->dropItem(id, playerPos, client);
 		sendToAll(responce[1]);
 	}
 

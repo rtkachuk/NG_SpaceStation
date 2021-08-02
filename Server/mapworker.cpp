@@ -33,11 +33,11 @@ QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString
 }
 
 
-bool MapWorker::checkMovementPosition(int x, int y)
+bool MapWorker::checkMovementPosition(position pos)
 {
-	return m_map[y][x] == '.' ||
-			m_map[y][x] == 'o' ||
-			m_map[y][x] == '_';
+	return m_map[pos.y][pos.x] == '.' ||
+			m_map[pos.y][pos.x] == 'o' ||
+			m_map[pos.y][pos.x] == '_';
 }
 
 QTcpSocket *MapWorker::getPlayerByPosition(position pos)
@@ -82,11 +82,8 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	return processPlayerMovement(pos, socket);
 }
 
-void MapWorker::updatePlayerPos(QTcpSocket* socket, int x, int y)
+void MapWorker::updatePlayerPos(QTcpSocket* socket, position pos)
 {
-	position pos;
-	pos.x = x;
-	pos.y = y;
 	m_playerPositions[socket] = pos;
 }
 
@@ -97,42 +94,42 @@ QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QStri
 	position actPos = Utilities::getCoordsBySide(pos, side);
 
 	switch (act) {
-		case actions::open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
-		case actions::close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
+		case actions::open: return formatMapChange(actPos, processOpen(actPos)); break;
+		case actions::close: return formatMapChange(actPos, processClose(actPos)); break;
 		default: return QByteArray("");
 	}
 }
 
 QByteArray MapWorker::processPlayerMovement(position pos, QTcpSocket *socket)
 {
-	if (checkMovementPosition(pos.x, pos.y)) {
-		updatePlayerPos(socket, pos.x, pos.y);
-		return formatResponce(pos.x, pos.y, socket);
+	if (checkMovementPosition(pos)) {
+		updatePlayerPos(socket, pos);
+		return formatResponce(pos, socket);
 	}
 
     return "";
 }
 
-void MapWorker::updateMapData(int x, int y, char object)
+void MapWorker::updateMapData(position pos, char object)
 {
 	int offset = 0;
-	for (int row=0; row<y; row++) {
+	for (int row=0; row<pos.y; row++) {
 		offset += m_map[row].size() + 1;
 	}
-	offset += x;
+	offset += pos.x;
 	m_mapData[offset] = object;
 	log ("Updated map");
 }
 
-QByteArray MapWorker::formatMapChange(int x, int y, char object)
+QByteArray MapWorker::formatMapChange(position pos, char object)
 {
-	if (m_map[y][x] == object) {
+	if (m_map[pos.y][pos.x] == object) {
 		return "";
 	}
 
-	m_map[y][x] = object;
-	updateMapData(x, y, object);
-	return QByteArray("CHG:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object + "|");
+	m_map[pos.y][pos.x] = object;
+	updateMapData(pos, object);
+	return QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|");
 }
 
 playerMovements MapWorker::getSideFromString(QString side)
@@ -144,28 +141,28 @@ playerMovements MapWorker::getSideFromString(QString side)
 	return playerMovements::sup;
 }
 
-QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)
+QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
 {
-	return "POS:" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y) + "|";
+	return "POS:" + m_playerIds[socket] + ":" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|";
 }
 
-char MapWorker::processOpen(int x, int y)
+char MapWorker::processOpen(position pos)
 {
-	switch(m_map[y][x]) {
+	switch(m_map[pos.y][pos.x]) {
 		case 'c': return 'o';
 		case 't': return 'T';
 		case 's': return 'S';
-		default: return m_map[y][x];
+		default: return m_map[pos.y][pos.x];
 	}
 }
 
-char MapWorker::processClose(int x, int y)
+char MapWorker::processClose(position pos)
 {
-	switch(m_map[y][x]) {
+	switch(m_map[pos.y][pos.x]) {
 		case 'o': return 'c';
 		case 'T': return 't';
 		case 'S': return 's';
-		default: return m_map[y][x];
+		default: return m_map[pos.y][pos.x];
 	}
 }
 
@@ -174,7 +171,7 @@ QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data, 
 	position pos = m_playerPositions[socket];
 	playerMovements side = getSideFromString(bside);
 	position actPos = Utilities::getCoordsBySide(pos, side);
-	return dropItem(data, actPos.x, actPos.y, socket);
+	return dropItem(data, actPos, socket);
 }
 
 QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
@@ -183,15 +180,12 @@ QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
 	playerMovements side = getSideFromString(data);
 	position actPos = Utilities::getCoordsBySide(pos, side);
 
-	return pickItem(actPos.x, actPos.y, socket);
+	return pickItem(actPos, socket);
 }
 
-QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::pickItem(position pos, QTcpSocket *player)
 {
-	position coords;
-	coords.x = x;
-	coords.y = y;
-	QByteArray id = m_itemController->getItem(coords);
+	QByteArray id = m_itemController->getItem(pos);
 
 	QVector<QByteArray> responce;
 
@@ -201,20 +195,16 @@ QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
 		responce.push_back("");
 	} else {
 		m_inventoryController->addItemToInventory(player, id);
-		m_itemController->deleteItem(coords, id);
+		m_itemController->deleteItem(pos, id);
 		responce.push_back("PITEM:" + id + "|");
-		responce.push_back("ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+		responce.push_back("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 	}
 
 	return responce;
 }
 
-QVector<QByteArray> MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::dropItem(QByteArray id, position pos, QTcpSocket *player)
 {
-	position coords;
-	coords.x = x;
-	coords.y = y;
-
 	QVector<QByteArray> responce;
 	log ("Item id to be dropped: " + id);
 
@@ -223,9 +213,9 @@ QVector<QByteArray> MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket 
 		responce.push_back("");
 	} else {
 		m_inventoryController->removeItemFromInventory(player, id);
-		m_itemController->addItem(coords, id);
+		m_itemController->addItem(pos, id);
 		responce.push_back("DITEM:" + id + "|");
-		responce.push_back("IPLACE:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+		responce.push_back("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 		responce.push_back(m_inventoryController->takeOff(id, player));
 	}
 

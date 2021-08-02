@@ -19,9 +19,9 @@ public:
 	void processMap(QByteArray mapData);
 	void addUser(QTcpSocket* socket, position pos);
 	void removeUser(QTcpSocket* socket) { m_playerPositions.erase(m_playerPositions.find(socket)); m_playerIds.erase(m_playerIds.find(socket)); }
-	void updatePlayerPos(QTcpSocket* socket, int x, int y);
+	void updatePlayerPos(QTcpSocket* socket, position pos);
 
-	bool checkMovementPosition(int x, int y);
+	bool checkMovementPosition(position pos);
 
 	position getPlayerPosition(QTcpSocket *socket) { return m_playerPositions[socket]; }
 
@@ -39,20 +39,20 @@ public:
 
 	QVector<QByteArray> processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside);
 	QVector<QByteArray> processPick(QTcpSocket *socket, QString data);
-	QVector<QByteArray> pickItem(int x, int y, QTcpSocket *player);
-	QVector<QByteArray> dropItem(QByteArray id, int x, int y, QTcpSocket *player);
+	QVector<QByteArray> pickItem(position pos, QTcpSocket *player);
+	QVector<QByteArray> dropItem(QByteArray id, position pos, QTcpSocket *player);
 
 
 private:
 	QByteArray processPlayerMovement(position pos, QTcpSocket* socket);
-	void updateMapData(int x, int y, char object);
-	QByteArray formatMapChange(int x, int y, char object);
+	void updateMapData(position pos, char object);
+	QByteArray formatMapChange(position pos, char object);
 
 	playerMovements getSideFromString(QString side);
-	QByteArray formatResponce (int x, int y, QTcpSocket* socket);
+	QByteArray formatResponce (position pos, QTcpSocket* socket);
 
-	char processOpen(int x, int y);
-	char processClose(int x, int y);
+	char processOpen(position pos);
+	char processClose(position pos);
 
 	void log(QString msg);
 
