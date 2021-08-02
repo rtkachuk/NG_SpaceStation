@@ -98,6 +98,7 @@ void MapWorker::updateCell(int x, int y, char object)
 		m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y);
 	switch (object) {
 		case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y); break;
+		case '_': m_scene->addPixmap(QPixmap(":/buildings/floor1.png"))->setPos(x, y); break;
 		case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(x, y); break;
 		case 'o': m_scene->addPixmap(QPixmap(":/buildings/door_open.png"))->setPos(x, y); break;
 		case 'c': m_scene->addPixmap(QPixmap(":/buildings/door_closed.png"))->setPos(x, y); break;

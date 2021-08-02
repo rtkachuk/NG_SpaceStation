@@ -19,6 +19,9 @@ public:
 	void sendMessage(QString message) { m_socket->write("SAY:" + message.toUtf8()); }
 	void changeName(QString name) { m_socket->write("NAME:" + name.toUtf8()); }
 
+	void wearItem(QByteArray id) { m_socket->write("WEAR:" + id); }
+	void takeOffItem(QByteArray id) { m_socket->write("TAKEOFF:" + id); }
+
 private:
 	void log(QString msg);
 
@@ -42,6 +45,9 @@ signals:
 
 	void placeItem(ItemInfo item);
 	void removeItem(ItemInfo item);
+
+	void signalWearItem(QByteArray id);
+	void signalTakeOffItem(QByteArray id);
 
 private:
 	QTcpSocket *m_socket;

@@ -53,6 +53,9 @@ void ConnectionManager::socketReady()
 	QList<QByteArray> gotData = received.split('|');
 
 	for (QByteArray data : gotData) {
+		if (data.isEmpty()) return;
+
+		log (data);
 
 		QList<QByteArray> params = data.split(':');
 		QByteArray command = params[0];
@@ -115,9 +118,20 @@ void ConnectionManager::socketReady()
 			m_map = params[1];
 			emit gotMap();
 		}
+<<<<<<< HEAD
         if (command == "HEALTH"){
             int HP = params[1].toInt();
             emit showHP(HP);
         }
+=======
+
+		if (command == "WEAR") {
+			emit signalWearItem(params[1]);
+		}
+
+		if (command == "TAKEOFF") {
+			emit signalTakeOffItem(params[1]);
+		}
+>>>>>>> cc945d011ad0a580335beaf09d28f5fa1afdbec9
 	}
 }

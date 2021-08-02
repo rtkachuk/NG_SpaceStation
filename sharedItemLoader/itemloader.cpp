@@ -33,18 +33,18 @@ BaseItem ItemLoader::parseItem(QString line)
 	BaseItem bufferItem;
 
 	itemType type = itemType::notype;
-	if (paramethers[0] == "tool") type = itemType::tool;
-	if (paramethers[0] == "weapon") type = itemType::weapon;
+	if (paramethers[1] == "tool") type = itemType::tool;
+	if (paramethers[1] == "weapon") type = itemType::weapon;
 
+	bufferItem.setId(paramethers[0].toUtf8());
 	bufferItem.setType(type);
-	bufferItem.setName(paramethers[1]);
-	bufferItem.setWearableMode(BaseItem::detectPlayerWearable(paramethers[2]));
-	bufferItem.setToolMode(BaseItem::detectToolMode(paramethers[3]));
-	bufferItem.setWeaponMode(BaseItem::detectWeaponMode(paramethers[4]));
-	bufferItem.setDamage(paramethers[5].toInt());
-	bufferItem.setPixmap(paramethers[6]);
-	bufferItem.setDescription(paramethers[7]);
-	bufferItem.setId(QByteArray::number(m_amountOfItems+1));
+	bufferItem.setName(paramethers[2]);
+	bufferItem.setWearableMode(BaseItem::detectPlayerWearable(paramethers[3]));
+	bufferItem.setToolMode(BaseItem::detectToolMode(paramethers[4]));
+	bufferItem.setWeaponMode(BaseItem::detectWeaponMode(paramethers[5]));
+	bufferItem.setDamage(paramethers[6].toInt());
+	bufferItem.setPixmap(paramethers[7]);
+	bufferItem.setDescription(paramethers[8]);
 
 	log ("=============================");
 	log ("Item name: " + bufferItem.getName());

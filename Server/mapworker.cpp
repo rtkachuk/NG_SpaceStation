@@ -1,11 +1,9 @@
 #include "mapworker.h"
 
-MapWorker::MapWorker()
+MapWorker::MapWorker(ItemLoader *loader)
 {
 	m_itemController = new ItemController();
-
-	m_itemLoader = new ItemLoader();
-	m_itemLoader->loadItems();
+	m_itemLoader = loader;
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -29,21 +27,20 @@ void MapWorker::processMap(QByteArray mapData)
 
 QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
-    position pos = m_playerPositions[buffer];
-    playerMovements side = getSideFromString(direction);
-    switch (act) {
-        case actions::push: return getMovementPush(side,buffer);
-    }
+	playerMovements side = Utilities::getSideFromString(direction);
+	if (act == actions::push) return getMovementPush(side,buffer);
     return QByteArray("");
 }
 
 
-bool MapWorker::checkMovementPosition(int x, int y)
+bool MapWorker::checkMovementPosition(position pos)
 {
-    return m_map[y][x] == '.' || m_map[y][x] == 'o';
+	return m_map[pos.y][pos.x] == '.' ||
+			m_map[pos.y][pos.x] == 'o' ||
+			m_map[pos.y][pos.x] == '_';
 }
 
-QTcpSocket *MapWorker::checkPlayer(position pos)
+QTcpSocket *MapWorker::getPlayerByPosition(position pos)
 {
     for(QTcpSocket* buffer : m_playerPositions.keys()){
         if(m_playerPositions[buffer].x==pos.x && m_playerPositions[buffer].y==pos.y){
@@ -55,25 +52,21 @@ QTcpSocket *MapWorker::checkPlayer(position pos)
 
 QByteArray MapWorker::getMovementPush(playerMovements side, QTcpSocket* buffer)
 {
-    if(buffer==nullptr){
-        return "";
-    }
+	if(buffer==nullptr) return "";
+
     position pushes = m_playerPositions[buffer];
-    position playerToPushCords=getCoordsBySide(pushes.x,pushes.y,side);
-    QTcpSocket *playerToPush=checkPlayer(playerToPushCords);
-    if(playerToPush==nullptr) return "";
-    switch (side) {
-        case playerMovements::sup: return processPlayerMovement(playerToPushCords.x, playerToPushCords.y-1, playerToPush); break;
-        case playerMovements::sdown: return processPlayerMovement(playerToPushCords.x, playerToPushCords.y+1, playerToPush); break;
-        case playerMovements::sleft: return processPlayerMovement(playerToPushCords.x-1, playerToPushCords.y, playerToPush); break;
-        case playerMovements::sright: return processPlayerMovement(playerToPushCords.x+1, playerToPushCords.y, playerToPush); break;
-    }
+	position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
+	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
+
+	if(playerToPush==nullptr) return "";
+
+	return getMovementResponse(playerToPush, side);
 }
 
 void MapWorker::addUser(QTcpSocket *socket, position pos)
 {
 	m_playerPositions[socket] = pos;
-	m_playerIds[socket] = generateId();
+	m_playerIds[socket] = Utilities::generateId();
 }
 
 QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements side)
@@ -81,148 +74,109 @@ QByteArray MapWorker::getMovementResponse(QTcpSocket *socket, playerMovements si
 	position pos = m_playerPositions[socket];
 
 	switch (side) {
-		case playerMovements::sup: return processPlayerMovement(pos.x, pos.y-1, socket); break;
-		case playerMovements::sdown: return processPlayerMovement(pos.x, pos.y+1, socket); break;
-		case playerMovements::sleft: return processPlayerMovement(pos.x-1, pos.y, socket); break;
-		case playerMovements::sright: return processPlayerMovement(pos.x+1, pos.y, socket); break;
-	}   
+		case playerMovements::sup: pos.y--; break;
+		case playerMovements::sdown: pos.y++; break;
+		case playerMovements::sleft: pos.x--; break;
+		case playerMovements::sright: pos.x++; break;
+	}
+	return processPlayerMovement(pos, socket);
 }
 
-void MapWorker::updatePlayerPos(QTcpSocket* socket, int x, int y)
+void MapWorker::updatePlayerPos(QTcpSocket* socket, position pos)
 {
-	position pos;
-	pos.x = x;
-	pos.y = y;
 	m_playerPositions[socket] = pos;
 }
 
 QByteArray MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QString direction)
 {
 	position pos = m_playerPositions[socket];
-	playerMovements side = getSideFromString(direction);
-    position actPos = getCoordsBySide(pos.x, pos.y, side);
+	playerMovements side = Utilities::getSideFromString(direction);
+	position actPos = Utilities::getCoordsBySide(pos, side);
 
 	switch (act) {
-		case actions::open: return formatMapChange(actPos.x, actPos.y, processOpen(actPos.x, actPos.y)); break;
-		case actions::close: return formatMapChange(actPos.x, actPos.y, processClose(actPos.x, actPos.y)); break;
+		case actions::open: return formatMapChange(actPos, processOpen(actPos)); break;
+		case actions::close: return formatMapChange(actPos, processClose(actPos)); break;
 		default: return QByteArray("");
 	}
 }
 
-QByteArray MapWorker::processPlayerMovement(int x, int y, QTcpSocket *socket)
+QByteArray MapWorker::processPlayerMovement(position pos, QTcpSocket *socket)
 {
-	if (checkMovementPosition(x, y)) { updatePlayerPos(socket, x, y); return formatResponce(x, y, socket); }
+	if (checkMovementPosition(pos)) {
+		updatePlayerPos(socket, pos);
+		return formatResponce(pos, socket);
+	}
+
     return "";
 }
 
-QByteArray MapWorker::generateId()
-{
-	QByteArray possibleChars("0123456789");
-	int randomStringLength = 6;
-	QByteArray id;
-
-	for (int symbol = 0; symbol < randomStringLength; symbol++) {
-		id += possibleChars.at(m_randomGenerator.bounded(0,possibleChars.length()));
-	}
-	return id;
-}
-
-void MapWorker::updateMapData(int x, int y, char object)
+void MapWorker::updateMapData(position pos, char object)
 {
 	int offset = 0;
-	for (int row=0; row<y; row++) {
+	for (int row=0; row<pos.y; row++) {
 		offset += m_map[row].size() + 1;
 	}
-	offset += x;
+	offset += pos.x;
 	m_mapData[offset] = object;
 	log ("Updated map");
 }
 
-QByteArray MapWorker::formatMapChange(int x, int y, char object)
+QByteArray MapWorker::formatMapChange(position pos, char object)
 {
-	if (m_map[y][x] == object) {
+	if (m_map[pos.y][pos.x] == object) {
 		return "";
 	}
 
-	m_map[y][x] = object;
-	updateMapData(x, y, object);
-	return QByteArray("CHG:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + object + "|");
+	m_map[pos.y][pos.x] = object;
+	updateMapData(pos, object);
+	return QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|");
 }
 
-position MapWorker::getCoordsBySide(int x, int y, playerMovements side)
+QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
 {
-	position pos;
-	pos.x = x;
-	pos.y = y;
-	switch (side) {
-		case playerMovements::sup: pos.y--; break;
-		case playerMovements::sdown: pos.y++; break;
-		case playerMovements::sleft: pos.x--; break;
-		case playerMovements::sright: pos.x++; break;
-	}
-
-	return pos;
+	return "POS:" + m_playerIds[socket] + ":" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|";
 }
 
-playerMovements MapWorker::getSideFromString(QString side)
+char MapWorker::processOpen(position pos)
 {
-	if (side == "UP") return playerMovements::sup;
-	if (side == "DOWN") return playerMovements::sdown;
-	if (side == "LEFT") return playerMovements::sleft;
-	if (side == "RIGHT") return playerMovements::sright;
-	return playerMovements::sup;
-}
-
-QByteArray MapWorker::formatResponce(int x, int y, QTcpSocket *socket)
-{
-	return "POS:" + m_playerIds[socket] + ":" + QByteArray::number(x) + ":" + QByteArray::number(y) + "|";
-}
-
-char MapWorker::processOpen(int x, int y)
-{
-	switch(m_map[y][x]) {
+	switch(m_map[pos.y][pos.x]) {
 		case 'c': return 'o';
 		case 't': return 'T';
 		case 's': return 'S';
-		default: return m_map[y][x];
+		default: return m_map[pos.y][pos.x];
 	}
 }
 
-char MapWorker::processClose(int x, int y)
+char MapWorker::processClose(position pos)
 {
-	switch(m_map[y][x]) {
+	switch(m_map[pos.y][pos.x]) {
 		case 'o': return 'c';
 		case 'T': return 't';
 		case 'S': return 's';
-		default: return m_map[y][x];
+		default: return m_map[pos.y][pos.x];
 	}
 }
 
-QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data)
+QVector<QByteArray> MapWorker::processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside)
 {
-	QList<QByteArray> prefs = data.split(':');
 	position pos = m_playerPositions[socket];
-	playerMovements side = getSideFromString(prefs[2]);
-	position actPos = getCoordsBySide(pos.x, pos.y, side);
-	return dropItem(prefs[1], actPos.x, actPos.y, socket);
+	playerMovements side = Utilities::getSideFromString(bside);
+	position actPos = Utilities::getCoordsBySide(pos, side);
+	return dropItem(data, actPos, socket);
 }
 
 QVector<QByteArray> MapWorker::processPick(QTcpSocket *socket, QString data)
 {
-	QString direction = data.split(':')[1];
 	position pos = m_playerPositions[socket];
-	playerMovements side = getSideFromString(direction);
-	position actPos = getCoordsBySide(pos.x, pos.y, side);
+	playerMovements side = Utilities::getSideFromString(data);
+	position actPos = Utilities::getCoordsBySide(pos, side);
 
-	return pickItem(actPos.x, actPos.y, socket);
+	return pickItem(actPos, socket);
 }
 
-QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::pickItem(position pos, QTcpSocket *player)
 {
-	position coords;
-	coords.x = x;
-	coords.y = y;
-	QByteArray id = m_itemController->getItem(coords);
+	QByteArray id = m_itemController->getItem(pos);
 
 	QVector<QByteArray> responce;
 
@@ -232,20 +186,16 @@ QVector<QByteArray> MapWorker::pickItem(int x, int y, QTcpSocket *player)
 		responce.push_back("");
 	} else {
 		m_inventoryController->addItemToInventory(player, id);
-		m_itemController->deleteItem(coords, id);
+		m_itemController->deleteItem(pos, id);
 		responce.push_back("PITEM:" + id + "|");
-		responce.push_back("ICLEAR:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+		responce.push_back("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 	}
 
 	return responce;
 }
 
-QVector<QByteArray> MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket *player)
+QVector<QByteArray> MapWorker::dropItem(QByteArray id, position pos, QTcpSocket *player)
 {
-	position coords;
-	coords.x = x;
-	coords.y = y;
-
 	QVector<QByteArray> responce;
 	log ("Item id to be dropped: " + id);
 
@@ -254,9 +204,10 @@ QVector<QByteArray> MapWorker::dropItem(QByteArray id, int x, int y, QTcpSocket 
 		responce.push_back("");
 	} else {
 		m_inventoryController->removeItemFromInventory(player, id);
-		m_itemController->addItem(coords, id);
+		m_itemController->addItem(pos, id);
 		responce.push_back("DITEM:" + id + "|");
-		responce.push_back("IPLACE:" + QByteArray::number(x) + ":" + QByteArray::number(y) + ":" + id + "|");
+		responce.push_back("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
+		responce.push_back(m_inventoryController->takeOff(id, player));
 	}
 
 	return responce;

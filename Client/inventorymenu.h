@@ -23,11 +23,24 @@ public:
 
 	void setItemLoader(ItemLoader *loader) { m_itemLoader = loader; }
 
-private slots:
-	void selectedItem(QListWidgetItem *item);
+public slots:
+	void processTakingOffItem(QByteArray id);
+	void processWearingItem(QByteArray id);
 
+signals:
+	void sendWearItem(QByteArray data);
+	void sendTakeOffItem(QByteArray data);
 
 private:
+	void clearWereable(QString name, QString text);
+
+private slots:
+	void selectedItem(QListWidgetItem *item);
+	void wearItem();
+	void takeOffItem();
+
+private:
+
     Ui::InventoryMenu *ui;
 	ItemLoader* m_itemLoader;
 
