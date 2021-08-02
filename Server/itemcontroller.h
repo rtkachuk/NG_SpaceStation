@@ -15,10 +15,10 @@ public:
 
 	void addItem(position cords, QByteArray id);
 	void deleteItem(position cords, QByteArray id);
-
 	void loadItems();
 
-    QByteArray getItem(position cords);
+    QByteArray getItemIdByPos(position cords);
+	QByteArray getItemIdByPos(position cords, int elementNumber);
 	QMap<position, QVector<QByteArray>>* getItems() { return &m_ids; }
 
 private:

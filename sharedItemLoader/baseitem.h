@@ -17,7 +17,8 @@ enum playerWearable {
 enum itemType {
 	notype,
 	tool,
-	weapon
+	weapon,
+	furniture
 };
 
 enum toolMode {
