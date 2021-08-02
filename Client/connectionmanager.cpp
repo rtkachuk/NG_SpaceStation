@@ -53,8 +53,10 @@ void ConnectionManager::socketReady()
 	QList<QByteArray> gotData = received.split('|');
 
 	for (QByteArray data : gotData) {
+		if (data.isEmpty()) return;
 
 		log (data);
+
 		QList<QByteArray> params = data.split(':');
 		QByteArray command = params[0];
 
