@@ -38,6 +38,7 @@ private slots:
 
 	void actShowActionsMenu();
     void actShowInventoryMenu();
+    void actShowHPMenu();
 
 	void connectToServer();
 	void connectedToServer();
@@ -92,6 +93,7 @@ private:
 	QAction *m_followPlayer;
 	QAction *m_showActionsMenu;
     QAction *m_showInventoryMenu;
+    QAction *m_showHPMenu;
 
 	ActionWindow *m_actionWindow;
 	ConnectDialog *m_connectDialog;
