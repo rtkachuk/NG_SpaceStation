@@ -1,0 +1,19 @@
+1:tool:Молоток:holdable:hammering:melee:10:/items/hammer.png:Молотком можно забивать гвозди, чинить советские телевизоры, или мнение других людей.
+2:tool:Отвёртка:holdable:screwing:melee:15:/items/screwdriver.png:Универсальная отвёртка - незаменимая вещь для любого инженера! Ну, или гопника.
+3:tool:Разводной ключ:holdable:wrenching:melee:25:/items/adjustable_wrench.png:Разводным ключём удобно монтировать трубы любого размера. Также можно неплохо так проломить череп.
+4:tool:Плоскогубцы:holdable:wrenching:melee:15:/items/pliers.png:Плоскогубцами также можно открутить гайки, или обжать провода. Удобно
+5:tool:Кусачки:holdable:cutting:melee:5:/items/wirecutters.png:Кусачки - идеальный инструмент для ремонта проводки, или диверсии
+6:tool:Кисть:holdable:nomode:melee:1:/items/brush.png:Кистью можно красить... Или развозить яд по стенам
+7:tool:"Библия":holdable:notool:melee:5:/books/book_religion.png:Карманная библия? Усомнился в своих силах?
+8:tool:"Готовить весело!":holdable:notool:melee:5:/books/book_cooking.png:101 рецепт салата из тыкв! Очень познавательно.
+9:tool:"Прикладная механика":holdable:notool:melee:5:/books/book_engineering.png:Куча рецептов для инженерки... с картинками! Кто-то оставил закладку с номером борделя - однозначно полезная штука!
+10:tool:"История галактики":holdable:notool:melee:5:/books/book_history.png:Краткая история всего, что происходило с нашей вселенной... Сборник анекдотов, короче.
+11:tool:"Книга магии":holdable:notool:melee:5:/books/book_magic.png:Это тебе не зайчика из шляпки вытаскивать!
+12:tool:"Терапия головного мозга":holdable:notool:melee:5:/books/book_medicine.png:В принципе, если ты можешь лечить - лечи. А лицензия - это уже потом.
+13:tool:"Энциклопедия сектора ЦН-8-TU":holdable:notool:melee:5:/books/book_science.png:Как вообще это всё можно удержать в голове?
+14:tool:Ноутбук:holdable:notool:noweapon:0:/items/notebook.png:Из-за нехватки финансирования мы получили квантовые компьютеры третьего поколения, вместо пятого. Это даже не старьё, это рухлядь. Но на этой рухляди можно дебажить ИИ нашей станции.
+15:weapon:Топор:holdable:notool:melee:40:/items/axe.png:Топор - на Земле им рубили лес, сейчас же можно запросто рубить головы.
+16:tool:Резиновые перчатки:gloves:notool:noweapon:0:/items/rubber_gloves.png:Резиновые перчатки - твой личный крест против электричества и антисанитарии!
+17:tool:Резиновые сапоги:feet:notool:noweapon:0:/items/rubber_boots.png:Резиновые сапоги - лучшая защита от грязи и электричества!
+18:tool:Сварочная маска:head:notool:noweapon:0:/item/welding_mask.png:Сварочная маска - если не хочешь носить свои глаза в пакетике, лучше использовать перед сваркой!
+19:tool:Сварочный аппарат:holdable:welding:noweapon:0:/item/welding_machine.png:Твой друг уснул в защитном костюме из металлических пластин? Привари его к стулу, вот умора!

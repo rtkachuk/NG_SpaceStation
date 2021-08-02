@@ -29,24 +29,7 @@ SpaceStation::SpaceStation(QWidget *parent)
     connect (m_actionWindow, &ActionWindow::closeSomething, this, &SpaceStation::processPlayerAction);
     connect (m_actionWindow, &ActionWindow::movePlayer, this, &SpaceStation::movePlayer);
     connect (m_actionWindow, &ActionWindow::getRequestPush, this, &SpaceStation::processPlayerAction);
-<<<<<<< HEAD
-    connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
-    connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
-    connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
-    connect (m_connectionManager, &ConnectionManager::message, this, &SpaceStation::chatMessage);
-    connect (m_connectionManager, &ConnectionManager::mapChanged, this, &SpaceStation::mapChanged);
-    connect (m_connectionManager, &ConnectionManager::gotId, this, &SpaceStation::gotId);
-    connect (m_connectionManager, &ConnectionManager::playerDisconnected, this, &SpaceStation::playerDisconnected);
-    connect (m_connectionManager, &ConnectionManager::pickItem, this, &SpaceStation::processItem);
-    connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
-    connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
 
-    connect (m_connectionManager, &ConnectionManager::placeItem, this, &SpaceStation::placeItem);
-    connect (m_connectionManager, &ConnectionManager::removeItem, this, &SpaceStation::removeItem);
-    connect (m_connectionManager, &ConnectionManager::showHP, this, &SpaceStation::hpShow);
-
-    connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
-=======
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
@@ -57,6 +40,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::pickItem, this, &SpaceStation::processItem);
 	connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
 	connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
+    connect (m_connectionManager, &ConnectionManager::showHP, this, &SpaceStation::hpShow);
 
 	connect (m_connectionManager, &ConnectionManager::placeItem, this, &SpaceStation::placeItem);
 	connect (m_connectionManager, &ConnectionManager::removeItem, this, &SpaceStation::removeItem);
@@ -67,7 +51,6 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::signalTakeOffItem, m_inventory, &InventoryMenu::processTakingOffItem);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
->>>>>>> cc945d011ad0a580335beaf09d28f5fa1afdbec9
 }
 
 SpaceStation::~SpaceStation()
@@ -190,12 +173,7 @@ void SpaceStation::gotInitPlayerPosition(position pos)
 
 void SpaceStation::sendMessage()
 {
-<<<<<<< HEAD
-    if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
-
-=======
 	if (ui->l_message->text().isEmpty() == false) m_connectionManager->sendMessage(ui->l_message->text());
->>>>>>> cc945d011ad0a580335beaf09d28f5fa1afdbec9
 }
 
 void SpaceStation::placeItem(ItemInfo item)

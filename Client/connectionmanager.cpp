@@ -118,12 +118,10 @@ void ConnectionManager::socketReady()
 			m_map = params[1];
 			emit gotMap();
 		}
-<<<<<<< HEAD
         if (command == "HEALTH"){
             int HP = params[1].toInt();
             emit showHP(HP);
         }
-=======
 
 		if (command == "WEAR") {
 			emit signalWearItem(params[1]);
@@ -132,6 +130,5 @@ void ConnectionManager::socketReady()
 		if (command == "TAKEOFF") {
 			emit signalTakeOffItem(params[1]);
 		}
->>>>>>> cc945d011ad0a580335beaf09d28f5fa1afdbec9
 	}
 }
