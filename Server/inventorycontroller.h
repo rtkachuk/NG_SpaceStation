@@ -22,6 +22,7 @@ public:
 
 	QByteArray wearId(QByteArray id, QTcpSocket *player);
 	QByteArray takeOff(QByteArray id, QTcpSocket *player);
+	QByteArray getWear(playerWearable place, QTcpSocket *player) { return m_wear[player].getwear(place); }
 
 private:
 	QMap<QTcpSocket*,QVector<QByteArray>> m_inventories;
