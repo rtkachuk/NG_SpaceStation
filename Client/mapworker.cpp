@@ -92,24 +92,27 @@ void MapWorker::removeItem(ItemInfo item)
 	m_items.remove(item);
 }
 
+void MapWorker::placeFoundation(int x, int y)
+{
+	m_scene->addPixmap(selectSpacePixmap())->setPos(x, y);
+	m_scene->addPixmap(QPixmap(":/buildings/foundation.png"))->setPos(x, y);
+}
+
+void MapWorker::constructCell(int x, int y, QString imagePath)
+{
+	placeFoundation(x, y);
+	m_scene->addPixmap(imagePath)->setPos(x, y);
+}
+
 void MapWorker::updateCell(int x, int y, char object)
 {
-	if (object != ' ') // it's not space
-		m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y);
 	switch (object) {
-		case '.': m_scene->addPixmap(QPixmap(":/buildings/floor.png"))->setPos(x, y); break;
-		case '_': m_scene->addPixmap(QPixmap(":/buildings/floor1.png"))->setPos(x, y); break;
-		case '#': m_scene->addPixmap(QPixmap(":/buildings/wall.png"))->setPos(x, y); break;
-		case 'o': m_scene->addPixmap(QPixmap(":/buildings/door_open.png"))->setPos(x, y); break;
-		case 'c': m_scene->addPixmap(QPixmap(":/buildings/door_closed.png"))->setPos(x, y); break;
-		case 'b': m_scene->addPixmap(QPixmap(":/buildings/door_broken.png"))->setPos(x, y); break;
-		case 't': m_scene->addPixmap(QPixmap(":/furniture/trash_can.png"))->setPos(x, y); break;
-		case 'T': m_scene->addPixmap(QPixmap(":/furniture/trash_can_open.png"))->setPos(x, y); break;
-		case 's': m_scene->addPixmap(QPixmap(":/furniture/box.png"))->setPos(x, y); break;
-		case 'S': m_scene->addPixmap(QPixmap(":/furniture/open_box.png"))->setPos(x, y); break;
-		case 'r': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm.png")); item->setPos(x, y); item->setZValue(10); } break;
-		case 'R': { QGraphicsPixmapItem *item = m_scene->addPixmap(QPixmap(":/tech/server_rack_kvm_switch.png")); item->setPos(x, y); item->setZValue(10); } break;
-		case 'j': m_scene->addPixmap(QPixmap(":/buildings/table.png"))->setPos(x, y); break;
+		case '.': constructCell(x, y, ":/buildings/floor.png"); break;
+		case '_': constructCell(x, y, ":/buildings/floor1.png"); break;
+		case '#': constructCell(x, y, ":/buildings/wall.png"); break;
+		case 'o': constructCell(x, y, ":/buildings/door_open.png"); break;
+		case 'c': constructCell(x, y, ":/buildings/door_closed.png"); break;
+		case 'b': constructCell(x, y, ":/buildings/door_broken.png"); break;
 		case '*': m_scene->addPixmap(selectSpacePixmap())->setPos(x, y); break;
 		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
 	}

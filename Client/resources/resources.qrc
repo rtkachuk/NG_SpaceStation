@@ -43,5 +43,6 @@
         <file>items/wirecutters.png</file>
         <file>buildings/floor1.png</file>
         <file>items/rubber_gloves.png</file>
+        <file>buildings/foundation.png</file>
     </qresource>
 </RCC>
