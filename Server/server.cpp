@@ -6,13 +6,16 @@ Server::Server()
 	m_itemLoader->loadItems();
 
 	m_mapFileLoader = new MapFileLoader();
-	m_mapWorker = new MapWorker(m_itemLoader);
 
 	m_inventoryController = new InventoryController(m_itemLoader);
     m_healthController = new HealthControl();
 
+	m_mapWorker = new MapWorker(m_itemLoader, m_healthController);
+
 	m_mapWorker->setInventoryController(m_inventoryController);
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
+
+	connect (m_mapWorker, &MapWorker::sendHealthInfo, this, &Server::notifyPlayerAboutDamage);
 
 	log ("Server ready");
 }
@@ -37,7 +40,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	m_players.append(socket);
 	m_mapWorker->addUser(socket, pos);
 	m_inventoryController->createPlayerInventory(socket);
-    m_healthController->createPlayerHealth(socket);
+	m_healthController->setPlayerHealth(socket, 100);
 
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
 	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
@@ -87,14 +90,19 @@ void Server::disconnected()
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
-    m_healthController->deleteHealth(client);
+	m_healthController->deleteHealth(client);
+}
+
+void Server::notifyPlayerAboutDamage(QTcpSocket *player)
+{
+	player->write(healthState(player));
 }
 
 void Server::processQuery(QTcpSocket *client, QByteArray query)
 {
 	QList<QByteArray> parts = query.split(':');
 	QByteArray command = parts[0];
-    if (command == "KICK") sendToAll(m_mapWorker->processPlayerKick(client,actions::kick,parts[1]));
+	if (command == "KICK") sendToAll(m_mapWorker->processPlayerKick(client,parts[1]));
 	if (command == "PUSH") sendToAll(m_mapWorker->processPlayerPush(client,actions::push,parts[1]));
 	if (command == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
 	if (command == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }

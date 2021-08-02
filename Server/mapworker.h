@@ -12,10 +12,11 @@
 #include "inventorycontroller.h"
 #include "../sharedItemLoader/itemloader.h"
 
-class MapWorker
+class MapWorker : public QObject
 {
+	Q_OBJECT
 public:
-	MapWorker(ItemLoader *loader);
+	MapWorker(ItemLoader *loader, HealthControl *health);
 	void setInventoryController(InventoryController* inv) { m_inventoryController = inv; }
 	void processMap(QByteArray mapData);
 	void addUser(QTcpSocket* socket, position pos);
@@ -32,9 +33,8 @@ public:
 
 	QByteArray getMap() { return m_mapData; }
     QByteArray processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
-    QByteArray processPlayerKick(QTcpSocket* buffer, actions act, QString direction);
+	QByteArray processPlayerKick(QTcpSocket* buffer, QString direction);
     QByteArray getMovementPush(playerMovements side,QTcpSocket* buffer);
-    QByteArray getMovementKick(playerMovements side,QTcpSocket* buffer);
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
 	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);
 	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
@@ -45,6 +45,8 @@ public:
 	QVector<QByteArray> pickItem(position pos, QTcpSocket *player);
 	QVector<QByteArray> dropItem(QByteArray id, position pos, QTcpSocket *player);
 
+signals:
+	void sendHealthInfo(QTcpSocket* player);
 
 private:
 	void updateMapData(position pos, char object);
@@ -70,7 +72,7 @@ private:
     ItemController* m_itemController;
 	InventoryController* m_inventoryController;
 	ItemLoader* m_itemLoader;
-    HealthControl *m_healthControll;
+	HealthControl *m_healthController;
 };
 
 #endif // MAPWORKER_H

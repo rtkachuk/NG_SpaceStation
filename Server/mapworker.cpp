@@ -1,10 +1,10 @@
 #include "mapworker.h"
 
-MapWorker::MapWorker(ItemLoader *loader)
+MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 {
 	m_itemController = new ItemController();
-    m_healthControll= new HealthControl();
 	m_itemLoader = loader;
+	m_healthController = health;
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -33,14 +33,19 @@ QByteArray MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString
     return QByteArray("");
 }
 
-QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, actions act, QString direction)
+QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
 {
-    playerMovements side = Utilities::getSideFromString(direction);
-    if (act == actions::kick){
-        m_healthControll->makeDamage(buffer,1);
-        return getMovementPush(side,buffer);
-    }
-    return QByteArray("");
+	playerMovements side = Utilities::getSideFromString(direction);
+	position playerToPushCords=Utilities::getCoordsBySide(m_playerPositions[buffer],side);
+	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
+
+	if (playerToPush == nullptr) return "";
+
+	int damage = 1;
+	m_healthController->makeDamage(playerToPush,damage);
+	emit sendHealthInfo(playerToPush);
+	return getMovementPush(side,buffer);
+	return QByteArray("");
 }
 
 
@@ -78,19 +83,6 @@ QByteArray MapWorker::getMovementPush(playerMovements side, QTcpSocket* buffer)
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
 
 	if(playerToPush==nullptr) return "";
-
-    return getMovementResponse(playerToPush, side);
-}
-
-QByteArray MapWorker::getMovementKick(playerMovements side, QTcpSocket *buffer)
-{
-    if(buffer==nullptr) return "";
-
-    position pushes = m_playerPositions[buffer];
-    position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
-    QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
-
-    if(playerToPush==nullptr) return "";
 
     return getMovementResponse(playerToPush, side);
 }

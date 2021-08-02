@@ -24,6 +24,8 @@ private slots:
 	void readyRead();
 	void disconnected();
 
+	void notifyPlayerAboutDamage(QTcpSocket *player);
+
 private:
 	void processQuery(QTcpSocket *client, QByteArray query);
 

@@ -16,7 +16,6 @@ public:
     ~StateWindow();
 public slots:
     void showHP(int number);
-    void updateHP(int number);
 
 private:
     Ui::StateWindow *ui;

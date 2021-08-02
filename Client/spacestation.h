@@ -30,10 +30,6 @@ public:
 	SpaceStation(QWidget *parent = nullptr);
 	~SpaceStation();
 
-public slots:
-    void hpShow(int HP);
-    void hpUpdate(int HP);
-
 private slots:
 	void actFindPlayer();
 
@@ -53,6 +49,8 @@ private slots:
 
 	void movePlayer(playerMovement side);
 	void processPlayerAction(QString action);
+
+	void hpShow(int HP);
 
 	void processItem(QByteArray id);
 	QByteArray getDropItemCommand();

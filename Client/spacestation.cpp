@@ -42,7 +42,6 @@ SpaceStation::SpaceStation(QWidget *parent)
     connect (m_connectionManager, &ConnectionManager::dropItem, this, &SpaceStation::processItem);
     connect (m_connectionManager, &ConnectionManager::initPlayerPosition, this, &SpaceStation::gotInitPlayerPosition);
     connect (m_connectionManager, &ConnectionManager::showHP, this, &SpaceStation::hpShow);
-    connect (m_connectionManager, &ConnectionManager::updateHP,this, &SpaceStation::hpShow);
 
     connect (m_connectionManager, &ConnectionManager::placeItem, this, &SpaceStation::placeItem);
     connect (m_connectionManager, &ConnectionManager::removeItem, this, &SpaceStation::removeItem);
@@ -63,11 +62,6 @@ SpaceStation::~SpaceStation()
 void SpaceStation::hpShow(int HP)
 {
     m_stateWindow->showHP(HP);
-}
-
-void SpaceStation::hpUpdate(int HP)
-{
-    m_stateWindow->updateHP(HP);
 }
 
 void SpaceStation::actFindPlayer()
