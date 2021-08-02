@@ -115,5 +115,9 @@ void ConnectionManager::socketReady()
 			m_map = params[1];
 			emit gotMap();
 		}
+        if (command == "HEALTH"){
+            int HP = params[1].toInt();
+            emit showHP(HP);
+        }
 	}
 }

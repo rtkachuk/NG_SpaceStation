@@ -16,6 +16,7 @@
 #include "selectdirectiondialog.h"
 #include "inventorymenu.h"
 #include "../sharedItemLoader/itemloader.h"
+#include "statewindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -28,6 +29,9 @@ class SpaceStation : public QMainWindow
 public:
 	SpaceStation(QWidget *parent = nullptr);
 	~SpaceStation();
+
+public slots:
+    void hpShow(int HP);
 
 private slots:
 	void actFindPlayer();
@@ -92,6 +96,7 @@ private:
 	SelectDirectionDialog *m_selectDirectionDialog;
     InventoryMenu *m_inventory;
 	ItemLoader *m_itemLoader;
+    StateWindow *m_stateWindow;
 
 	QThread *m_networkingThread;
 };

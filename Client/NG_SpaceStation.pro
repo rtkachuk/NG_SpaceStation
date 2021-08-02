@@ -18,7 +18,8 @@ SOURCES += \
     main.cpp \
     mapworker.cpp \
     selectdirectiondialog.cpp \
-    spacestation.cpp
+    spacestation.cpp \
+    statewindow.cpp
 
 HEADERS += \
     ../sharedItemLoader/baseitem.h \
@@ -30,14 +31,16 @@ HEADERS += \
     inventorymenu.h \
     mapworker.h \
     selectdirectiondialog.h \
-    spacestation.h
+    spacestation.h \
+    statewindow.h
 
 FORMS += \
     actionwindow.ui \
     connectdialog.ui \
     inventorymenu.ui \
     selectdirectiondialog.ui \
-    spacestation.ui
+    spacestation.ui \
+    statewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

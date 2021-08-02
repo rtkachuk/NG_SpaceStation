@@ -39,6 +39,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
 	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
+    socket->write(healthState(socket));
 	sendAllItemsPositions(socket);
 }
 
@@ -91,6 +92,7 @@ void Server::disconnected()
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
+    m_healthController->deleteHealth(client);
 }
 
 void Server::incomingConnection(qintptr handle)
@@ -103,5 +105,5 @@ void Server::incomingConnection(qintptr handle)
 	connect (client, &QTcpSocket::readyRead, this, &Server::readyRead);
 	connect (client, &QTcpSocket::disconnected, this, &Server::disconnected);
 
-	processNewPlayer(client);
+    processNewPlayer(client);
 }

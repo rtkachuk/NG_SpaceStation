@@ -12,6 +12,7 @@ public:
     void createPlayerHealth(QTcpSocket *player){m_healthPlayer[player]=100;}
     void deleteHealth(QTcpSocket *player){m_healthPlayer[player]=0;}
     void setDamage(QTcpSocket *player,int damage);
+    int getHealth(QTcpSocket *player){return m_healthPlayer[player];}
 private:
     QMap<QTcpSocket*,int> m_healthPlayer;
 };

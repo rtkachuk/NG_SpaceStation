@@ -25,6 +25,7 @@ private:
 	void sendAllItemsPositions(QTcpSocket* socket);
 
 	void log(QString msg);
+    QByteArray healthState(QTcpSocket* client){return "HEALTH:" + QByteArray::number(m_healthController->getHealth(client)) + "|";}
 
 	QVector<QTcpSocket*> m_players;
 	QMap<QTcpSocket*, QString> m_playerNames;

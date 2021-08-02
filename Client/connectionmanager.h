@@ -36,7 +36,7 @@ signals:
 	void gotId(QByteArray id);
 	void playerDisconnected(QByteArray id);
 	void initPlayerPosition(position pos);
-
+    void showHP(int HP);
 	void pickItem(QByteArray id);
 	void dropItem(QByteArray id);
 
