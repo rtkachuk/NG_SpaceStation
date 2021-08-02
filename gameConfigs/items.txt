@@ -21,3 +21,4 @@
 21:furniture:Стол:itemnomode:notool:noweapon:0:/buildings/table.png:Стол, на который можно что-то положить.
 22:furniture:Серверная стойка:itemnomode:notool:noweapon:0:/tech/server_rack_kvm.png:Серверная стойка. Ничего особо интересного, нужно найти терминал, чтобы управлять ею.
 23:furniture:Серверный терминал:itemnomode:notool:noweapon:0:/tech/server_rack_kvm.png:Терминал. Через него я могу покопаться на серверных стойках, которые как правило стоят неподалёку
+24:notype:Лужа крови:itemnomode:notool:noweapon:0:/misc/blood.png:Лужа крови, ничего необычного
