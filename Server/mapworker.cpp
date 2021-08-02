@@ -40,9 +40,13 @@ QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
 
 	if (playerToPush == nullptr) return "";
-
-	int damage = 1;
-	m_healthController->makeDamage(playerToPush,damage);
+    QByteArray id=m_inventoryController->getWear(playerWearable::holdable, buffer);
+    int damage=0;
+    if(id.isEmpty()==false){
+        damage=m_itemLoader->getItemById(id).getDamage();
+    }
+    else damage = 1;
+    m_healthController->makeDamage(playerToPush,damage);
 	emit sendHealthInfo(playerToPush);
 	return getMovementPush(side,buffer);
 	return QByteArray("");

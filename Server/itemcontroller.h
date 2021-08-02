@@ -18,13 +18,12 @@ public:
 	void loadItems();
 
     QByteArray getItemIdByPos(position cords);
-	QByteArray getItemIdByPos(position cords, int elementNumber);
+    QByteArray getItemIdByPos(position cords, int elementNumber);
 	QMap<position, QVector<QByteArray>>* getItems() { return &m_ids; }
 
 private:
 	void parseItem(QString line);
 	void log(QString msg);
-
 	QMap<position, QVector<QByteArray>> m_ids;
 	int m_amountOfItems;
 };
