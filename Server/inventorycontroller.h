@@ -7,6 +7,7 @@
 #include <QTcpSocket>
 #include "playerwear.h"
 #include "../sharedItemLoader/itemloader.h"
+#include "recipesLoader/recipesloader.h"
 
 class InventoryController : public QObject
 {
@@ -34,6 +35,7 @@ private:
 	QMap<QTcpSocket*,QVector<QByteArray>> m_inventories;
 	QMap<QTcpSocket*,PlayerWear> m_wear;
 	ItemLoader* m_itemLoader;
+	RecipesLoader* m_recipesLoader;
 };
 
 #endif // INVENTORYCONTROLLER_H

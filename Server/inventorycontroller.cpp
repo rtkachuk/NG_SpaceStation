@@ -3,6 +3,7 @@
 InventoryController::InventoryController(ItemLoader *loader)
 {
 	m_itemLoader = loader;
+	m_recipesLoader = new RecipesLoader();
 }
 
 void InventoryController::wearId(QByteArray id, QTcpSocket *player)

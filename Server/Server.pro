@@ -18,6 +18,7 @@ SOURCES += \
         mapfileloader.cpp \
         mapworker.cpp \
         playerwear.cpp \
+        recipesLoader/recipesloader.cpp \
         server.cpp \
         utilities.cpp
 
@@ -36,5 +37,6 @@ HEADERS += \
     mapfileloader.h \
     mapworker.h \
     playerwear.h \
+    recipesLoader/recipesloader.h \
     server.h \
     utilities.h
