@@ -22,7 +22,6 @@
         <file>misc/space4.png</file>
         <file>items/adjustable_wrench.png</file>
         <file>items/brush.png</file>
-        <file>items/hammer.png</file>
         <file>items/noitem.png</file>
         <file>items/screwdriver.png</file>
         <file>books/book_cooking.png</file>
@@ -44,5 +43,12 @@
         <file>buildings/floor1.png</file>
         <file>items/rubber_gloves.png</file>
         <file>buildings/foundation.png</file>
+        <file>materials/circuit.png</file>
+        <file>items/big_hammer.png</file>
+        <file>items/dynamite.png</file>
+        <file>items/hammer.png</file>
+        <file>items/rubber_boots.png</file>
+        <file>items/welding_machine.png</file>
+        <file>items/welding_mask.png</file>
     </qresource>
 </RCC>

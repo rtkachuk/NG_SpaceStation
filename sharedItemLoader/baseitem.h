@@ -18,7 +18,8 @@ enum itemType {
 	notype,
 	tool,
 	weapon,
-	furniture
+	furniture,
+	material
 };
 
 enum toolMode {

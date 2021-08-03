@@ -77,6 +77,8 @@ void MapWorker::placeItem(ItemInfo itemInfo)
 		log (tool.getPixmap());
 	}
 
+	log (tool.getPixmap());
+
 	log(QString::number(itemInfo.pos.x) + ":" + QString::number(itemInfo.pos.y));
 
 	QGraphicsPixmapItem *item = m_scene->addPixmap(image);

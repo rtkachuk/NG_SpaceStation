@@ -40,16 +40,21 @@ QByteArray MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
 
 	if (playerToPush == nullptr) return "";
+
     QByteArray id=m_inventoryController->getWear(playerWearable::holdable, buffer);
-    int damage=0;
+
+	int damage=1;
     if(id.isEmpty()==false){
         damage=m_itemLoader->getItemById(id).getDamage();
     }
-    else damage = 1;
-    m_healthController->makeDamage(playerToPush,damage);
+
+	m_healthController->makeDamage(playerToPush,damage);
+	m_itemController->addItem(playerToPushCords, "24"); // blood id
 	emit sendHealthInfo(playerToPush);
-	return getMovementPush(side,buffer);
-	return QByteArray("");
+	return getMovementPush(side,buffer) +
+			"IPLACE:" +
+			QByteArray::number(playerToPushCords.x) + ":" +
+			QByteArray::number(playerToPushCords.y) + ":24|";
 }
 
 
@@ -216,7 +221,7 @@ QVector<QByteArray> MapWorker::pickItem(position pos, QTcpSocket *player)
 
 	QVector<QByteArray> responce;
 
-	if (id.isEmpty() || type == itemType::furniture)
+	if (id.isEmpty() || type == itemType::furniture || type == itemType::notype)
 	{
 		responce.push_back("");
 		responce.push_back("");
