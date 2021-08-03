@@ -47,11 +47,6 @@ BaseItem ItemLoader::parseItem(QString line)
 	bufferItem.setPixmap(paramethers[7]);
 	bufferItem.setDescription(paramethers[8]);
 
-	log ("=============================");
-	log ("Item name: " + bufferItem.getName());
-	log ("Item pixmap: " + bufferItem.getPixmap());
-	log ("Item id: " + bufferItem.getId());
-
 	m_amountOfItems++;
 
 

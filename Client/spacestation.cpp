@@ -217,6 +217,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
     case Qt::Key_T: processPlayerAction(getDropItemCommand()); break;
     case Qt::Key_B: processPlayerAction("PUSH"); break;
     case Qt::Key_F: m_followPlayer->setChecked(true); break;
+	case Qt::Key_K: processPlayerAction("KICK");
     }
 }
 

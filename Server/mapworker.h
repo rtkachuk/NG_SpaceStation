@@ -32,26 +32,27 @@ public:
 	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }
 
 	QByteArray getMap() { return m_mapData; }
-    QByteArray processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
-	QByteArray processPlayerKick(QTcpSocket* buffer, QString direction);
-    QByteArray getMovementPush(playerMovements side,QTcpSocket* buffer);
+	void processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
+	void processPlayerKick(QTcpSocket* buffer, QString direction);
+	void pushPlayer(playerMovements side,QTcpSocket* buffer);
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
-	QByteArray getMovementResponse(QTcpSocket *socket, playerMovements side);
-	QByteArray processPlayerAction(QTcpSocket* socket, actions act, QString side);
+	void movePlayer(QTcpSocket *socket, playerMovements side);
+	void processPlayerAction(QTcpSocket* socket, actions act, QString side);
 
 
-	QVector<QByteArray> processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside);
-	QVector<QByteArray> processPick(QTcpSocket *socket, QString data);
-	QVector<QByteArray> pickItem(position pos, QTcpSocket *player);
-	QVector<QByteArray> dropItem(QByteArray id, position pos, QTcpSocket *player);
+	void processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside);
+	void processPick(QTcpSocket *socket, QString data);
+	void pickItem(position pos, QTcpSocket *player);
+	void dropItem(QByteArray id, position pos, QTcpSocket *player);
 
 signals:
-	void sendHealthInfo(QTcpSocket* player);
+	void sendToPlayer(QTcpSocket* player, QByteArray data);
+	void sendToAll(QByteArray data);
 
 private:
 	void updateMapData(position pos, char object);
 
-	QByteArray processPlayerMovement(position pos, QTcpSocket* socket);
+	void processPlayerMovement(position pos, QTcpSocket* socket);
 	QByteArray formatMapChange(position pos, char object);
 	QByteArray formatResponce (position pos, QTcpSocket* socket);
 

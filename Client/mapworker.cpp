@@ -74,12 +74,7 @@ void MapWorker::placeItem(ItemInfo itemInfo)
 
 	if (tool.getId() != "-1") {
 		image = QPixmap(":" + tool.getPixmap());
-		log (tool.getPixmap());
 	}
-
-	log (tool.getPixmap());
-
-	log(QString::number(itemInfo.pos.x) + ":" + QString::number(itemInfo.pos.y));
 
 	QGraphicsPixmapItem *item = m_scene->addPixmap(image);
 	item->setPos(itemInfo.pos.x * m_cellSizePixels, itemInfo.pos.y * m_cellSizePixels);

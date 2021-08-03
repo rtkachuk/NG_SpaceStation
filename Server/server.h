@@ -24,7 +24,9 @@ private slots:
 	void readyRead();
 	void disconnected();
 
-	void notifyPlayerAboutDamage(QTcpSocket *player);
+	void sendToPlayer(QTcpSocket *player, QByteArray data);
+	void sendToAll(QByteArray message); // Send data to every user
+
 
 private:
 	void processQuery(QTcpSocket *client, QByteArray query);
@@ -32,15 +34,12 @@ private:
 	void processNewPlayer(QTcpSocket *socket); // Create inventory, player position, etc.
 	void sendAllItemsPositions(QTcpSocket* socket); // Send all items positions to new player
 
-	void sendToAll(QByteArray message); // Send data to every user
-
 	// Send chat message from one user to everybody from list
 	//
 
 	void chatMessageReceived(QTcpSocket *player, QByteArray message);
 
 	void log(QString msg);
-    QByteArray healthState(QTcpSocket* client){return "HEALTH:" + QByteArray::number(m_healthController->getHealth(client)) + "|";}
 
 	QVector<QTcpSocket*> m_players;
 	QMap<QTcpSocket*, QString> m_playerNames;

@@ -5,14 +5,13 @@ InventoryController::InventoryController(ItemLoader *loader)
 	m_itemLoader = loader;
 }
 
-QByteArray InventoryController::wearId(QByteArray id, QTcpSocket *player)
+void InventoryController::wearId(QByteArray id, QTcpSocket *player)
 {
 	if (m_inventories[player].contains(id))
-		return m_wear[player].wearOn(id);
-	return "";
+		emit sendToPlayer(player, m_wear[player].wearOn(id));
 }
 
-QByteArray InventoryController::takeOff(QByteArray id, QTcpSocket *player)
+void InventoryController::takeOff(QByteArray id, QTcpSocket *player)
 {
-	return m_wear[player].takeOff(id);
+	emit sendToPlayer(player, m_wear[player].takeOff(id));
 }

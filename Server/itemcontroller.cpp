@@ -58,7 +58,6 @@ void ItemController::parseItem(QString line)
 
 	addItem(pos, itemPrefs[0].toUtf8());
 	m_amountOfItems++;
-	log ("Placed item with id " + itemPrefs[0]);
 }
 
 void ItemController::log(QString msg)

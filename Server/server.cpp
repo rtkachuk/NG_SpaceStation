@@ -15,7 +15,10 @@ Server::Server()
 	m_mapWorker->setInventoryController(m_inventoryController);
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
 
-	connect (m_mapWorker, &MapWorker::sendHealthInfo, this, &Server::notifyPlayerAboutDamage);
+	connect (m_mapWorker, &MapWorker::sendToPlayer, this, &Server::sendToPlayer);
+	connect (m_mapWorker, &MapWorker::sendToAll, this, &Server::sendToAll);
+	connect (m_inventoryController, &InventoryController::sendToPlayer, this, &Server::sendToPlayer);
+	connect (m_inventoryController, &InventoryController::sendToAll, this, &Server::sendToAll);
 
 	log ("Server ready");
 }
@@ -45,7 +48,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
 	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
-    socket->write(healthState(socket));
+	socket->write("HEALTH:" + QByteArray::number(m_healthController->getHealth(socket)) + "|");
 	sendAllItemsPositions(socket);
 }
 
@@ -81,10 +84,8 @@ void Server::disconnected()
 
 	QVector<QByteArray> inventory = m_inventoryController->getPlayerInventory(client);
 	position playerPos = m_mapWorker->getPlayerPosition(client);
-	for (QByteArray id : inventory) {
-		QVector<QByteArray> responce = m_mapWorker->dropItem(id, playerPos, client);
-		sendToAll(responce[1]);
-	}
+	for (QByteArray id : inventory)
+		m_mapWorker->dropItem(id, playerPos, client);
 
 	m_players.remove(m_players.indexOf(client));
 	sendToAll("DIS:" + m_mapWorker->getUserId(client));
@@ -93,29 +94,30 @@ void Server::disconnected()
 	m_healthController->deleteHealth(client);
 }
 
-void Server::notifyPlayerAboutDamage(QTcpSocket *player)
+void Server::sendToPlayer(QTcpSocket *player, QByteArray data)
 {
-	player->write(healthState(player));
+	if (player != nullptr)
+		player->write(data);
 }
 
 void Server::processQuery(QTcpSocket *client, QByteArray query)
 {
 	QList<QByteArray> parts = query.split(':');
 	QByteArray command = parts[0];
-	if (command == "KICK") sendToAll(m_mapWorker->processPlayerKick(client,parts[1]));
-	if (command == "PUSH") sendToAll(m_mapWorker->processPlayerPush(client,actions::push,parts[1]));
-	if (command == "UP") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sup)); }
-	if (command == "DOWN") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sdown)); }
-	if (command == "LEFT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sleft)); }
-	if (command == "RIGHT") { sendToAll(m_mapWorker->getMovementResponse(client, playerMovements::sright)); }
-	if (command == "OPEN") sendToAll(m_mapWorker->processPlayerAction(client, actions::open, parts[1]));
-	if (command == "CLOSE") sendToAll(m_mapWorker->processPlayerAction(client, actions::close, parts[1]));
+	if (command == "KICK") m_mapWorker->processPlayerKick(client,parts[1]);
+	if (command == "PUSH") m_mapWorker->processPlayerPush(client,actions::push,parts[1]);
+	if (command == "UP") { m_mapWorker->movePlayer(client, playerMovements::sup); }
+	if (command == "DOWN") { m_mapWorker->movePlayer(client, playerMovements::sdown); }
+	if (command == "LEFT") { m_mapWorker->movePlayer(client, playerMovements::sleft); }
+	if (command == "RIGHT") { m_mapWorker->movePlayer(client, playerMovements::sright); }
+	if (command == "OPEN") m_mapWorker->processPlayerAction(client, actions::open, parts[1]);
+	if (command == "CLOSE") m_mapWorker->processPlayerAction(client, actions::close, parts[1]);
 	if (command == "SAY") chatMessageReceived(client, parts[1]);
-	if (command == "PICK") { QVector<QByteArray> result = m_mapWorker->processPick(client, parts[1]); client->write(result[0]); sendToAll(result[1]); }
-	if (command == "DROP") { QVector<QByteArray> result = m_mapWorker->processDrop(client, parts[1], parts[2]); client->write(result[0]); client->write(result[2]); sendToAll(result[1]); }
+	if (command == "PICK") { m_mapWorker->processPick(client, parts[1]); }
+	if (command == "DROP") { m_mapWorker->processDrop(client, parts[1], parts[2]); }
 	if (command == "NAME") { m_playerNames[client] = parts[1]; }
-	if (command == "WEAR") { client->write(m_inventoryController->wearId(parts[1], client)); }
-	if (command == "TAKEOFF") { client->write(m_inventoryController->takeOff(parts[1], client)); }
+	if (command == "WEAR") { m_inventoryController->wearId(parts[1], client); }
+	if (command == "TAKEOFF") { m_inventoryController->takeOff(parts[1], client); }
 }
 
 void Server::incomingConnection(qintptr handle)

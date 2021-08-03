@@ -1,14 +1,16 @@
 #ifndef INVENTORYCONTROLLER_H
 #define INVENTORYCONTROLLER_H
 
+#include <QObject>
 #include <QMap>
 #include <QVector>
 #include <QTcpSocket>
 #include "playerwear.h"
 #include "../sharedItemLoader/itemloader.h"
 
-class InventoryController
+class InventoryController : public QObject
 {
+	Q_OBJECT
 public:
 	InventoryController(ItemLoader* loader);
 
@@ -20,9 +22,13 @@ public:
 	bool checkPlayerExist(QTcpSocket* player) { return m_inventories.contains(player); }
 	QVector<QByteArray> getPlayerInventory(QTcpSocket *player) { return m_inventories[player]; }
 
-	QByteArray wearId(QByteArray id, QTcpSocket *player);
-	QByteArray takeOff(QByteArray id, QTcpSocket *player);
+	void wearId(QByteArray id, QTcpSocket *player);
+	void takeOff(QByteArray id, QTcpSocket *player);
 	QByteArray getWear(playerWearable place, QTcpSocket *player) { return m_wear[player].getwear(place); }
+
+signals:
+	void sendToPlayer(QTcpSocket* player, QByteArray data);
+	void sendToAll(QByteArray data);
 
 private:
 	QMap<QTcpSocket*,QVector<QByteArray>> m_inventories;
