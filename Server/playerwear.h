@@ -3,7 +3,7 @@
 
 #include <QByteArray>
 #include <QMap>
-#include "enums.h"
+#include "utilities.h"
 #include "../sharedItemLoader/itemloader.h"
 
 class PlayerWear

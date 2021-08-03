@@ -50,5 +50,6 @@
         <file>items/rubber_boots.png</file>
         <file>items/welding_machine.png</file>
         <file>items/welding_mask.png</file>
+        <file>materials/metal_sheet.png</file>
     </qresource>
 </RCC>

@@ -30,7 +30,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     ../sharedItemLoader/baseitem.h \
     ../sharedItemLoader/itemloader.h \
-    enums.h \
     healthcontrol.h \
     inventorycontroller.h \
     itemcontroller.h \

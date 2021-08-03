@@ -27,6 +27,10 @@ public:
 	void takeOff(QByteArray id, QTcpSocket *player);
 	QByteArray getWear(playerWearable place, QTcpSocket *player) { return m_wear[player].getwear(place); }
 
+	QVector<QByteArray> getRequirementsForCrafting(QByteArray id) { return m_recipesLoader->getRequirements(id); }
+	QList<QByteArray> getAvailableRecipes() { return m_recipesLoader->getAvaiableRecipes(); }
+	QByteArray getToolRequiredForCrafting(QByteArray id) { return m_recipesLoader->getRequiredToolForCrafting(id); }
+
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);

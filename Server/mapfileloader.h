@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QFile>
 
-#include "enums.h"
+#include "utilities.h"
 
 class MapFileLoader
 {

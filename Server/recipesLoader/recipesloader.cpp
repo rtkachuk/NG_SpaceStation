@@ -14,26 +14,47 @@ void RecipesLoader::processFile()
 		return;
 	}
 
-	QString recipes = data.readAll();
+	QList<QByteArray> recipes = data.readAll().split('\n');
 	data.close();
 
 	parseRecipes(&recipes);
 }
 
-void RecipesLoader::parseRecipes(QString *data)
+void RecipesLoader::parseRecipes(QList<QByteArray> *data)
 {
 	m_recipes.clear();
-	for (QString row : *data) {
+	for (QByteArray row : *data) {
+
+		if (row.isEmpty()) continue;
 
 		QVector<QByteArray> requirements;
-		QList items = row.split(':');
-		QString idToCraft = items.first();
+		QList<QByteArray> items = row.split(':');
+		QByteArray idToBeCrafted = items[0];
+		items.pop_front();
+		QByteArray toolUsed = items[0];
 		items.pop_front();
 
-		for (QString item : items) {
-			requirements.push_back(item.toUtf8());
+		for (QByteArray item : items) {
+			requirements.push_back(item);
 		}
 
-		m_recipes[idToCraft.toUtf8()] = requirements;
+		m_recipes[idToBeCrafted] = requirements;
+		m_requiredTools[idToBeCrafted] = toolUsed;
 	}
+}
+
+QVector<QByteArray> RecipesLoader::getRequirements(QByteArray id)
+{
+	if (m_recipes.contains(id))
+		return m_recipes[id];
+	else
+		return QVector<QByteArray>();
+}
+
+QByteArray RecipesLoader::getRequiredToolForCrafting(QByteArray id)
+{
+	if (m_requiredTools.contains(id))
+		return m_requiredTools[id];
+	else
+		return "";
 }

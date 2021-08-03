@@ -123,8 +123,8 @@ void MapWorker::processPlayerAction(QTcpSocket *socket, actions act, QString dir
 	position actPos = Utilities::getCoordsBySide(pos, side);
 
 	switch (act) {
-		case actions::open: emit sendToAll(formatMapChange(actPos, processOpen(actPos))); break;
-		case actions::close: emit sendToAll(formatMapChange(actPos, processClose(actPos))); break;
+		case actions::open: formatMapChange(actPos, processOpen(actPos)); break;
+		case actions::close: formatMapChange(actPos, processClose(actPos)); break;
 		default: log("Unknown action passed to processPlayerAction function");
 	}
 }
@@ -147,15 +147,15 @@ void MapWorker::updateMapData(position pos, char object)
 	m_mapData[offset] = object;
 }
 
-QByteArray MapWorker::formatMapChange(position pos, char object)
+void MapWorker::formatMapChange(position pos, char object)
 {
 	if (m_map[pos.y][pos.x] == object) {
-		return "";
+		return;
 	}
 
 	m_map[pos.y][pos.x] = object;
 	updateMapData(pos, object);
-	return QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|");
+	emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
 }
 
 QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
@@ -229,6 +229,41 @@ void MapWorker::dropItem(QByteArray id, position pos, QTcpSocket *player)
 		emit sendToPlayer(player, "DITEM:" + id + "|");
 		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 		m_inventoryController->takeOff(id, player);
+	}
+}
+
+void MapWorker::processDestroy(QTcpSocket *player, QByteArray side)
+{
+	QByteArray itemInHands = m_inventoryController->getWear(playerWearable::holdable, player);
+	position pos = Utilities::getCoordsBySide(m_playerPositions[player], Utilities::getSideFromString(side));
+
+	// Hardcoded big_hammer. NEED TO BE FIXED WITH RECIPES LOADER!!!
+	//
+
+	if (itemInHands == "25") {
+		destroyElementFromMap(pos);
+	}
+}
+
+void MapWorker::destroyElementFromMap(position pos)
+{
+	QByteArray element = m_itemController->getItemIdByPos(pos);
+
+	if (element.isEmpty()) {
+		char building = m_map[pos.y][pos.x];
+		switch (building) {
+			case '#': element = "WALL"; formatMapChange(pos, '~'); break;
+			case '.': element = "FLOOR"; formatMapChange(pos, '~'); break;
+		}
+	} else {
+		m_itemController->deleteItem(pos, element);
+	}
+
+	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCrafting(element);
+	log (QString::number(requirements.size()));
+	for (QByteArray id : requirements) {
+		m_itemController->addItem(pos, id);
+		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 	}
 }
 

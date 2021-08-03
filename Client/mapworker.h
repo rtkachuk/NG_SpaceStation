@@ -48,7 +48,6 @@ public slots:
 	void removeItem(ItemInfo item);
 
 private:
-	void placeFoundation(int x, int y);
 	void constructCell(int x, int y, QString image);
 	void updateCell(int x, int y, char object);
 	QPixmap selectSpacePixmap();

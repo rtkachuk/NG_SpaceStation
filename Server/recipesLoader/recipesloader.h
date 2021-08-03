@@ -13,13 +13,15 @@ class RecipesLoader : public QObject
 public:
 	explicit RecipesLoader(QObject *parent = nullptr);
 	void processFile();
-	void parseRecipes(QString *data);
-	QVector<QByteArray> getRequirements(QByteArray id) { return m_recipes[id]; }
+	void parseRecipes(QList<QByteArray> *data);
+	QVector<QByteArray> getRequirements(QByteArray id);
 	QList<QByteArray> getAvaiableRecipes() { return m_recipes.keys(); }
+	QByteArray getRequiredToolForCrafting(QByteArray id);
 
 private:
 	void log(QString msg) { qDebug() << "[RecipesLoader]: " << msg; }
 	QMap<QByteArray, QVector<QByteArray>> m_recipes;
+	QMap<QByteArray, QByteArray> m_requiredTools;
 
 };
 

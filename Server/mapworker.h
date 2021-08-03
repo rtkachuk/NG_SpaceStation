@@ -7,7 +7,7 @@
 
 #include "utilities.h"
 #include "healthcontrol.h"
-#include "enums.h"
+#include "utilities.h"
 #include "itemcontroller.h"
 #include "inventorycontroller.h"
 #include "../sharedItemLoader/itemloader.h"
@@ -45,6 +45,10 @@ public:
 	void pickItem(position pos, QTcpSocket *player);
 	void dropItem(QByteArray id, position pos, QTcpSocket *player);
 
+	void processDestroy(QTcpSocket *player, QByteArray side);
+
+	void destroyElementFromMap(position pos);
+
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);
@@ -53,7 +57,7 @@ private:
 	void updateMapData(position pos, char object);
 
 	void processPlayerMovement(position pos, QTcpSocket* socket);
-	QByteArray formatMapChange(position pos, char object);
+	void formatMapChange(position pos, char object);
 	QByteArray formatResponce (position pos, QTcpSocket* socket);
 
 	playerMovements getSideFromString(QString side);

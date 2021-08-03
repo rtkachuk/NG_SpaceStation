@@ -89,15 +89,8 @@ void MapWorker::removeItem(ItemInfo item)
 	m_items.remove(item);
 }
 
-void MapWorker::placeFoundation(int x, int y)
-{
-	m_scene->addPixmap(selectSpacePixmap())->setPos(x, y);
-	m_scene->addPixmap(QPixmap(":/buildings/foundation.png"))->setPos(x, y);
-}
-
 void MapWorker::constructCell(int x, int y, QString imagePath)
 {
-	placeFoundation(x, y);
 	m_scene->addPixmap(imagePath)->setPos(x, y);
 }
 
@@ -111,6 +104,7 @@ void MapWorker::updateCell(int x, int y, char object)
 		case 'c': constructCell(x, y, ":/buildings/door_closed.png"); break;
 		case 'b': constructCell(x, y, ":/buildings/door_broken.png"); break;
 		case '*': m_scene->addPixmap(selectSpacePixmap())->setPos(x, y); break;
+		case '~': constructCell(x, y, ":/buildings/foundation.png"); break;
 		default: m_scene->addRect(x, y, m_cellSizePixels, m_cellSizePixels);
 	}
 }
