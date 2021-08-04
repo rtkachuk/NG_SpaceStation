@@ -78,15 +78,29 @@ void MapWorker::placeItem(ItemInfo itemInfo)
 
 	QGraphicsPixmapItem *item = m_scene->addPixmap(image);
 	item->setPos(itemInfo.pos.x * m_cellSizePixels, itemInfo.pos.y * m_cellSizePixels);
-	item->setZValue(5);
 
-	m_items[itemInfo] = item;
+	if (m_items.contains(itemInfo))
+		m_items[itemInfo].push_back(item);
+	else {
+		QVector<QGraphicsPixmapItem*> items;
+		items.push_back(item);
+		m_items[itemInfo] = items;
+	}
 }
 
 void MapWorker::removeItem(ItemInfo item)
 {
-	delete m_items[item];
-	m_items.remove(item);
+	QGraphicsPixmapItem *pixm = m_items[item].first();
+	if (pixm != nullptr) {
+		m_scene->removeItem(pixm);
+		log ("Removed item " + item.id);
+	}
+	else
+		log ("Map items data contains no objects!");
+	m_items[item].removeOne(pixm);
+
+	if (m_items[item].isEmpty())
+		m_items.remove(item);
 }
 
 void MapWorker::constructCell(int x, int y, QString imagePath)
