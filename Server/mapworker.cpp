@@ -80,7 +80,8 @@ bool MapWorker::checkMovementPosition(position pos)
 	bool conditionIsFloor =
 			m_map[pos.y][pos.x] == '.' ||
 			m_map[pos.y][pos.x] == 'o' ||
-			m_map[pos.y][pos.x] == '_';
+			m_map[pos.y][pos.x] == '_' ||
+			m_map[pos.y][pos.x] == '~';
 
 	bool conditionNoItemsOnTheWay = m_itemLoader->getItemById(m_itemController->getItemIdByPos(pos)).getType() != itemType::furniture;
 
@@ -224,8 +225,10 @@ void MapWorker::pickItem(position pos, QTcpSocket *player)
 	QByteArray id;
 	do {
 		id = m_itemController->getItemIdByPos(pos, itemNumber);
+
 		if (id.isEmpty())
 			break;
+
 		type = m_itemLoader->getItemById(id).getType();
 		itemNumber++;
 	} while (type == itemType::furniture);
@@ -274,6 +277,7 @@ void MapWorker::destroyElementFromMap(position pos)
 		}
 	} else {
 		m_itemController->deleteItem(pos, element);
+		emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
 	}
 
 	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCrafting(element);

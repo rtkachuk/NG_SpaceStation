@@ -36,6 +36,7 @@ BaseItem ItemLoader::parseItem(QString line)
 	if (paramethers[1] == "tool") type = itemType::tool;
 	if (paramethers[1] == "weapon") type = itemType::weapon;
 	if (paramethers[1] == "furniture") type = itemType::furniture;
+	if (paramethers[1] == "material") type = itemType::material;
 
 	bufferItem.setId(paramethers[0].toUtf8());
 	bufferItem.setType(type);

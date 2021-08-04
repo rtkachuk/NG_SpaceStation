@@ -72,7 +72,7 @@ private:
 	QRandomGenerator m_randomGenerator;
 	ItemLoader* m_itemLoader;
 
-	QMap<ItemInfo, QGraphicsPixmapItem*> m_items;
+	QMap<ItemInfo, QVector<QGraphicsPixmapItem*>> m_items;
 };
 
 #endif // MAPWORKER_H
