@@ -260,6 +260,7 @@ void MapWorker::destroyElementFromMap(position pos)
 		}
 	} else {
 		m_itemController->deleteItem(pos, element);
+		emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
 	}
 
 	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCrafting(element);
