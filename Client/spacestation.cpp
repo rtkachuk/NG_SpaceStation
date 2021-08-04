@@ -30,6 +30,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_actionWindow, &ActionWindow::movePlayer, this, &SpaceStation::movePlayer);
 	connect (m_actionWindow, &ActionWindow::getRequestPush, this, &SpaceStation::processPlayerAction);
 	connect (m_actionWindow, &ActionWindow::getRequestKick, this, &SpaceStation::processPlayerAction);
+    connect (m_actionWindow, &ActionWindow::getRequestPull, this, &SpaceStation::processPlayerAction);
 
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
@@ -152,7 +153,6 @@ void SpaceStation::movePlayer(playerMovement side)
 
 void SpaceStation::processPlayerAction(QString action)
 {
-
 	m_connectionManager->actionPlayer(action, askDirection());
 }
 
@@ -219,6 +219,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 		case Qt::Key_K: processPlayerAction("KICK"); break;
 		case Qt::Key_U: processPlayerAction("DEST"); break;
+        case Qt::Key_Z: processPlayerAction("PULL"); break;
 	}
 }
 

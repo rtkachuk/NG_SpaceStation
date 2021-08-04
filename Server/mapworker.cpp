@@ -1,4 +1,4 @@
-#include "mapworker.h"
+﻿#include "mapworker.h"
 
 MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 {
@@ -29,7 +29,29 @@ void MapWorker::processMap(QByteArray mapData)
 void MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
 	playerMovements side = Utilities::getSideFromString(direction);
-	if (act == actions::push) pushPlayer(side,buffer);
+    position pos;
+    if (act == actions::push){
+        pushPlayer(side,buffer);
+        processItemPush(pos,buffer,side);
+    }
+}
+
+void MapWorker::processItemPush(position pos, QTcpSocket *socket, playerMovements side)
+{
+    int itemNumber = 0;
+    itemType type = itemType::notype;
+    QByteArray id;
+    do {
+        id = m_itemController->getItemIdByPos(pos, itemNumber);
+        if (id.isEmpty())
+            break;
+        type = m_itemLoader->getItemById(id).getType();
+        itemNumber++;
+    } while (type != itemType::furniture);
+    position pushes = m_playerPositions[socket];
+    position itemToPushCords=Utilities::getCoordsBySide(pushes,side);
+    QTcpSocket *itemToPush=getPlayerByPosition(itemToPushCords);
+    movePlayer(itemToPush, side);
 }
 
 void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
@@ -51,10 +73,8 @@ void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
 	m_itemController->addItem(playerToPushCords, "24"); // blood id
 	emit sendToPlayer(playerToPush, "HEALTH:" + QByteArray::number(m_healthController->getHealth(playerToPush)) + "|");
 	emit sendToAll("IPLACE:" + QByteArray::number(playerToPushCords.x) + ":" + QByteArray::number(playerToPushCords.y) + ":24|");
-	pushPlayer(side,buffer);
+    pushPlayer(side,buffer);
 }
-
-
 bool MapWorker::checkMovementPosition(position pos)
 {
 	bool conditionIsFloor =
@@ -84,9 +104,6 @@ void MapWorker::pushPlayer(playerMovements side, QTcpSocket* buffer)
     position pushes = m_playerPositions[buffer];
 	position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
-
-	if(playerToPush==nullptr) return;
-
 	movePlayer(playerToPush, side);
 }
 

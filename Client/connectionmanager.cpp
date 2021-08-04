@@ -57,7 +57,7 @@ void ConnectionManager::socketReady()
 
 		log (data);
 
-		QList<QByteArray> params = data.split(':');
+        QList<QByteArray> params = data.split(':');
 		QByteArray command = params[0];
 
 		if (command == "POS") {

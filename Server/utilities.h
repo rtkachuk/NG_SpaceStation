@@ -29,7 +29,8 @@ enum actions {
 	pick,
 	drop,
 	push,
-	kick
+    kick,
+    pull
 };
 
 class Utilities
