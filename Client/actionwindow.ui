@@ -94,7 +94,7 @@
      <string>KICK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="b_pull">
     <property name="geometry">
      <rect>
       <x>0</x>

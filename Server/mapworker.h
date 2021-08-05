@@ -33,7 +33,9 @@ public:
 
 	QByteArray getMap() { return m_mapData; }
 	void processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
+    void processItemPush(position pos, QTcpSocket *socket, playerMovements side);
 	void processPlayerKick(QTcpSocket* buffer, QString direction);
+    void processPlayerPull(QTcpSocket* buffer, actions act, QString direction);
 	void pushPlayer(playerMovements side,QTcpSocket* buffer);
 	QByteArray getUserId(QTcpSocket* socket) { return m_playerIds[socket]; }
 	void movePlayer(QTcpSocket *socket, playerMovements side);

@@ -11,8 +11,9 @@ ActionWindow::ActionWindow(QWidget *parent) :
 
 	connect (ui->b_open, &QPushButton::clicked, this, &ActionWindow::actOpen);
 	connect (ui->b_close, &QPushButton::clicked, this, &ActionWindow::actClose);
-    connect(ui->b_push, &QPushButton::clicked, this, &ActionWindow::actPush);
-    connect(ui->b_kick, &QPushButton::clicked, this, &ActionWindow::actKick);
+    connect (ui->b_push, &QPushButton::clicked, this, &ActionWindow::actPush);
+    connect (ui->b_kick, &QPushButton::clicked, this, &ActionWindow::actKick);
+    connect (ui->b_pull, &QPushButton::clicked, this, &ActionWindow::actPull);
 	connect (ui->b_up, &QPushButton::clicked, this, &ActionWindow::actMoveUp);
 	connect (ui->b_down, &QPushButton::clicked, this, &ActionWindow::actMoveDown);
 	connect (ui->b_left, &QPushButton::clicked, this, &ActionWindow::actMoveLeft);
