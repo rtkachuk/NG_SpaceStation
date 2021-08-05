@@ -257,6 +257,10 @@ void MapWorker::processDestroy(QTcpSocket *player, QByteArray side)
 	QByteArray itemInHands = m_inventoryController->getWear(playerWearable::holdable, player);
 	position pos = Utilities::getCoordsBySide(m_playerPositions[player], Utilities::getSideFromString(side));
 
+	position playerPos = m_playerPositions[player];
+	log (QString::number(playerPos.y) + ":::" + QString::number(playerPos.x));
+	log (QString::number(pos.y) + ":::" + QString::number(pos.x));
+
 	// Hardcoded big_hammer. NEED TO BE FIXED WITH RECIPES LOADER!!!
 	//
 
@@ -295,6 +299,7 @@ void MapWorker::getResourcesFromPlayerForBuilding(QTcpSocket *player, QByteArray
 		int amount = requirements[element];
 		for (int i=0; i<amount; i++) {
 			m_inventoryController->removeItemFromInventory(player, element);
+			emit sendToPlayer(player, "DITEM:" + element + "|");
 		}
 	}
 }
@@ -324,10 +329,11 @@ void MapWorker::destroyElementFromMap(position pos)
 
 void MapWorker::buildElementOnMap(position pos, QByteArray element)
 {
-	if (m_map[pos.y][pos.x] == '~') {
-		m_map[pos.y][pos.x] = element.data()[0];
-		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
-	}
+	log(element);
+	if (element == "WALL")
+		formatMapChange(pos, '#');
+	if (element == "FLOOR")
+		formatMapChange(pos, '.');
 }
 
 void MapWorker::log(QString msg)

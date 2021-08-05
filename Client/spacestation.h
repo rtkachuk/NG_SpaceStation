@@ -17,6 +17,7 @@
 #include "inventorymenu.h"
 #include "../sharedItemLoader/itemloader.h"
 #include "statewindow.h"
+#include "buildingdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -64,6 +65,8 @@ private slots:
 
 	void wearItem(QByteArray id);
 	void takeOffItem(QByteArray id);
+
+	void buildItem();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

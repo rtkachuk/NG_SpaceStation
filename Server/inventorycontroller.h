@@ -7,7 +7,7 @@
 #include <QTcpSocket>
 #include "playerwear.h"
 #include "../sharedItemLoader/itemloader.h"
-#include "recipesLoader/recipesloader.h"
+#include "../recipesLoader/recipesloader.h"
 
 class InventoryController : public QObject
 {

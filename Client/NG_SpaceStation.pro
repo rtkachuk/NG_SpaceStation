@@ -9,9 +9,11 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../recipesLoader/recipesloader.cpp \
     ../sharedItemLoader/baseitem.cpp \
     ../sharedItemLoader/itemloader.cpp \
     actionwindow.cpp \
+    buildingdialog.cpp \
     connectdialog.cpp \
     connectionmanager.cpp \
     inventorymenu.cpp \
@@ -22,9 +24,11 @@ SOURCES += \
     statewindow.cpp
 
 HEADERS += \
+    ../recipesLoader/recipesloader.h \
     ../sharedItemLoader/baseitem.h \
     ../sharedItemLoader/itemloader.h \
     actionwindow.h \
+    buildingdialog.h \
     connectdialog.h \
     connectionmanager.h \
     enums.h \
@@ -36,6 +40,7 @@ HEADERS += \
 
 FORMS += \
     actionwindow.ui \
+    buildingdialog.ui \
     connectdialog.ui \
     inventorymenu.ui \
     selectdirectiondialog.ui \
