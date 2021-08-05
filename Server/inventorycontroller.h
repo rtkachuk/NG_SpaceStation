@@ -7,7 +7,7 @@
 #include <QTcpSocket>
 #include "playerwear.h"
 #include "../sharedItemLoader/itemloader.h"
-#include "recipesLoader/recipesloader.h"
+#include "../recipesLoader/recipesloader.h"
 
 class InventoryController : public QObject
 {
@@ -19,6 +19,7 @@ public:
 	void destroyPlayerInventory(QTcpSocket *player) { m_inventories.remove(player); m_wear.remove(player); }
 	void addItemToInventory(QTcpSocket* player, QByteArray itemId) { m_inventories[player].push_back(itemId); }
 	void removeItemFromInventory(QTcpSocket* player, QByteArray itemId) { m_inventories[player].removeOne(itemId); }
+	int getItemsAmountInInventory(QTcpSocket* player, QByteArray itemId);
 
 	bool checkPlayerExist(QTcpSocket* player) { return m_inventories.contains(player); }
 	QVector<QByteArray> getPlayerInventory(QTcpSocket *player) { return m_inventories[player]; }
@@ -27,7 +28,8 @@ public:
 	void takeOff(QByteArray id, QTcpSocket *player);
 	QByteArray getWear(playerWearable place, QTcpSocket *player) { return m_wear[player].getwear(place); }
 
-	QVector<QByteArray> getRequirementsForCrafting(QByteArray id) { return m_recipesLoader->getRequirements(id); }
+	QVector<QByteArray> getRequirementsForCraftingRaw(QByteArray id) { return m_recipesLoader->getRequirementsRaw(id); }
+	QMap<QByteArray, int> getRequirementsForCraftingTable(QByteArray id) { return m_recipesLoader->getRequirementsTable(id); }
 	QList<QByteArray> getAvailableRecipes() { return m_recipesLoader->getAvaiableRecipes(); }
 	QByteArray getToolRequiredForCrafting(QByteArray id) { return m_recipesLoader->getRequiredToolForCrafting(id); }
 

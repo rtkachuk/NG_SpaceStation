@@ -257,11 +257,50 @@ void MapWorker::processDestroy(QTcpSocket *player, QByteArray side)
 	QByteArray itemInHands = m_inventoryController->getWear(playerWearable::holdable, player);
 	position pos = Utilities::getCoordsBySide(m_playerPositions[player], Utilities::getSideFromString(side));
 
+	position playerPos = m_playerPositions[player];
+	log (QString::number(playerPos.y) + ":::" + QString::number(playerPos.x));
+	log (QString::number(pos.y) + ":::" + QString::number(pos.x));
+
 	// Hardcoded big_hammer. NEED TO BE FIXED WITH RECIPES LOADER!!!
 	//
 
 	if (itemInHands == "25") {
 		destroyElementFromMap(pos);
+	}
+}
+
+void MapWorker::processBuild(QTcpSocket *player, QByteArray direction, QByteArray id)
+{
+	playerMovements side = Utilities::getSideFromString(direction);
+	position pos = Utilities::getCoordsBySide(m_playerPositions[player], side);
+
+	if (checkBuildRequirementsMet(player, id)) {
+		getResourcesFromPlayerForBuilding(player, id);
+		buildElementOnMap(pos, id);
+	}
+}
+
+bool MapWorker::checkBuildRequirementsMet(QTcpSocket *player, QByteArray id)
+{
+	QMap<QByteArray, int> requirements = m_inventoryController->getRequirementsForCraftingTable(id);
+	QList<QByteArray> keys = requirements.keys();
+	for (QByteArray element : keys) {
+		if (requirements[element] > m_inventoryController->getItemsAmountInInventory(player, element))
+			return false;
+	}
+	return true;
+}
+
+void MapWorker::getResourcesFromPlayerForBuilding(QTcpSocket *player, QByteArray id)
+{
+	QMap<QByteArray, int> requirements = m_inventoryController->getRequirementsForCraftingTable(id);
+	QList<QByteArray> keys = requirements.keys();
+	for (QByteArray element : keys) {
+		int amount = requirements[element];
+		for (int i=0; i<amount; i++) {
+			m_inventoryController->removeItemFromInventory(player, element);
+			emit sendToPlayer(player, "DITEM:" + element + "|");
+		}
 	}
 }
 
@@ -280,12 +319,21 @@ void MapWorker::destroyElementFromMap(position pos)
 		emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
 	}
 
-	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCrafting(element);
+	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCraftingRaw(element);
 	log (QString::number(requirements.size()));
 	for (QByteArray id : requirements) {
 		m_itemController->addItem(pos, id);
 		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
 	}
+}
+
+void MapWorker::buildElementOnMap(position pos, QByteArray element)
+{
+	log(element);
+	if (element == "WALL")
+		formatMapChange(pos, '#');
+	if (element == "FLOOR")
+		formatMapChange(pos, '.');
 }
 
 void MapWorker::log(QString msg)

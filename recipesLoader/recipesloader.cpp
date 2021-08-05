@@ -43,12 +43,27 @@ void RecipesLoader::parseRecipes(QList<QByteArray> *data)
 	}
 }
 
-QVector<QByteArray> RecipesLoader::getRequirements(QByteArray id)
+QVector<QByteArray> RecipesLoader::getRequirementsRaw(QByteArray id)
 {
 	if (m_recipes.contains(id))
 		return m_recipes[id];
 	else
 		return QVector<QByteArray>();
+}
+
+QMap<QByteArray, int> RecipesLoader::getRequirementsTable(QByteArray id)
+{
+	QVector<QByteArray> requirements = getRequirementsRaw(id);
+	QMap<QByteArray, int> result;
+
+	for (QByteArray item : requirements) {
+		if (result.contains(item))
+			result[item]++;
+		else
+			result[item] = 1;
+	}
+
+	return result;
 }
 
 QByteArray RecipesLoader::getRequiredToolForCrafting(QByteArray id)

@@ -119,6 +119,7 @@ void Server::processQuery(QTcpSocket *client, QByteArray query)
 	if (command == "WEAR") { m_inventoryController->wearId(parts[1], client); }
 	if (command == "TAKEOFF") { m_inventoryController->takeOff(parts[1], client); }
 	if (command == "DEST") { m_mapWorker->processDestroy(client, parts[1] ); }
+	if (command == "BUILD") { m_mapWorker->processBuild(client, parts[2], parts[1]); }
 }
 
 void Server::incomingConnection(qintptr handle)

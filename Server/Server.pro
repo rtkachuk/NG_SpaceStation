@@ -9,6 +9,7 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ../recipesLoader/recipesloader.cpp \
         ../sharedItemLoader/baseitem.cpp \
         ../sharedItemLoader/itemloader.cpp \
         healthcontrol.cpp \
@@ -18,7 +19,6 @@ SOURCES += \
         mapfileloader.cpp \
         mapworker.cpp \
         playerwear.cpp \
-        recipesLoader/recipesloader.cpp \
         server.cpp \
         utilities.cpp
 
@@ -28,6 +28,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ../recipesLoader/recipesloader.h \
     ../sharedItemLoader/baseitem.h \
     ../sharedItemLoader/itemloader.h \
     healthcontrol.h \
@@ -36,6 +37,5 @@ HEADERS += \
     mapfileloader.h \
     mapworker.h \
     playerwear.h \
-    recipesLoader/recipesloader.h \
     server.h \
     utilities.h

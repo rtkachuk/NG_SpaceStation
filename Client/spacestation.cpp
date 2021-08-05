@@ -202,6 +202,14 @@ void SpaceStation::takeOffItem(QByteArray id)
 	m_connectionManager->takeOffItem(id);
 }
 
+void SpaceStation::buildItem()
+{
+	BuildingDialog *build = new BuildingDialog(m_itemLoader);
+	if (build->exec() == QDialog::Rejected) return;
+	processPlayerAction("BUILD:" + build->getItem());
+	delete build;
+}
+
 
 void SpaceStation::keyPressEvent(QKeyEvent *event)
 {	
@@ -215,11 +223,12 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_C: processPlayerAction("CLOSE"); break;
 		case Qt::Key_P: processPlayerAction("PICK"); break;
 		case Qt::Key_T: processPlayerAction(getDropItemCommand()); break;
-		case Qt::Key_B: processPlayerAction("PUSH"); break;
+		case Qt::Key_J: processPlayerAction("PUSH"); break;
 		case Qt::Key_F: m_followPlayer->setChecked(true); break;
 		case Qt::Key_K: processPlayerAction("KICK"); break;
 		case Qt::Key_U: processPlayerAction("DEST"); break;
         case Qt::Key_Z: processPlayerAction("PULL"); break;
+		case Qt::Key_B: buildItem(); break;
 	}
 }
 
