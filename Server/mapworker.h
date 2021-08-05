@@ -48,8 +48,13 @@ public:
 	void dropItem(QByteArray id, position pos, QTcpSocket *player);
 
 	void processDestroy(QTcpSocket *player, QByteArray side);
+	void processBuild(QTcpSocket *player, QByteArray side, QByteArray id);
+
+	bool checkBuildRequirementsMet(QTcpSocket *player, QByteArray id);
+	void getResourcesFromPlayerForBuilding(QTcpSocket *player, QByteArray id);
 
 	void destroyElementFromMap(position pos);
+	void buildElementOnMap(position pos, QByteArray element);
 
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);

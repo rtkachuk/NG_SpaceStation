@@ -265,6 +265,40 @@ void MapWorker::processDestroy(QTcpSocket *player, QByteArray side)
 	}
 }
 
+void MapWorker::processBuild(QTcpSocket *player, QByteArray direction, QByteArray id)
+{
+	playerMovements side = Utilities::getSideFromString(direction);
+	position pos = Utilities::getCoordsBySide(m_playerPositions[player], side);
+
+	if (checkBuildRequirementsMet(player, id)) {
+		getResourcesFromPlayerForBuilding(player, id);
+		buildElementOnMap(pos, id);
+	}
+}
+
+bool MapWorker::checkBuildRequirementsMet(QTcpSocket *player, QByteArray id)
+{
+	QMap<QByteArray, int> requirements = m_inventoryController->getRequirementsForCraftingTable(id);
+	QList<QByteArray> keys = requirements.keys();
+	for (QByteArray element : keys) {
+		if (requirements[element] > m_inventoryController->getItemsAmountInInventory(player, element))
+			return false;
+	}
+	return true;
+}
+
+void MapWorker::getResourcesFromPlayerForBuilding(QTcpSocket *player, QByteArray id)
+{
+	QMap<QByteArray, int> requirements = m_inventoryController->getRequirementsForCraftingTable(id);
+	QList<QByteArray> keys = requirements.keys();
+	for (QByteArray element : keys) {
+		int amount = requirements[element];
+		for (int i=0; i<amount; i++) {
+			m_inventoryController->removeItemFromInventory(player, element);
+		}
+	}
+}
+
 void MapWorker::destroyElementFromMap(position pos)
 {
 	QByteArray element = m_itemController->getItemIdByPos(pos);
@@ -280,11 +314,19 @@ void MapWorker::destroyElementFromMap(position pos)
 		emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
 	}
 
-	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCrafting(element);
+	QVector<QByteArray> requirements = m_inventoryController->getRequirementsForCraftingRaw(element);
 	log (QString::number(requirements.size()));
 	for (QByteArray id : requirements) {
 		m_itemController->addItem(pos, id);
 		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");
+	}
+}
+
+void MapWorker::buildElementOnMap(position pos, QByteArray element)
+{
+	if (m_map[pos.y][pos.x] == '~') {
+		m_map[pos.y][pos.x] = element.data()[0];
+		emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
 	}
 }
 

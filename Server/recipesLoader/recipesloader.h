@@ -14,7 +14,8 @@ public:
 	explicit RecipesLoader(QObject *parent = nullptr);
 	void processFile();
 	void parseRecipes(QList<QByteArray> *data);
-	QVector<QByteArray> getRequirements(QByteArray id);
+	QVector<QByteArray> getRequirementsRaw(QByteArray id);
+	QMap<QByteArray, int> getRequirementsTable(QByteArray id);
 	QList<QByteArray> getAvaiableRecipes() { return m_recipes.keys(); }
 	QByteArray getRequiredToolForCrafting(QByteArray id);
 
