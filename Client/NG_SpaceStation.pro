@@ -21,7 +21,8 @@ SOURCES += \
     mapworker.cpp \
     selectdirectiondialog.cpp \
     spacestation.cpp \
-    statewindow.cpp
+    statewindow.cpp \
+    timer.cpp
 
 HEADERS += \
     ../recipesLoader/recipesloader.h \
@@ -36,7 +37,8 @@ HEADERS += \
     mapworker.h \
     selectdirectiondialog.h \
     spacestation.h \
-    statewindow.h
+    statewindow.h \
+    timer.h
 
 FORMS += \
     actionwindow.ui \
@@ -45,7 +47,8 @@ FORMS += \
     inventorymenu.ui \
     selectdirectiondialog.ui \
     spacestation.ui \
-    statewindow.ui
+    statewindow.ui \
+    timer.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

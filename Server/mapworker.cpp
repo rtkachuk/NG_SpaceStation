@@ -338,6 +338,17 @@ void MapWorker::buildElementOnMap(position pos, QByteArray element)
 		formatMapChange(pos, '.');
 }
 
+void MapWorker::startDynamite(QTcpSocket *client, QString direction)
+{
+	position playerPos = m_playerPositions[client];
+	position side = Utilities::getCoordsBySide(playerPos, Utilities::getSideFromString(direction));
+	dropItem("27", side, client);
+
+	log ("Sleeping...");
+	QTimer::singleShot(10000, this, std::bind(&MapWorker::explode, this, side, 7));
+	log ("BOOOM");
+}
+
 void MapWorker::explode(position pos, int radius)
 {
 	int x = pos.x;

@@ -229,6 +229,7 @@ void SpaceStation::keyPressEvent(QKeyEvent *event)
 		case Qt::Key_U: processPlayerAction("DEST"); break;
         case Qt::Key_Z: processPlayerAction("PULL"); break;
 		case Qt::Key_B: buildItem(); break;
+		case Qt::Key_E: processPlayerAction("USE"); break;
 	}
 }
 

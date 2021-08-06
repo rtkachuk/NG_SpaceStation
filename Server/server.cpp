@@ -30,6 +30,13 @@ void Server::sendToAll(QByteArray message)
 	}
 }
 
+void Server::processUse(QTcpSocket *client, QString side)
+{
+	if (m_inventoryController->getWear(playerWearable::holdable, client) == "27") // dynamite
+		m_mapWorker->startDynamite(client, side);
+
+}
+
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 {
 	QByteArray name = m_playerNames[player].toUtf8();
@@ -120,6 +127,7 @@ void Server::processQuery(QTcpSocket *client, QByteArray query)
 	if (command == "TAKEOFF") { m_inventoryController->takeOff(parts[1], client); }
 	if (command == "DEST") { m_mapWorker->processDestroy(client, parts[1] ); }
 	if (command == "BUILD") { m_mapWorker->processBuild(client, parts[2], parts[1]); }
+	if (command == "USE") { processUse(client, parts[1]); }
 }
 
 void Server::incomingConnection(qintptr handle)
