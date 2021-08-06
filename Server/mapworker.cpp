@@ -80,7 +80,9 @@ bool MapWorker::checkMovementPosition(position pos)
 	bool conditionIsFloor =
 			m_map[pos.y][pos.x] == '.' ||
 			m_map[pos.y][pos.x] == 'o' ||
-			m_map[pos.y][pos.x] == '_' ||
+			(m_map[pos.y][pos.x] >= '1' && m_map[pos.y][pos.x] <= '9') ||
+			m_map[pos.y][pos.x] == '!' ||
+			m_map[pos.y][pos.x] == '@' ||
 			m_map[pos.y][pos.x] == '~';
 
 	bool conditionNoItemsOnTheWay = m_itemLoader->getItemById(m_itemController->getItemIdByPos(pos)).getType() != itemType::furniture;
