@@ -29,6 +29,7 @@ private slots:
 
 
 private:
+	void processUse(QTcpSocket *client, QString side);
 	void processQuery(QTcpSocket *client, QByteArray query);
 
 	void processNewPlayer(QTcpSocket *socket); // Create inventory, player position, etc.

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QRandomGenerator>
+#include <QTimer>
+#include <QThread>
 
 #include "utilities.h"
 #include "healthcontrol.h"
@@ -56,13 +58,16 @@ public:
 	void destroyElementFromMap(position pos);
 	void buildElementOnMap(position pos, QByteArray element);
 
+	void startDynamite(QTcpSocket *client, QString direction);
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);
 
+private slots:
+	void explode(position pos, int radius);
+
 private:
 
-	void explode(position pos, int radius);
 	void explodeCell(position pos);
 
 	void updateMapData(position pos, char object);
