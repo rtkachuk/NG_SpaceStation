@@ -61,6 +61,10 @@ signals:
 	void sendToAll(QByteArray data);
 
 private:
+
+	void explode(position pos, int radius);
+	void explodeCell(position pos);
+
 	void updateMapData(position pos, char object);
 
 	void processPlayerMovement(position pos, QTcpSocket* socket);

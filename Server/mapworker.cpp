@@ -80,7 +80,9 @@ bool MapWorker::checkMovementPosition(position pos)
 	bool conditionIsFloor =
 			m_map[pos.y][pos.x] == '.' ||
 			m_map[pos.y][pos.x] == 'o' ||
-			m_map[pos.y][pos.x] == '_' ||
+			(m_map[pos.y][pos.x] >= '1' && m_map[pos.y][pos.x] <= '9') ||
+			m_map[pos.y][pos.x] == '!' ||
+			m_map[pos.y][pos.x] == '@' ||
 			m_map[pos.y][pos.x] == '~';
 
 	bool conditionNoItemsOnTheWay = m_itemLoader->getItemById(m_itemController->getItemIdByPos(pos)).getType() != itemType::furniture;
@@ -334,6 +336,37 @@ void MapWorker::buildElementOnMap(position pos, QByteArray element)
 		formatMapChange(pos, '#');
 	if (element == "FLOOR")
 		formatMapChange(pos, '.');
+}
+
+void MapWorker::explode(position pos, int radius)
+{
+	int x = pos.x;
+	int y = pos.y;
+
+	for (int i = x-radius; i<=x+radius; i++)
+		for (int j=y-radius; j<=y+radius; j++)
+			if ((i-x)*(i-x) + (j-y) * (j-y) <= radius*radius) {
+				position exPos;
+				exPos.x = i;
+				exPos.y = j;
+				explodeCell(exPos);
+			}
+}
+
+void MapWorker::explodeCell(position pos)
+{
+	QByteArray element;
+	do {
+		element = m_itemController->getItemIdByPos(pos);
+		if (element.isEmpty() == false) {
+			m_itemController->deleteItem(pos, element);
+			emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
+		}
+	} while (element.isEmpty() == false);
+
+	int number = m_randomGenerator.bounded(10);
+	if (number > 7) { formatMapChange(pos, '*'); return; }
+	if (number > 5) { formatMapChange(pos, '~'); return; }
 }
 
 void MapWorker::log(QString msg)

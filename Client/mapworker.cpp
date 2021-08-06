@@ -112,7 +112,17 @@ void MapWorker::updateCell(int x, int y, char object)
 {
 	switch (object) {
 		case '.': constructCell(x, y, ":/buildings/floor.png"); break;
-		case '_': constructCell(x, y, ":/buildings/floor1.png"); break;
+		case '1': constructCell(x, y, ":/buildings/floor1.png"); break;
+		case '2': constructCell(x, y, ":/buildings/floor2.png"); break;
+		case '3': constructCell(x, y, ":/buildings/floor3.png"); break;
+		case '4': constructCell(x, y, ":/buildings/floor4.png"); break;
+		case '5': constructCell(x, y, ":/buildings/floor5.png"); break;
+		case '6': constructCell(x, y, ":/buildings/floor6.png"); break;
+		case '7': constructCell(x, y, ":/buildings/floor7.png"); break;
+		case '8': constructCell(x, y, ":/buildings/floor8.png"); break;
+		case '9': constructCell(x, y, ":/buildings/floor9.png"); break;
+		case '!': constructCell(x, y, ":/buildings/floor10.png"); break;
+		case '@': constructCell(x, y, ":/buildings/floor11.png"); break;
 		case '#': constructCell(x, y, ":/buildings/wall.png"); break;
 		case 'o': constructCell(x, y, ":/buildings/door_open.png"); break;
 		case 'c': constructCell(x, y, ":/buildings/door_closed.png"); break;

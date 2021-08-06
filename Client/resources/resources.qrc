@@ -51,5 +51,28 @@
         <file>items/welding_machine.png</file>
         <file>items/welding_mask.png</file>
         <file>materials/metal_sheet.png</file>
+        <file>items/bucket.png</file>
+        <file>items/medkit.png</file>
+        <file>items/mop.png</file>
+        <file>items/oxygen_tank.png</file>
+        <file>items/pda.png</file>
+        <file>items/syringe_blood.png</file>
+        <file>items/syringe_green.png</file>
+        <file>items/syringe_purple.png</file>
+        <file>materials/blue_wires.png</file>
+        <file>materials/copper_wire.png</file>
+        <file>materials/green_wires.png</file>
+        <file>materials/radio_parts.png</file>
+        <file>buildings/floor2.png</file>
+        <file>buildings/floor3.png</file>
+        <file>buildings/floor4.png</file>
+        <file>buildings/floor5.png</file>
+        <file>buildings/floor6.png</file>
+        <file>buildings/floor7.png</file>
+        <file>buildings/floor8.png</file>
+        <file>buildings/floor9.png</file>
+        <file>buildings/floor10.png</file>
+        <file>buildings/floor11.png</file>
+        <file>buildings/floor12.png</file>
     </qresource>
 </RCC>
