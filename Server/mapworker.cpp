@@ -30,8 +30,8 @@ void MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direc
 {
 	playerMovements side = Utilities::getSideFromString(direction);
     position pos= Utilities::getCoordsBySide(m_playerPositions[buffer],side);
-    if (act == actions::push){
-        pushPlayer(side,buffer);
+	if (act == actions::push){
+		pushPlayer(side,buffer);
         processItemPush(pos,buffer,side);
     }
 }
@@ -105,6 +105,7 @@ void MapWorker::pushPlayer(playerMovements side, QTcpSocket* buffer)
     position pushes = m_playerPositions[buffer];
 	position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
+	if (playerToPush == nullptr) return;
 	movePlayer(playerToPush, side);
 }
 
