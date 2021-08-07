@@ -32,7 +32,7 @@ public:
 	QMap<position, QVector<QByteArray>>* getAllItems() { return m_itemController->getItems(); }
 
 	QByteArray getMap() { return m_mapData; }
-	void processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
+    void processPlayerPush(QTcpSocket* buffer, actions act, QString direction);
     void processItemPush(position pos, QTcpSocket *socket, playerMovements side);
 	void processPlayerKick(QTcpSocket* buffer, QString direction);
     void processPlayerPull(QTcpSocket* buffer, actions act, QString direction);

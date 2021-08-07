@@ -29,7 +29,7 @@ void MapWorker::processMap(QByteArray mapData)
 void MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
 	playerMovements side = Utilities::getSideFromString(direction);
-    position pos;
+    position pos= Utilities::getCoordsBySide(m_playerPositions[buffer],side);
     if (act == actions::push){
         pushPlayer(side,buffer);
         processItemPush(pos,buffer,side);
