@@ -11,12 +11,9 @@ SpaceStation::SpaceStation(QWidget *parent)
 	m_itemLoader->loadItems();
 
 	m_actionWindow = new ActionWindow();
-	m_actionWindow->show();
 	m_inventory = new InventoryMenu();
 	m_inventory->setItemLoader(m_itemLoader);
-	m_inventory->show();
 	m_stateWindow = new StateWindow();
-	m_stateWindow->show();
 
 	ui->t_chat->setReadOnly(true);
 
