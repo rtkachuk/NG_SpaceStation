@@ -29,9 +29,9 @@ void MapWorker::processMap(QByteArray mapData)
 void MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
 	playerMovements side = Utilities::getSideFromString(direction);
-    position pos = Utilities::getCoordsBySide(m_playerPositions[buffer],side);
-    if (act == actions::push){
-        pushPlayer(side,buffer);
+    position pos= Utilities::getCoordsBySide(m_playerPositions[buffer],side);
+	if (act == actions::push){
+		pushPlayer(side,buffer);
         processItemPush(pos,buffer,side);
     }
 }
@@ -50,6 +50,7 @@ void MapWorker::processItemPush(position pos, QTcpSocket *socket, playerMovement
     } while (type != itemType::furniture);
     position pushes = m_playerPositions[socket];
     position itemToPushCords=Utilities::getCoordsBySide(pushes,side);
+    m_itemController->deleteItem(pushes,id);
 }
 
 void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
@@ -103,6 +104,7 @@ void MapWorker::pushPlayer(playerMovements side, QTcpSocket* buffer)
     position pushes = m_playerPositions[buffer];
 	position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
+	if (playerToPush == nullptr) return;
 	movePlayer(playerToPush, side);
 }
 
