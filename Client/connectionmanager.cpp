@@ -6,6 +6,7 @@ ConnectionManager::ConnectionManager()
 
 	connect (m_socket, &QTcpSocket::connected, this, &ConnectionManager::connectedToServer);
 	connect (m_socket, &QTcpSocket::readyRead, this, &ConnectionManager::socketReady);
+	connect (m_socket, &QTcpSocket::disconnected, this, &ConnectionManager::connectionLost);
 }
 
 void ConnectionManager::connectToServer(QString ip, QString port)
@@ -146,4 +147,9 @@ void ConnectionManager::socketReady()
 		else
 			m_incomingDataBuffer += received[i];
 	}
+}
+
+void ConnectionManager::connectionLost()
+{
+	emit disconnected();
 }

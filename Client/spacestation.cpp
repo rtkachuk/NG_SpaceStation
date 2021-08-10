@@ -30,6 +30,7 @@ SpaceStation::SpaceStation(QWidget *parent)
     connect (m_actionWindow, &ActionWindow::getRequestPull, this, &SpaceStation::processPlayerAction);
 
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
+	connect (m_connectionManager, &ConnectionManager::disconnected, this, &SpaceStation::connectionLost);
 	connect (m_connectionManager, &ConnectionManager::mapLoadingStarted, this, &SpaceStation::mapLoadingStarted);
 	connect (m_connectionManager, &ConnectionManager::mapPartReceived, this, &SpaceStation::mapPartReceived);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
@@ -108,6 +109,11 @@ void SpaceStation::connectedToServer()
 {
 	ui->statusbar->showMessage("Connected to " + m_ip);
 	m_connectionManager->changeName(m_name);
+}
+
+void SpaceStation::connectionLost()
+{
+	QMessageBox::critical(this, "Connection lost", "Server closed connection. Sorry");
 }
 
 void SpaceStation::mapLoadingStarted(int maximum)
