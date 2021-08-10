@@ -30,6 +30,8 @@ SpaceStation::SpaceStation(QWidget *parent)
     connect (m_actionWindow, &ActionWindow::getRequestPull, this, &SpaceStation::processPlayerAction);
 
 	connect (m_connectionManager, &ConnectionManager::connected, this, &SpaceStation::connectedToServer);
+	connect (m_connectionManager, &ConnectionManager::mapLoadingStarted, this, &SpaceStation::mapLoadingStarted);
+	connect (m_connectionManager, &ConnectionManager::mapPartReceived, this, &SpaceStation::mapPartReceived);
 	connect (m_connectionManager, &ConnectionManager::gotMap, this, &SpaceStation::mapReceived);
 	connect (m_connectionManager, &ConnectionManager::playerPosition, this, &SpaceStation::setPlayerPosition);
 	connect (m_connectionManager, &ConnectionManager::message, this, &SpaceStation::chatMessage);
@@ -108,9 +110,22 @@ void SpaceStation::connectedToServer()
 	m_connectionManager->changeName(m_name);
 }
 
+void SpaceStation::mapLoadingStarted(int maximum)
+{
+	m_loaderProgress = new LoaderProgress();
+	m_loaderProgress->setMaximum(maximum);
+	m_loaderProgress->show();
+}
+
+void SpaceStation::mapPartReceived(int value)
+{
+	m_loaderProgress->setValue(value);
+}
+
 void SpaceStation::mapReceived()
 {
-	ui->statusbar->showMessage("Loading map...");
+	m_loaderProgress->close();
+	delete m_loaderProgress;
 	m_mapWorker->mapInit(m_connectionManager->getMap());
 	m_mapWorker->drawMap();
 }

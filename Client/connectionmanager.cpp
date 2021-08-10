@@ -114,10 +114,19 @@ void ConnectionManager::socketReady()
 			emit initPlayerPosition(pos);
 		}
 
-		if (command == "MAP_DATA") {
-			m_map = params[1];
-			emit gotMap();
+		if (command == "MAP") {
+			if (params[1] == "START") {
+				emit mapLoadingStarted(params[2].toInt());
+				m_map.clear();
+			}
+			if (params[1] == "BLOCK") {
+				emit mapPartReceived(params[2].toInt());
+				m_map += params[3] + "\n";
+			}
+			if (params[1] == "END")
+				emit gotMap();
 		}
+
         if (command == "HEALTH"){
             int HP = params[1].toInt();
             emit showHP(HP);

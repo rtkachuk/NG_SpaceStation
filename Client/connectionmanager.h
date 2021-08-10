@@ -32,7 +32,11 @@ private slots:
 signals:
 	void dataReady();
 	void connected();
+
+	void mapLoadingStarted(int maximum);
+	void mapPartReceived(int value);
 	void gotMap();
+
 	void playerPosition(QByteArray id, int x, int y);
 	void message(QString message);
 	void mapChanged(int x, int y, char object);

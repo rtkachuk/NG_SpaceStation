@@ -18,6 +18,7 @@
 #include "../sharedItemLoader/itemloader.h"
 #include "statewindow.h"
 #include "buildingdialog.h"
+#include "loaderprogress.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -41,7 +42,10 @@ private slots:
 	void connectToServer();
 	void connectedToServer();
 
+	void mapLoadingStarted(int maximum);
+	void mapPartReceived(int value);
 	void mapReceived();
+
 	void setPlayerPosition(QByteArray id, int x, int y);
 	void chatMessage(QString message);
 	void mapChanged(int x, int y, char object);
@@ -104,7 +108,9 @@ private:
     InventoryMenu *m_inventory;
 	ItemLoader *m_itemLoader;
     StateWindow *m_stateWindow;
+	LoaderProgress *m_loaderProgress;
 
 	QThread *m_networkingThread;
 };
+
 #endif // SPACESTATION_H

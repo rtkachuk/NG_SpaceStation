@@ -39,6 +39,7 @@ private:
 	//
 
 	void chatMessageReceived(QTcpSocket *player, QByteArray message);
+	void sendMap(QTcpSocket *player);
 
 	void log(QString msg);
 
