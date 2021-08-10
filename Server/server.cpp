@@ -51,18 +51,8 @@ void Server::sendMap(QTcpSocket *player)
 	sendToPlayer(player, "MAP:START:" + QByteArray::number(allAmount) + "|");
 	int blockNumber = 1;
 	for (QByteArray line : rows) {
-		QByteArray data;
-		int currentPosition = 0;
-		int currentByte = 0;
-		while (currentPosition < line.size()) {
-			for (currentByte = 0; currentByte < 10 && currentPosition + currentByte < line.size(); currentByte++)
-				data += line[currentPosition + currentByte];
-			sendToPlayer(player, "MAP:BLOCK:" + QByteArray::number(blockNumber) + ":" + data + "|");
-			data = "";
-			currentPosition += currentByte;
-		}
-		sendToPlayer(player, "MAP:BLOCK:" + QByteArray::number(blockNumber) + ":\n|");
-		blockNumber++;
+			sendToPlayer(player, "MAP:BLOCK:" + QByteArray::number(blockNumber) + ":" + line + "\n|");
+			blockNumber++;
 	}
 	sendToPlayer(player, "MAP:END|");
 }

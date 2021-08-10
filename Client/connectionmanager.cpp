@@ -41,6 +41,94 @@ void ConnectionManager::log(QString msg)
 	qDebug() << "[ConnectionManager]: " << msg;
 }
 
+void ConnectionManager::processReceivedQuery(QByteArray data)
+{
+	log (data);
+	QList<QByteArray> params = data.split(':');
+	QByteArray command = params[0];
+
+	if (command == "POS") {
+		emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
+	}
+	if (command == "CHG") {
+		emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
+	}
+
+	if (command == "IPLACE") {
+		ItemInfo item;
+		item.pos.x = params[1].toInt();
+		item.pos.y = params[2].toInt();
+		item.id = params[3];
+
+		emit placeItem(item);
+	}
+
+	if (command == "ICLEAR") {
+		ItemInfo item;
+		item.pos.x = params[1].toInt();
+		item.pos.y = params[2].toInt();
+		item.id = params[3];
+
+		emit removeItem(item);
+	}
+
+	if (command == "ID") {
+		emit gotId(params[1]);
+	}
+
+	if (command == "DIS") {
+		emit playerDisconnected(params[1]);
+	}
+
+	if (command == "SAY") {
+		emit message(params[1] + ":" + params[2]);
+	}
+
+	if (command == "PITEM") {
+		emit pickItem(params[1]);
+	}
+
+	if (command == "DITEM") {
+		emit dropItem(params[1]);
+	}
+
+	if (command == "INIT") {
+		position pos;
+
+		pos.x = params[1].toInt();
+		pos.y = params[2].toInt();
+
+		emit initPlayerPosition(pos);
+	}
+
+	if (command == "MAP") {
+		if (params[1] == "START") {
+			emit mapLoadingStarted(params[2].toInt());
+			m_map.clear();
+		}
+		if (params[1] == "BLOCK") {
+			emit mapPartReceived(params[2].toInt());
+			m_map += params[3];
+		}
+		if (params[1] == "END") {
+			emit gotMap();
+		}
+	}
+
+	if (command == "HEALTH"){
+		int HP = params[1].toInt();
+		emit showHP(HP);
+	}
+
+	if (command == "WEAR") {
+		emit signalWearItem(params[1]);
+	}
+
+	if (command == "TAKEOFF") {
+		emit signalTakeOffItem(params[1]);
+	}
+}
+
 void ConnectionManager::connectedToServer()
 {
 	log ("Connected to " + m_socket->peerName());
@@ -50,118 +138,12 @@ void ConnectionManager::connectedToServer()
 void ConnectionManager::socketReady()
 {
 	QByteArray received = m_socket->readAll();
-	QList<QByteArray> gotData = received.split('|');
-
-	for (QByteArray data : gotData) {
-		if (data.isEmpty()) return;
-
-		log (data);
-
-        QList<QByteArray> params = data.split(':');
-		QByteArray command = params[0];
-
-		if (command == "POS") {
-			emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
-			continue;
+	for (int i=0; i<received.size(); i++) {
+		if (received[i] == '|') {
+			processReceivedQuery(m_incomingDataBuffer);
+			m_incomingDataBuffer.clear();
 		}
-		if (command == "CHG") {
-			emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
-			continue;
-		}
-
-		if (command == "IPLACE") {
-			ItemInfo item;
-			item.pos.x = params[1].toInt();
-			item.pos.y = params[2].toInt();
-			item.id = params[3];
-
-			emit placeItem(item);
-			continue;
-		}
-
-		if (command == "ICLEAR") {
-			ItemInfo item;
-			item.pos.x = params[1].toInt();
-			item.pos.y = params[2].toInt();
-			item.id = params[3];
-
-			emit removeItem(item);
-			continue;
-		}
-
-		if (command == "ID") {
-			emit gotId(params[1]);
-			continue;
-		}
-
-		if (command == "DIS") {
-			emit playerDisconnected(params[1]);
-			continue;
-		}
-
-		if (command == "SAY") {
-			emit message(params[1] + ":" + params[2]);
-			continue;
-		}
-
-		if (command == "PITEM") {
-			emit pickItem(params[1]);
-			continue;
-		}
-
-		if (command == "DITEM") {
-			emit dropItem(params[1]);
-			continue;
-		}
-
-		if (command == "INIT") {
-			position pos;
-
-			pos.x = params[1].toInt();
-			pos.y = params[2].toInt();
-
-			emit initPlayerPosition(pos);
-			continue;
-		}
-
-		if (command == "MAP") {
-			if (params[1] == "START") {
-				mapLoadingMode = true;
-				emit mapLoadingStarted(params[2].toInt());
-				m_map.clear();
-				continue;
-			}
-			if (params[1] == "BLOCK") {
-				emit mapPartReceived(params[2].toInt());
-				m_map += params[3];
-				continue;
-			}
-			if (params[1] == "END") {
-				mapLoadingMode = false;
-				emit gotMap();
-				continue;
-			}
-		}
-
-        if (command == "HEALTH"){
-            int HP = params[1].toInt();
-            emit showHP(HP);
-			continue;
-        }
-
-		if (command == "WEAR") {
-			emit signalWearItem(params[1]);
-			continue;
-		}
-
-		if (command == "TAKEOFF") {
-			emit signalTakeOffItem(params[1]);
-			continue;
-		}
-
-		if (mapLoadingMode) {
-			emit mapPartReceived(params[0].toInt());
-			m_map += params[0];
-		}
+		else
+			m_incomingDataBuffer += received[i];
 	}
 }

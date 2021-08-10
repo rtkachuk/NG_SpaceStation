@@ -24,6 +24,7 @@ public:
 
 private:
 	void log(QString msg);
+	void processReceivedQuery(QByteArray data);
 
 private slots:
 	void connectedToServer();
@@ -56,7 +57,7 @@ signals:
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
-	bool mapLoadingMode = false;
+	QByteArray m_incomingDataBuffer;
 };
 
 #endif // CONNECTIONMANAGER_H
