@@ -29,10 +29,12 @@ private:
 private slots:
 	void connectedToServer();
 	void socketReady();
+	void connectionLost();
 
 signals:
 	void dataReady();
 	void connected();
+	void disconnected();
 
 	void mapLoadingStarted(int maximum);
 	void mapPartReceived(int value);

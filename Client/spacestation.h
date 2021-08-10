@@ -41,6 +41,7 @@ private slots:
 
 	void connectToServer();
 	void connectedToServer();
+	void connectionLost();
 
 	void mapLoadingStarted(int maximum);
 	void mapPartReceived(int value);
