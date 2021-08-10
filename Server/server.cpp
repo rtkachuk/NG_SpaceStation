@@ -40,7 +40,21 @@ void Server::processUse(QTcpSocket *client, QString side)
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 {
 	QByteArray name = m_playerNames[player].toUtf8();
-	sendToAll("SAY:" + name + ":" + message);
+	sendToAll("SAY:" + name + ":" + message + "|");
+}
+
+void Server::sendMap(QTcpSocket *player)
+{
+	QByteArray map = m_mapWorker->getMap();
+	QList<QByteArray> rows = map.split('\n');
+	int allAmount = rows.size();
+	sendToPlayer(player, "MAP:START:" + QByteArray::number(allAmount) + "|");
+	int blockNumber = 1;
+	for (QByteArray line : rows) {
+			sendToPlayer(player, "MAP:BLOCK:" + QByteArray::number(blockNumber) + ":" + line + "\n|");
+			blockNumber++;
+	}
+	sendToPlayer(player, "MAP:END|");
 }
 
 void Server::processNewPlayer(QTcpSocket* socket)
@@ -53,7 +67,8 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	m_healthController->setPlayerHealth(socket, 100);
 
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
-	socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
+	//socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
+	sendMap(socket);
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
 	socket->write("HEALTH:" + QByteArray::number(m_healthController->getHealth(socket)) + "|");
 	sendAllItemsPositions(socket);
@@ -95,7 +110,7 @@ void Server::disconnected()
 		m_mapWorker->dropItem(id, playerPos, client);
 
 	m_players.remove(m_players.indexOf(client));
-	sendToAll("DIS:" + m_mapWorker->getUserId(client));
+	sendToAll("DIS:" + m_mapWorker->getUserId(client) + "|");
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
 	m_healthController->deleteHealth(client);

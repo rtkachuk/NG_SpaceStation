@@ -24,6 +24,7 @@ public:
 
 private:
 	void log(QString msg);
+	void processReceivedQuery(QByteArray data);
 
 private slots:
 	void connectedToServer();
@@ -32,7 +33,11 @@ private slots:
 signals:
 	void dataReady();
 	void connected();
+
+	void mapLoadingStarted(int maximum);
+	void mapPartReceived(int value);
 	void gotMap();
+
 	void playerPosition(QByteArray id, int x, int y);
 	void message(QString message);
 	void mapChanged(int x, int y, char object);
@@ -52,6 +57,7 @@ signals:
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
+	QByteArray m_incomingDataBuffer;
 };
 
 #endif // CONNECTIONMANAGER_H

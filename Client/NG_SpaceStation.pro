@@ -17,6 +17,7 @@ SOURCES += \
     connectdialog.cpp \
     connectionmanager.cpp \
     inventorymenu.cpp \
+    loaderprogress.cpp \
     main.cpp \
     mapworker.cpp \
     selectdirectiondialog.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     connectionmanager.h \
     enums.h \
     inventorymenu.h \
+    loaderprogress.h \
     mapworker.h \
     selectdirectiondialog.h \
     spacestation.h \
@@ -45,6 +47,7 @@ FORMS += \
     buildingdialog.ui \
     connectdialog.ui \
     inventorymenu.ui \
+    loaderprogress.ui \
     selectdirectiondialog.ui \
     spacestation.ui \
     statewindow.ui \
