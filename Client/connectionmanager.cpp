@@ -62,9 +62,11 @@ void ConnectionManager::socketReady()
 
 		if (command == "POS") {
 			emit playerPosition(params[1], params[2].toInt(), params[3].toInt());
+			continue;
 		}
 		if (command == "CHG") {
 			emit mapChanged(params[1].toInt(), params[2].toInt(), params[3].toStdString()[0]);
+			continue;
 		}
 
 		if (command == "IPLACE") {
@@ -74,6 +76,7 @@ void ConnectionManager::socketReady()
 			item.id = params[3];
 
 			emit placeItem(item);
+			continue;
 		}
 
 		if (command == "ICLEAR") {
@@ -83,26 +86,32 @@ void ConnectionManager::socketReady()
 			item.id = params[3];
 
 			emit removeItem(item);
+			continue;
 		}
 
 		if (command == "ID") {
 			emit gotId(params[1]);
+			continue;
 		}
 
 		if (command == "DIS") {
 			emit playerDisconnected(params[1]);
+			continue;
 		}
 
 		if (command == "SAY") {
 			emit message(params[1] + ":" + params[2]);
+			continue;
 		}
 
 		if (command == "PITEM") {
 			emit pickItem(params[1]);
+			continue;
 		}
 
 		if (command == "DITEM") {
 			emit dropItem(params[1]);
+			continue;
 		}
 
 		if (command == "INIT") {
@@ -112,32 +121,47 @@ void ConnectionManager::socketReady()
 			pos.y = params[2].toInt();
 
 			emit initPlayerPosition(pos);
+			continue;
 		}
 
 		if (command == "MAP") {
 			if (params[1] == "START") {
+				mapLoadingMode = true;
 				emit mapLoadingStarted(params[2].toInt());
 				m_map.clear();
+				continue;
 			}
 			if (params[1] == "BLOCK") {
 				emit mapPartReceived(params[2].toInt());
 				m_map += params[3];
+				continue;
 			}
-			if (params[1] == "END")
+			if (params[1] == "END") {
+				mapLoadingMode = false;
 				emit gotMap();
+				continue;
+			}
 		}
 
         if (command == "HEALTH"){
             int HP = params[1].toInt();
             emit showHP(HP);
+			continue;
         }
 
 		if (command == "WEAR") {
 			emit signalWearItem(params[1]);
+			continue;
 		}
 
 		if (command == "TAKEOFF") {
 			emit signalTakeOffItem(params[1]);
+			continue;
+		}
+
+		if (mapLoadingMode) {
+			emit mapPartReceived(params[0].toInt());
+			m_map += params[0];
 		}
 	}
 }

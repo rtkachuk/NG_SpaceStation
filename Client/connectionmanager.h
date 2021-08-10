@@ -56,6 +56,7 @@ signals:
 private:
 	QTcpSocket *m_socket;
 	QByteArray m_map;
+	bool mapLoadingMode = false;
 };
 
 #endif // CONNECTIONMANAGER_H
