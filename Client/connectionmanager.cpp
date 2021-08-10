@@ -121,7 +121,7 @@ void ConnectionManager::socketReady()
 			}
 			if (params[1] == "BLOCK") {
 				emit mapPartReceived(params[2].toInt());
-				m_map += params[3] + "\n";
+				m_map += params[3];
 			}
 			if (params[1] == "END")
 				emit gotMap();
