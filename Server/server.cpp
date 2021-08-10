@@ -40,7 +40,7 @@ void Server::processUse(QTcpSocket *client, QString side)
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
 {
 	QByteArray name = m_playerNames[player].toUtf8();
-	sendToAll("SAY:" + name + ":" + message);
+	sendToAll("SAY:" + name + ":" + message + "|");
 }
 
 void Server::sendMap(QTcpSocket *player)
@@ -110,7 +110,7 @@ void Server::disconnected()
 		m_mapWorker->dropItem(id, playerPos, client);
 
 	m_players.remove(m_players.indexOf(client));
-	sendToAll("DIS:" + m_mapWorker->getUserId(client));
+	sendToAll("DIS:" + m_mapWorker->getUserId(client) + "|");
 	m_mapWorker->removeUser(client);
 	m_inventoryController->destroyPlayerInventory(client);
 	m_healthController->deleteHealth(client);
