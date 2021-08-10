@@ -50,7 +50,11 @@ void MapWorker::processItemPush(position pos, QTcpSocket *socket, playerMovement
     } while (type != itemType::furniture);
     position pushes = m_playerPositions[socket];
     position itemToPushCords=Utilities::getCoordsBySide(pushes,side);
-    m_itemController->deleteItem(pushes,id);
+    position newPosItemtoPush=Utilities::getCoordsBySide(itemToPushCords,side);
+    m_itemController->addItem(Utilities::getCoordsBySide(itemToPushCords,side),id);
+    emit sendToAll("IPLACE:" + QByteArray::number(newPosItemtoPush.x) + ":" + QByteArray::number(newPosItemtoPush.y) + ":" + id + "|");
+    m_itemController->deleteItem(itemToPushCords,id);
+    emit sendToAll("ICLEAR:" + QByteArray::number(itemToPushCords.x) + ":" + QByteArray::number(itemToPushCords.y) + ":" + id + "|");
 }
 
 void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
