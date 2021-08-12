@@ -7,6 +7,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 {
 	ui->setupUi(this);
 
+    qRegisterMetaType<ItemInfo>();
+
 	m_itemLoader = new ItemLoader();
 	m_itemLoader->loadItems();
 
