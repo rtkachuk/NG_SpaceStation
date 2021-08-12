@@ -26,4 +26,6 @@ struct ItemInfo {
 		}
 };
 
+Q_DECLARE_METATYPE(ItemInfo);
+
 #endif // ENUMS_H
