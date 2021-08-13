@@ -11,8 +11,13 @@ struct position
 {
 	int x;
 	int y;
+	position() {}
+	position(int newX, int newY) { x = newX; y = newY; }
 	bool operator<( const position& other) const {
 			 return std::tie(x,y) < std::tie(other.x,other.y);
+		}
+	bool operator==( const position& other) const {
+			 return std::tie(x,y) == std::tie(other.x,other.y);
 		}
 };
 

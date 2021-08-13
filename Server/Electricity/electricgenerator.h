@@ -9,10 +9,12 @@ class ElectricGenerator : public QObject
 	Q_OBJECT
 public:
 	explicit ElectricGenerator(QObject *parent = nullptr);
+	bool isWorking() { return m_started; }
 
 public slots:
 	void start();
-	void setGenerationPower(int value);
+	void setGenerationPower(int value) { m_powerGeneration = value; }
+	void setRequiredPower(int value) { m_powerConstrumption = value; }
 	void stop();
 
 private slots:

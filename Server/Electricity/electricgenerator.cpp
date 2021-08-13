@@ -23,11 +23,6 @@ void ElectricGenerator::start()
 	}
 }
 
-void ElectricGenerator::setGenerationPower(int value)
-{
-	m_powerGeneration = value;
-}
-
 void ElectricGenerator::stop()
 {
 	m_started = false;
