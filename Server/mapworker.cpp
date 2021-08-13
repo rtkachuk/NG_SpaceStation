@@ -5,6 +5,7 @@ MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 	m_itemController = new ItemController();
 	m_itemLoader = loader;
 	m_healthController = health;
+	m_electricityController = new ElectricityController(this);
 }
 
 void MapWorker::processMap(QByteArray mapData)

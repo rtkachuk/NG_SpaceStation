@@ -13,6 +13,7 @@
 #include "itemcontroller.h"
 #include "inventorycontroller.h"
 #include "../sharedItemLoader/itemloader.h"
+#include "Electricity/electricitycontroller.h"
 
 class MapWorker : public QObject
 {
@@ -94,6 +95,7 @@ private:
 	InventoryController* m_inventoryController;
 	ItemLoader* m_itemLoader;
 	HealthControl *m_healthController;
+	ElectricityController *m_electricityController;
 };
 
 #endif // MAPWORKER_H
