@@ -124,7 +124,6 @@ void MapWorker::removeGenerator(position pos)
 
 void MapWorker::updateNode(position pos, QByteArray state)
 {
-    log ("NODE");
     removeNode(pos);
     if (state == "CLOSED") m_nodes[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/electric_node_closed.png");
     if (state == "POWERED") m_nodes[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/electric_node_green.png");
@@ -134,7 +133,6 @@ void MapWorker::updateNode(position pos, QByteArray state)
 void MapWorker::removeNode(position pos)
 {
     if (m_nodes.contains(pos)) {
-        log ("REMOVED");
         QGraphicsPixmapItem *item = m_nodes[pos];
         m_nodes.remove(pos);
         m_scene->removeItem(item);
