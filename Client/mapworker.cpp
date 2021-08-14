@@ -105,8 +105,6 @@ void MapWorker::removeItem(ItemInfo item)
 
 void MapWorker::updateGenerator(position pos, QByteArray state)
 {
-    log ("GENERATOR GOT: " + state);
-    log ("GENERATOR POS: " + QString::number(pos.x) + ":::" + QString::number(pos.y));
     removeGenerator(pos);
     if (state == "STARTED") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_started.png");
     if (state == "STALLED") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_stalled.png");
