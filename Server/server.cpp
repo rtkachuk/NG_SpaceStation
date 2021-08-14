@@ -71,6 +71,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	sendMap(socket);
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
 	socket->write("HEALTH:" + QByteArray::number(m_healthController->getHealth(socket)) + "|");
+    m_mapWorker->sendElectricToolsStatuses(socket);
 	sendAllItemsPositions(socket);
 }
 

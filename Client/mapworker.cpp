@@ -100,12 +100,34 @@ void MapWorker::removeItem(ItemInfo item)
 	m_items[item].removeOne(pixm);
 
 	if (m_items[item].isEmpty())
-		m_items.remove(item);
+        m_items.remove(item);
 }
 
-void MapWorker::constructCell(int x, int y, QString imagePath)
+void MapWorker::updateGenerator(position pos, QByteArray state)
 {
-	m_scene->addPixmap(imagePath)->setPos(x, y);
+    log ("GENERATOR GOT: " + state);
+    log ("GENERATOR POS: " + QString::number(pos.x) + ":::" + QString::number(pos.y));
+    removeGenerator(pos);
+    if (state == "STARTED") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_started.png");
+    if (state == "STALLED") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_stalled.png");
+    if (state == "BROKEN") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_broken.png");
+    if (state == "STOPPED") m_generators[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/generator_stopped.png");
+}
+
+void MapWorker::removeGenerator(position pos)
+{
+    if (m_generators.contains(pos)) {
+        QGraphicsPixmapItem *item = m_generators[pos];
+        m_generators.remove(pos);
+        delete item;
+    }
+}
+
+QGraphicsPixmapItem *MapWorker::constructCell(int x, int y, QString imagePath)
+{
+    QGraphicsPixmapItem *item = m_scene->addPixmap(imagePath);
+    item->setPos(x, y);
+    return item;
 }
 
 void MapWorker::updateCell(int x, int y, char object)

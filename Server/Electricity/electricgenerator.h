@@ -10,6 +10,7 @@ class ElectricGenerator : public QObject
 public:
 	explicit ElectricGenerator(QObject *parent = nullptr);
 	bool isWorking() { return m_started; }
+    QByteArray getGeneratorState() { return m_currentState; };
 
 public slots:
 	void start();
@@ -21,10 +22,7 @@ private slots:
 	void secondPassed();
 
 signals:
-	void exploded();
-	void started();
-	void stalled();
-	void stopped();
+    void stateChanged(QByteArray state);
 
 private:
 	QTimer *m_generatorTimer;
@@ -33,6 +31,8 @@ private:
 	int m_powerGeneration;
 	bool m_started;
 	bool m_broken;
+
+    QByteArray m_currentState;
 
 	const int temperatureDecreasing = 3;
 	const int lowestTemperature = 24;

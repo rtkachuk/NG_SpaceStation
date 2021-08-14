@@ -16,15 +16,26 @@ class ElectricityController : public QObject
 public:
 	explicit ElectricityController(QObject *parent = nullptr);
 	void addGenerator(position pos);
+    void removeGenerator(position pos);
 	void addNode(position pos);
+    void removeNode(position pos);
+    void addWire(position pos);
+    void removeWire(position pos);
+    QByteArray getNewPlayerInfo();
 
 public slots:
 	void processElectricityLines();
 
 signals:
+    void requiredElectricityUpdate();
+    void updateGeneratorState(position pos, QByteArray state);
+
+private slots:
+    void updatedGeneratorState(QByteArray state);
 
 private:
 	void loadMap();
+    bool checkWireExist(position pos);
 	void processMap(QByteArray *map);
 	int inspectLine(position pos, position previous, bool powered);
 	bool checkSideLine(position pos, position previous);

@@ -12,21 +12,25 @@ ElectricGenerator::ElectricGenerator(QObject *parent) : QObject(parent)
 	m_started = false;
 	m_broken = false;
 
-	connect (m_generatorTimer, &QTimer::timeout, this, &ElectricGenerator::secondPassed);
+    m_currentState = "STOPPED";
+
+    connect (m_generatorTimer, &QTimer::timeout, this, &ElectricGenerator::secondPassed);
 }
 
 void ElectricGenerator::start()
 {
 	if (m_broken == false) {
 		m_started = true;
-		emit started();
+        m_currentState = "STARTED";
+        emit stateChanged(m_currentState);
 	}
 }
 
 void ElectricGenerator::stop()
 {
 	m_started = false;
-	emit stopped();
+    m_currentState = "STOPPED";
+    emit stateChanged(m_currentState);
 }
 
 void ElectricGenerator::secondPassed()
@@ -42,7 +46,8 @@ void ElectricGenerator::secondPassed()
 	if (powerDelta < 0) {
 		m_powerGeneration = 0;
 		m_started = false;
-		emit stalled();
+        m_currentState = "STALLED";
+        emit stateChanged(m_currentState);
 		return;
 	}
 
@@ -51,6 +56,7 @@ void ElectricGenerator::secondPassed()
 	if (m_currentTemperature >= explodeTemperature) {
 		disconnect (m_generatorTimer, &QTimer::timeout, this, &ElectricGenerator::secondPassed);
 		m_broken = true;
-		emit exploded();
+        m_currentState = "EXPLODED";
+        emit stateChanged(m_currentState);
 	}
 }

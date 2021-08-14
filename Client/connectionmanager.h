@@ -55,6 +55,7 @@ signals:
 
 	void signalWearItem(QByteArray id);
 	void signalTakeOffItem(QByteArray id);
+    void generatorStatusUpdate(position pos, QByteArray state);
 
 private:
 	QTcpSocket *m_socket;

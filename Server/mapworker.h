@@ -60,12 +60,15 @@ public:
 	void buildElementOnMap(position pos, QByteArray element);
 
 	void startDynamite(QTcpSocket *client, QString direction);
+
+    void sendElectricToolsStatuses(QTcpSocket *client);
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);
 
 private slots:
 	void explode(position pos, int radius);
+    void generatorStateChanged(position pos, QByteArray state);
 
 private:
 

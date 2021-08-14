@@ -6,6 +6,8 @@ MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 	m_itemLoader = loader;
 	m_healthController = health;
 	m_electricityController = new ElectricityController(this);
+
+    connect (m_electricityController, &ElectricityController::updateGeneratorState, this, &MapWorker::generatorStateChanged);
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -351,7 +353,12 @@ void MapWorker::startDynamite(QTcpSocket *client, QString direction)
 
 	log ("Sleeping...");
 	QTimer::singleShot(10000, this, std::bind(&MapWorker::explode, this, side, 7));
-	log ("BOOOM");
+    log ("BOOOM");
+}
+
+void MapWorker::sendElectricToolsStatuses(QTcpSocket *client)
+{
+    sendToPlayer(client, m_electricityController->getNewPlayerInfo());
 }
 
 void MapWorker::explode(position pos, int radius)
@@ -366,7 +373,12 @@ void MapWorker::explode(position pos, int radius)
 				exPos.x = i;
 				exPos.y = j;
 				explodeCell(exPos);
-			}
+            }
+}
+
+void MapWorker::generatorStateChanged(position pos, QByteArray state)
+{
+    sendToAll("GEN:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
 }
 
 void MapWorker::explodeCell(position pos)

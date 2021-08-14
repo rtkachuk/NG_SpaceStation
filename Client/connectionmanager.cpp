@@ -128,6 +128,10 @@ void ConnectionManager::processReceivedQuery(QByteArray data)
 	if (command == "TAKEOFF") {
 		emit signalTakeOffItem(params[1]);
 	}
+
+    if (command == "GEN") {
+        emit generatorStatusUpdate(position(params[1].toInt(), params[2].toInt()), params[3]);
+    }
 }
 
 void ConnectionManager::connectedToServer()
