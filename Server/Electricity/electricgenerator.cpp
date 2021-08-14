@@ -59,4 +59,12 @@ void ElectricGenerator::secondPassed()
         m_currentState = "EXPLODED";
         emit stateChanged(m_currentState);
 	}
+    if (m_started == true) {
+        log ("Generator temperature: " + QString::number(m_currentTemperature));
+    }
+}
+
+void ElectricGenerator::log(QString msg)
+{
+    qDebug() << "[ElectricGenerator]: " << msg;
 }

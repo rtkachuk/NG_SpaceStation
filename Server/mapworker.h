@@ -62,6 +62,8 @@ public:
 	void startDynamite(QTcpSocket *client, QString direction);
 
     void sendElectricToolsStatuses(QTcpSocket *client);
+
+    void processUseAction(QTcpSocket *client, QString side);
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);
@@ -69,6 +71,7 @@ signals:
 private slots:
 	void explode(position pos, int radius);
     void generatorStateChanged(position pos, QByteArray state);
+    void nodeStateChanged(position pos, QByteArray state);
 
 private:
 

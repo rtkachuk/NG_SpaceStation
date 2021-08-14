@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QDebug>
 
 class ElectricGenerator : public QObject
 {
@@ -25,6 +26,8 @@ signals:
     void stateChanged(QByteArray state);
 
 private:
+    void log(QString msg);
+
 	QTimer *m_generatorTimer;
 	int m_currentTemperature;
 	int m_powerConstrumption;

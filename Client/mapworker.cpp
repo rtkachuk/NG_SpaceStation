@@ -117,6 +117,27 @@ void MapWorker::removeGenerator(position pos)
     if (m_generators.contains(pos)) {
         QGraphicsPixmapItem *item = m_generators[pos];
         m_generators.remove(pos);
+        m_scene->removeItem(item);
+        delete item;
+    }
+}
+
+void MapWorker::updateNode(position pos, QByteArray state)
+{
+    log ("NODE");
+    removeNode(pos);
+    if (state == "CLOSED") m_nodes[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/electric_node_closed.png");
+    if (state == "POWERED") m_nodes[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/electric_node_green.png");
+    if (state == "HALT") m_nodes[pos] = constructCell(pos.x * m_cellSizePixels, pos.y * m_cellSizePixels, ":/tech/electric_node_red.png");
+}
+
+void MapWorker::removeNode(position pos)
+{
+    if (m_nodes.contains(pos)) {
+        log ("REMOVED");
+        QGraphicsPixmapItem *item = m_nodes[pos];
+        m_nodes.remove(pos);
+        m_scene->removeItem(item);
         delete item;
     }
 }

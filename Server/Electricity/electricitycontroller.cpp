@@ -23,6 +23,7 @@ void ElectricityController::removeGenerator(position pos)
         if (m_generators[generator] == pos) {
             m_generators.remove(generator);
             m_wireMap[pos.y][pos.x] = '.';
+            disconnect (generator, &ElectricGenerator::stateChanged, this, &ElectricityController::updatedGeneratorState);
             delete generator;
         }
     }
@@ -34,6 +35,7 @@ void ElectricityController::addNode(position pos)
 	ElectricNode *node = new ElectricNode();
 	m_nodes[pos] = node;
     m_wireMap[pos.y][pos.x] = 'n';
+    connect (node, &ElectricNode::stateChanged, this, &ElectricityController::updatedNodeState);
     emit requiredElectricityUpdate();
 }
 
@@ -43,6 +45,7 @@ void ElectricityController::removeNode(position pos)
     ElectricNode *node = m_nodes[pos];
     m_nodes.remove(pos);
     m_wireMap[pos.y][pos.x] = '.';
+    disconnect (node, &ElectricNode::stateChanged, this, &ElectricityController::updatedNodeState);
     delete node;
 }
 
@@ -67,11 +70,63 @@ QByteArray ElectricityController::getNewPlayerInfo()
         position pos = m_generators[generator];
         responce.append("GEN:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + generator->getGeneratorState() + "|");
     }
+    for (position pos : m_nodes.keys()) {
+         ElectricNode *node = m_nodes[pos];
+         QByteArray state;
+         if (node->isOpened() == false)
+             state = "CLOSED";
+         else if (node->isPowered())
+             state = "POWERED";
+         else
+             state = "HALT";
+         responce.append("NODE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
+    }
     return responce;
+}
+
+electricityObjectType ElectricityController::getObjectByCords(position pos)
+{
+    for (ElectricGenerator *generator : m_generators.keys()) {
+        if (m_generators[generator] == pos)
+            return electricityObjectType::generator;
+    }
+    if (m_nodes.contains(pos))
+        return electricityObjectType::node;
+    return electricityObjectType::none;
+}
+
+void ElectricityController::switchGenerator(position pos)
+{
+    ElectricGenerator *generator;
+    for (ElectricGenerator *buffer : m_generators.keys()) {
+        if (m_generators[buffer] == pos) {
+            generator = buffer;
+            break;
+        }
+    }
+
+    if (generator == nullptr) return;
+    if (generator->isWorking())
+        generator->stop();
+    else
+        generator->start();
+}
+
+void ElectricityController::switchNode(position pos)
+{
+    if (m_nodes.contains(pos) == false) return;
+
+    ElectricNode *node = m_nodes[pos];
+
+    if (node->isOpened())
+        node->setOpened(false);
+    else
+        node->setOpened(true);
 }
 
 void ElectricityController::processElectricityLines()
 {
+    turnOffEverythingBeforeRecalculating();
 	for (ElectricGenerator *generator : m_generators.keys()) {
 		generator->setRequiredPower(inspectLine(m_generators[generator], position(0,0), generator->isWorking()));
     }
@@ -82,6 +137,23 @@ void ElectricityController::updatedGeneratorState(QByteArray state)
     ElectricGenerator *generator = (ElectricGenerator*)sender();
     emit updateGeneratorState(m_generators[generator], state);
     processElectricityLines();
+}
+
+void ElectricityController::updatedNodeState(QByteArray state)
+{
+    ElectricNode *node = (ElectricNode*)sender();
+    for (position pos : m_nodes.keys()) {
+        if (m_nodes[pos] == node) {
+            emit updateNodeState(pos, state);
+            return;
+        }
+    }
+}
+
+void ElectricityController::turnOffEverythingBeforeRecalculating()
+{
+    for (position pos : m_nodes.keys())
+        m_nodes[pos]->setPowered(false);
 }
 
 void ElectricityController::loadMap()
@@ -132,7 +204,7 @@ void ElectricityController::processMap(QByteArray *map)
 int ElectricityController::inspectLine(position pos, position previous, bool powered)
 {
 	// Check here any technic exist
-	updateNodeState(pos, powered);
+    updateNodesState(pos, powered);
 	int powerRequired = 0;
 
 	if (checkSideLine(position(pos.x + 1, pos.y), previous)) powerRequired+=inspectLine(position(pos.x + 1, pos.y), pos, powered);
@@ -157,7 +229,7 @@ bool ElectricityController::checkLineExist(position pos)
 	return false;
 }
 
-void ElectricityController::updateNodeState(position pos, bool state)
+void ElectricityController::updateNodesState(position pos, bool state)
 {
 	if (m_nodes.contains(pos)) {
 		m_nodes[pos]->setPowered(state);

@@ -56,6 +56,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_connectionManager, &ConnectionManager::signalTakeOffItem, m_inventory, &InventoryMenu::processTakingOffItem);
 
     connect (m_connectionManager, &ConnectionManager::generatorStatusUpdate, m_mapWorker, &MapWorker::updateGenerator);
+    connect (m_connectionManager, &ConnectionManager::nodeStatusUpdate, m_mapWorker, &MapWorker::updateNode);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }

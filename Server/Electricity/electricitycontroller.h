@@ -10,6 +10,12 @@
 #include "electricnode.h"
 #include "../utilities.h"
 
+enum electricityObjectType {
+    generator,
+    node,
+    none
+};
+
 class ElectricityController : public QObject
 {
 	Q_OBJECT
@@ -22,6 +28,10 @@ public:
     void addWire(position pos);
     void removeWire(position pos);
     QByteArray getNewPlayerInfo();
+    electricityObjectType getObjectByCords(position pos);
+
+    void switchGenerator(position pos);
+    void switchNode(position pos);
 
 public slots:
 	void processElectricityLines();
@@ -29,18 +39,21 @@ public slots:
 signals:
     void requiredElectricityUpdate();
     void updateGeneratorState(position pos, QByteArray state);
+    void updateNodeState(position pos, QByteArray state);
 
 private slots:
     void updatedGeneratorState(QByteArray state);
+    void updatedNodeState(QByteArray state);
 
 private:
+    void turnOffEverythingBeforeRecalculating();
 	void loadMap();
     bool checkWireExist(position pos);
 	void processMap(QByteArray *map);
 	int inspectLine(position pos, position previous, bool powered);
 	bool checkSideLine(position pos, position previous);
 	bool checkLineExist(position pos);
-	void updateNodeState(position pos, bool state);
+    void updateNodesState(position pos, bool state);
 	void log(QString msg);
 	QMap<ElectricGenerator*, position> m_generators;
 	QMap<position, ElectricNode*> m_nodes;

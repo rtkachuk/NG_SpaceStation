@@ -11,15 +11,15 @@ class ElectricNode : public QObject
 public:
 	explicit ElectricNode(QObject *parent = nullptr);
 	bool isPowered() { return m_powered; }
-	void setPowered(bool powered) { m_powered = powered; }
-
+    void setPowered(bool powered);
+    bool isOpened() { return m_opened; }
+    void setOpened(bool opened);
 
 signals:
-
+    void stateChanged(QByteArray state);
 private:
-	position m_pos;
 	bool m_powered;
-
+    bool m_opened;
 };
 
 #endif // ELECTRICNODE_H
