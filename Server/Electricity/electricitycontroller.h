@@ -33,6 +33,8 @@ public:
     void switchGenerator(position pos);
     void switchNode(position pos);
 
+    bool checkWireExist(position pos);
+
 public slots:
 	void processElectricityLines();
 
@@ -48,7 +50,6 @@ private slots:
 private:
     void turnOffEverythingBeforeRecalculating();
 	void loadMap();
-    bool checkWireExist(position pos);
 	void processMap(QByteArray *map);
 	int inspectLine(position pos, position previous, bool powered);
 	bool checkSideLine(position pos, position previous);

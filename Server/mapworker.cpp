@@ -1,4 +1,4 @@
-﻿#include "mapworker.h"
+#include "mapworker.h"
 
 MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 {
@@ -181,9 +181,16 @@ void MapWorker::formatMapChange(position pos, char object)
 		return;
 	}
 
-	m_map[pos.y][pos.x] = object;
-	updateMapData(pos, object);
-	emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
+    m_map[pos.y][pos.x] = object;
+    updateMapData(pos, object);
+    emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
+
+    if (object == '~') // If foundation should be placed
+    {
+        if (m_electricityController->checkWireExist(pos)) {
+            emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":41|"); // Place wire
+        }
+    }
 }
 
 QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
@@ -339,7 +346,6 @@ void MapWorker::destroyElementFromMap(position pos)
 
 void MapWorker::buildElementOnMap(position pos, QByteArray element)
 {
-	log(element);
 	if (element == "WALL")
 		formatMapChange(pos, '#');
 	if (element == "FLOOR")
