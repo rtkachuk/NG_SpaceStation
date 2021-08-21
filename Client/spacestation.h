@@ -72,6 +72,7 @@ private slots:
 	void takeOffItem(QByteArray id);
 
 	void buildItem();
+    void processGeneratorUpdate(int x, int y, QByteArray state);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);

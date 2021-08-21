@@ -32,9 +32,11 @@ void Server::sendToAll(QByteArray message)
 
 void Server::processUse(QTcpSocket *client, QString side)
 {
-	if (m_inventoryController->getWear(playerWearable::holdable, client) == "27") // dynamite
+    if (m_inventoryController->getWear(playerWearable::holdable, client) == "27") { // dynamite
 		m_mapWorker->startDynamite(client, side);
-
+        return;
+    }
+    m_mapWorker->processUseAction(client, side);
 }
 
 void Server::chatMessageReceived(QTcpSocket *player, QByteArray(message))
@@ -71,6 +73,7 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	sendMap(socket);
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
 	socket->write("HEALTH:" + QByteArray::number(m_healthController->getHealth(socket)) + "|");
+    m_mapWorker->sendElectricToolsStatuses(socket);
 	sendAllItemsPositions(socket);
 }
 

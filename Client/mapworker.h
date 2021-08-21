@@ -46,9 +46,13 @@ public slots:
 	void updateMap(int x, int y, char object);
 	void placeItem(ItemInfo item);
 	void removeItem(ItemInfo item);
+    void updateGenerator(position pos, QByteArray state);
+    void removeGenerator(position pos);
+    void updateNode(position pos, QByteArray state);
+    void removeNode(position pos);
 
 private:
-	void constructCell(int x, int y, QString image);
+    QGraphicsPixmapItem* constructCell(int x, int y, QString image);
 	void updateCell(int x, int y, char object);
 	QPixmap selectSpacePixmap();
 	void log(QString message);
@@ -61,6 +65,8 @@ private:
 	QGraphicsPixmapItem *m_player;
 	QByteArray m_playerId;
 	QMap<QByteArray, QGraphicsPixmapItem*> m_players;
+    QMap<position, QGraphicsPixmapItem*> m_generators;
+    QMap<position, QGraphicsPixmapItem*> m_nodes;
 
 	int m_currentPlayerPositionX = 0;
 	int m_currentPlayerPositionY = 0;

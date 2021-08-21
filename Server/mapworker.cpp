@@ -1,10 +1,14 @@
-﻿#include "mapworker.h"
+#include "mapworker.h"
 
 MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 {
 	m_itemController = new ItemController();
 	m_itemLoader = loader;
 	m_healthController = health;
+	m_electricityController = new ElectricityController(this);
+
+    connect (m_electricityController, &ElectricityController::updateGeneratorState, this, &MapWorker::generatorStateChanged);
+    connect (m_electricityController, &ElectricityController::updateNodeState, this, &MapWorker::nodeStateChanged);
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -177,9 +181,16 @@ void MapWorker::formatMapChange(position pos, char object)
 		return;
 	}
 
-	m_map[pos.y][pos.x] = object;
-	updateMapData(pos, object);
-	emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
+    m_map[pos.y][pos.x] = object;
+    updateMapData(pos, object);
+    emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
+
+    if (object == '~') // If foundation should be placed
+    {
+        if (m_electricityController->checkWireExist(pos)) {
+            emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":41|"); // Place wire
+        }
+    }
 }
 
 QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
@@ -335,7 +346,6 @@ void MapWorker::destroyElementFromMap(position pos)
 
 void MapWorker::buildElementOnMap(position pos, QByteArray element)
 {
-	log(element);
 	if (element == "WALL")
 		formatMapChange(pos, '#');
 	if (element == "FLOOR")
@@ -350,7 +360,23 @@ void MapWorker::startDynamite(QTcpSocket *client, QString direction)
 
 	log ("Sleeping...");
 	QTimer::singleShot(10000, this, std::bind(&MapWorker::explode, this, side, 7));
-	log ("BOOOM");
+    log ("BOOOM");
+}
+
+void MapWorker::sendElectricToolsStatuses(QTcpSocket *client)
+{
+    sendToPlayer(client, m_electricityController->getNewPlayerInfo());
+}
+
+void MapWorker::processUseAction(QTcpSocket *client, QString side)
+{
+    position pos = Utilities::getCoordsBySide(m_playerPositions[client], Utilities::getSideFromString(side));
+
+    switch (m_electricityController->getObjectByCords(pos)) {
+        case electricityObjectType::generator: m_electricityController->switchGenerator(pos); break;
+        case electricityObjectType::node: m_electricityController->switchNode(pos); break;
+        default: log ("No electricity objects found!");
+    }
 }
 
 void MapWorker::explode(position pos, int radius)
@@ -365,7 +391,17 @@ void MapWorker::explode(position pos, int radius)
 				exPos.x = i;
 				exPos.y = j;
 				explodeCell(exPos);
-			}
+            }
+}
+
+void MapWorker::generatorStateChanged(position pos, QByteArray state)
+{
+    sendToAll("GEN:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
+}
+
+void MapWorker::nodeStateChanged(position pos, QByteArray state)
+{
+    sendToAll("NODE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
 }
 
 void MapWorker::explodeCell(position pos)

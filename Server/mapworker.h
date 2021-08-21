@@ -13,6 +13,7 @@
 #include "itemcontroller.h"
 #include "inventorycontroller.h"
 #include "../sharedItemLoader/itemloader.h"
+#include "Electricity/electricitycontroller.h"
 
 class MapWorker : public QObject
 {
@@ -59,12 +60,18 @@ public:
 	void buildElementOnMap(position pos, QByteArray element);
 
 	void startDynamite(QTcpSocket *client, QString direction);
+
+    void sendElectricToolsStatuses(QTcpSocket *client);
+
+    void processUseAction(QTcpSocket *client, QString side);
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);
 
 private slots:
 	void explode(position pos, int radius);
+    void generatorStateChanged(position pos, QByteArray state);
+    void nodeStateChanged(position pos, QByteArray state);
 
 private:
 
@@ -94,6 +101,7 @@ private:
 	InventoryController* m_inventoryController;
 	ItemLoader* m_itemLoader;
 	HealthControl *m_healthController;
+	ElectricityController *m_electricityController;
 };
 
 #endif // MAPWORKER_H

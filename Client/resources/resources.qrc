@@ -74,5 +74,19 @@
         <file>buildings/floor10.png</file>
         <file>buildings/floor11.png</file>
         <file>buildings/floor12.png</file>
+        <file>clothes/engineer_pants.png</file>
+        <file>clothes/engineer_vest.png</file>
+        <file>furniture/old_wooden_table.png</file>
+        <file>items/old_computer.png</file>
+        <file>items/pieces_of_wires.png</file>
+        <file>tech/electric_node_closed.png</file>
+        <file>tech/electric_node_green.png</file>
+        <file>tech/electric_node_red.png</file>
+        <file>tech/generator_broken.png</file>
+        <file>tech/generator_stalled.png</file>
+        <file>tech/generator_started.png</file>
+        <file>tech/generator_stopped.png</file>
+        <file>tech/straight_wires.png</file>
+        <file>tech/wires_angle.png</file>
     </qresource>
 </RCC>

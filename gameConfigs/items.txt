@@ -38,3 +38,4 @@
 38:tool:"Абраксол":holdable:healing:melee:3:/items/syringe_purple.png:Вроде как обезбаливающее.
 39:tool:Коммуникатор:holdable:notool:noweapon:0:/items/pda.png:Основное средство связи. Без него я не могу слышать остальных.
 40:tool:Балон с кислородом:holdable:notool:melee:20:/items/oxygen_tank.png:Живительный кислород!
+41:furniture:Провод:nomode:notool:noweapon:0:/tech/straight_wires.png:Установленный провод. Как ты его смог взять?

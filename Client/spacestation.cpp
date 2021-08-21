@@ -8,6 +8,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	ui->setupUi(this);
 
     qRegisterMetaType<ItemInfo>();
+    qRegisterMetaType<position>();
 
 	m_itemLoader = new ItemLoader();
 	m_itemLoader->loadItems();
@@ -53,6 +54,9 @@ SpaceStation::SpaceStation(QWidget *parent)
 	connect (m_inventory, &InventoryMenu::sendTakeOffItem, this, &SpaceStation::takeOffItem);
 	connect (m_connectionManager, &ConnectionManager::signalWearItem, m_inventory, &InventoryMenu::processWearingItem);
 	connect (m_connectionManager, &ConnectionManager::signalTakeOffItem, m_inventory, &InventoryMenu::processTakingOffItem);
+
+    connect (m_connectionManager, &ConnectionManager::generatorStatusUpdate, m_mapWorker, &MapWorker::updateGenerator);
+    connect (m_connectionManager, &ConnectionManager::nodeStatusUpdate, m_mapWorker, &MapWorker::updateNode);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
@@ -227,7 +231,12 @@ void SpaceStation::buildItem()
 	BuildingDialog *build = new BuildingDialog(m_itemLoader);
 	if (build->exec() == QDialog::Rejected) return;
 	processPlayerAction("BUILD:" + build->getItem());
-	delete build;
+    delete build;
+}
+
+void SpaceStation::processGeneratorUpdate(int x, int y, QByteArray state)
+{
+
 }
 
 

@@ -12,6 +12,9 @@ SOURCES += \
         ../recipesLoader/recipesloader.cpp \
         ../sharedItemLoader/baseitem.cpp \
         ../sharedItemLoader/itemloader.cpp \
+        Electricity/electricgenerator.cpp \
+        Electricity/electricitycontroller.cpp \
+        Electricity/electricnode.cpp \
         healthcontrol.cpp \
         inventorycontroller.cpp \
         itemcontroller.cpp \
@@ -31,6 +34,9 @@ HEADERS += \
     ../recipesLoader/recipesloader.h \
     ../sharedItemLoader/baseitem.h \
     ../sharedItemLoader/itemloader.h \
+    Electricity/electricgenerator.h \
+    Electricity/electricitycontroller.h \
+    Electricity/electricnode.h \
     healthcontrol.h \
     inventorycontroller.h \
     itemcontroller.h \
