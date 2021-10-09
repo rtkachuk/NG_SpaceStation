@@ -412,6 +412,7 @@ void MapWorker::explodeCell(position pos)
 		if (element.isEmpty() == false) {
 			m_itemController->deleteItem(pos, element);
 			emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + element + "|");
+			m_electricityController->clearCell(pos);
 		}
 	} while (element.isEmpty() == false);
 
