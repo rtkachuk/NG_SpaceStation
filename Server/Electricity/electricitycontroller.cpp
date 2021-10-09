@@ -92,7 +92,14 @@ electricityObjectType ElectricityController::getObjectByCords(position pos)
     }
     if (m_nodes.contains(pos))
         return electricityObjectType::node;
-    return electricityObjectType::none;
+	return electricityObjectType::none;
+}
+
+void ElectricityController::clearCell(position pos)
+{
+	removeGenerator(pos);
+	removeNode(pos);
+	removeWire(pos);
 }
 
 void ElectricityController::switchGenerator(position pos)

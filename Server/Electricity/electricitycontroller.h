@@ -29,6 +29,7 @@ public:
     void removeWire(position pos);
     QByteArray getNewPlayerInfo();
     electricityObjectType getObjectByCords(position pos);
+	void clearCell(position pos);
 
     void switchGenerator(position pos);
     void switchNode(position pos);
