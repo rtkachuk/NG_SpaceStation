@@ -8,7 +8,8 @@
 #include "mapfileloader.h"
 #include "mapworker.h"
 #include "inventorycontroller.h"
-#include <healthcontrol.h>
+#include "roundtimer.h"
+#include "healthcontrol.h"
 
 // Basic server flow:
 // readyRead() -> processQuery() -> ...
@@ -26,6 +27,9 @@ private slots:
 
 	void sendToPlayer(QTcpSocket *player, QByteArray data);
 	void sendToAll(QByteArray message); // Send data to every user
+
+	void minutePassed(QByteArray message);
+	void roundLimit();
 
 
 private:
@@ -51,6 +55,7 @@ private:
 	InventoryController *m_inventoryController;
     HealthControl *m_healthController;
 	ItemLoader* m_itemLoader;
+	RoundTimer* m_roundTimer;
 
 protected:
 	void incomingConnection(qintptr handle);
