@@ -15,6 +15,11 @@ Server::Server()
 	m_mapWorker->setInventoryController(m_inventoryController);
 	m_mapWorker->processMap(m_mapFileLoader->getMap());
 
+	m_roundTimer = new RoundTimer();
+
+	connect (m_roundTimer, &RoundTimer::emitMinutePassed, this, &Server::minutePassed);
+	connect (m_roundTimer, &RoundTimer::roundLimit, this, &Server::roundLimit);
+
 	connect (m_mapWorker, &MapWorker::sendToPlayer, this, &Server::sendToPlayer);
 	connect (m_mapWorker, &MapWorker::sendToAll, this, &Server::sendToAll);
 	connect (m_inventoryController, &InventoryController::sendToPlayer, this, &Server::sendToPlayer);
@@ -28,6 +33,16 @@ void Server::sendToAll(QByteArray message)
 	for (QTcpSocket* client : m_players) {
 		client->write(message);
 	}
+}
+
+void Server::minutePassed(QByteArray message)
+{
+	sendToAll("SAY:<<<Ъмозг>>>:" + message + "|");
+}
+
+void Server::roundLimit()
+{
+	sendToAll("SAY:<<<Ъмозг>>>:ВНИМАНИЕ! НАЧАТ ПРОЦЕСС САМОЛИКВИДАЦИИ СТАНЦИИ!");
 }
 
 void Server::processUse(QTcpSocket *client, QString side)
@@ -69,7 +84,6 @@ void Server::processNewPlayer(QTcpSocket* socket)
 	m_healthController->setPlayerHealth(socket, 100);
 
 	socket->write("INIT:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + "|");
-	//socket->write("MAP_DATA:" + m_mapWorker->getMap() + "|");
 	sendMap(socket);
 	socket->write("ID:" + m_mapWorker->getUserId(socket) + "|");
 	socket->write("HEALTH:" + QByteArray::number(m_healthController->getHealth(socket)) + "|");

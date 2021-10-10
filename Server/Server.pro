@@ -22,6 +22,7 @@ SOURCES += \
         mapfileloader.cpp \
         mapworker.cpp \
         playerwear.cpp \
+        roundtimer.cpp \
         server.cpp \
         utilities.cpp
 
@@ -43,5 +44,6 @@ HEADERS += \
     mapfileloader.h \
     mapworker.h \
     playerwear.h \
+    roundtimer.h \
     server.h \
     utilities.h
