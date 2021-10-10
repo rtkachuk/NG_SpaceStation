@@ -152,6 +152,7 @@ void SpaceStation::setPlayerPosition(QByteArray id, int x, int y)
 void SpaceStation::chatMessage(QString message)
 {
 	ui->t_chat->setText(ui->t_chat->toPlainText() + "\n" + message);
+	ui->t_chat->verticalScrollBar()->setValue(ui->t_chat->verticalScrollBar()->maximum());
 }
 
 void SpaceStation::mapChanged(int x, int y, char object)
