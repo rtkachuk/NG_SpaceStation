@@ -8,10 +8,10 @@ ElectricityController::ElectricityController(QObject *parent) : QObject(parent)
 void ElectricityController::addGenerator(position pos)
 {
 	ElectricGenerator *generator = new ElectricGenerator();
-	connect (generator, &ElectricGenerator::explode, this, &ElectricityController::generatorExplode);
 	m_generators[generator] = pos;
     m_wireMap[pos.y][pos.x] = 'g';
 
+	connect (generator, &ElectricGenerator::explode, this, &ElectricityController::generatorExplode);
     connect (generator, &ElectricGenerator::stateChanged, this, &ElectricityController::updatedGeneratorState);
     emit updateGeneratorState(pos, "STOPPED");
 
@@ -24,6 +24,7 @@ void ElectricityController::removeGenerator(position pos)
         if (m_generators[generator] == pos) {
             m_generators.remove(generator);
             m_wireMap[pos.y][pos.x] = '.';
+			disconnect (generator, &ElectricGenerator::explode, this, &ElectricityController::generatorExplode);
             disconnect (generator, &ElectricGenerator::stateChanged, this, &ElectricityController::updatedGeneratorState);
             delete generator;
         }
@@ -46,6 +47,7 @@ void ElectricityController::removeNode(position pos)
     ElectricNode *node = m_nodes[pos];
     m_nodes.remove(pos);
     m_wireMap[pos.y][pos.x] = '.';
+
     disconnect (node, &ElectricNode::stateChanged, this, &ElectricityController::updatedNodeState);
     delete node;
 }
@@ -177,6 +179,7 @@ void ElectricityController::generatorExplode()
 	ElectricGenerator *generator = (ElectricGenerator*)sender();
 	position pos = m_generators[generator];
 	emit generatorExploded(pos, 13);
+	removeGenerator(pos);
 }
 
 void ElectricityController::turnOffEverythingBeforeRecalculating()
