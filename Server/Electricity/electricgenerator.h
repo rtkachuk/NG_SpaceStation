@@ -17,6 +17,7 @@ public slots:
 	void start();
 	void setGenerationPower(int value) { m_powerGeneration = value; }
 	void setRequiredPower(int value) { m_powerConstrumption = value; }
+	QByteArray openGeneratorControlPanel();
 	void stop();
 
 private slots:
@@ -24,6 +25,7 @@ private slots:
 
 signals:
     void stateChanged(QByteArray state);
+	void explode();
 
 private:
     void log(QString msg);

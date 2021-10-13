@@ -133,6 +133,10 @@ void ConnectionManager::processReceivedQuery(QByteArray data)
         emit generatorStatusUpdate(position(params[1].toInt(), params[2].toInt()), params[3]);
     }
 
+	if (command == "GENCONT") {
+		emit receivedGeneratorInfo(params[1].toInt(), params[2].toInt(), params[3].toInt(), params[4].toInt(), params[5].toInt(), params[6].toInt());
+	}
+
     if (command == "NODE") {
         emit nodeStatusUpdate(position(params[1].toInt(), params[2].toInt()), params[3]);
     }

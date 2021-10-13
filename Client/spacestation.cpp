@@ -17,6 +17,7 @@ SpaceStation::SpaceStation(QWidget *parent)
 	m_inventory = new InventoryMenu();
 	m_inventory->setItemLoader(m_itemLoader);
 	m_stateWindow = new StateWindow();
+	m_generatorController = new GeneratorController(this);
 
 	ui->t_chat->setReadOnly(true);
 
@@ -57,6 +58,8 @@ SpaceStation::SpaceStation(QWidget *parent)
 
     connect (m_connectionManager, &ConnectionManager::generatorStatusUpdate, m_mapWorker, &MapWorker::updateGenerator);
     connect (m_connectionManager, &ConnectionManager::nodeStatusUpdate, m_mapWorker, &MapWorker::updateNode);
+	connect (m_connectionManager, &ConnectionManager::receivedGeneratorInfo, this, &SpaceStation::processGeneratorChanges);
+	connect (m_generatorController, &QDialog::accepted, this, &SpaceStation::updateGeneratorStateFromController);
 
 	connect (ui->b_send, &QPushButton::clicked, this, &SpaceStation::sendMessage);
 }
@@ -238,6 +241,31 @@ void SpaceStation::buildItem()
 void SpaceStation::processGeneratorUpdate(int x, int y, QByteArray state)
 {
 
+}
+
+void SpaceStation::processGeneratorChanges(bool started, int temperature, int generation, int construmption, int x, int y)
+{
+	generatorInfo info;
+	info.status = started;
+	info.temperature = temperature;
+	info.power = generation;
+	info.construmption = construmption;
+	info.x = x;
+	info.y = y;
+
+	m_generatorController->setConfiguration(info);
+	m_generatorController->show();
+}
+
+void SpaceStation::updateGeneratorStateFromController()
+{
+	generatorInfo info = m_generatorController->getNewConfiguration();
+
+	m_connectionManager->sendPureQuery(QByteArray("GENUPD") + ":" +
+			QByteArray::number(info.status) + ":" +
+			QByteArray::number(info.power) + ":" +
+			QByteArray::number(info.x) + ":" +
+			QByteArray::number(info.y) + "|");
 }
 
 

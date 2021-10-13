@@ -64,6 +64,8 @@ public:
     void sendElectricToolsStatuses(QTcpSocket *client);
 
     void processUseAction(QTcpSocket *client, QString side);
+
+	void processGeneratorChangeFromController(bool state, int power, position pos);
 signals:
 	void sendToPlayer(QTcpSocket* player, QByteArray data);
 	void sendToAll(QByteArray data);

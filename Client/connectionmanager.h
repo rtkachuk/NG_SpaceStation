@@ -22,6 +22,7 @@ public:
 
 	void wearItem(QByteArray id) { m_socket->write("WEAR:" + id); }
 	void takeOffItem(QByteArray id) { m_socket->write("TAKEOFF:" + id); }
+	void sendPureQuery(QByteArray query) { m_socket->write(query); };
 
 private:
 	void log(QString msg);
@@ -58,6 +59,7 @@ signals:
 	void signalTakeOffItem(QByteArray id);
     void generatorStatusUpdate(position pos, QByteArray state);
     void nodeStatusUpdate(position pos, QByteArray state);
+	void receivedGeneratorInfo(bool status, int temperature, int generation, int construmption, int x, int y);
 
 private:
 	QTcpSocket *m_socket;

@@ -160,6 +160,7 @@ void Server::processQuery(QTcpSocket *client, QByteArray query)
 	if (command == "DEST") { m_mapWorker->processDestroy(client, parts[1] ); }
 	if (command == "BUILD") { m_mapWorker->processBuild(client, parts[2], parts[1]); }
 	if (command == "USE") { processUse(client, parts[1]); }
+	if (command == "GENUPD") { m_mapWorker->processGeneratorChangeFromController(bool(parts[1].toInt()), parts[2].toInt(), position(parts[3].toInt(), parts[4].toInt())); }
 }
 
 void Server::incomingConnection(qintptr handle)

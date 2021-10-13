@@ -8,6 +8,7 @@ ElectricityController::ElectricityController(QObject *parent) : QObject(parent)
 void ElectricityController::addGenerator(position pos)
 {
 	ElectricGenerator *generator = new ElectricGenerator();
+	connect (generator, &ElectricGenerator::explode, this, &ElectricityController::generatorExplode);
 	m_generators[generator] = pos;
     m_wireMap[pos.y][pos.x] = 'g';
 
@@ -102,21 +103,35 @@ void ElectricityController::clearCell(position pos)
 	removeWire(pos);
 }
 
-void ElectricityController::switchGenerator(position pos)
+ElectricGenerator *ElectricityController::findGenerator(position pos)
 {
-    ElectricGenerator *generator;
-    for (ElectricGenerator *buffer : m_generators.keys()) {
-        if (m_generators[buffer] == pos) {
-            generator = buffer;
-            break;
-        }
-    }
+	ElectricGenerator *generator = nullptr;
+	for (ElectricGenerator *buffer : m_generators.keys()) {
+		if (m_generators[buffer] == pos) {
+			generator = buffer;
+			break;
+		}
+	}
+	return generator;
+}
 
-    if (generator == nullptr) return;
-    if (generator->isWorking())
-        generator->stop();
-    else
-        generator->start();
+void ElectricityController::setGeneratorConfiguration(bool status, int power, position pos)
+{
+	ElectricGenerator *generator = findGenerator(pos);
+
+	if (generator == nullptr) return;
+	generator->setGenerationPower(power);
+	status ? generator->start() : generator->stop();
+}
+
+QByteArray ElectricityController::getGeneratorStatus(position pos)
+{
+	ElectricGenerator *generator = findGenerator(pos);
+
+	if (generator == nullptr) return "";
+	return generator->openGeneratorControlPanel() + ":" +
+			QByteArray::number(pos.x) + ":" +
+			QByteArray::number(pos.y) + "|";
 }
 
 void ElectricityController::switchNode(position pos)
@@ -154,7 +169,14 @@ void ElectricityController::updatedNodeState(QByteArray state)
             emit updateNodeState(pos, state);
             return;
         }
-    }
+	}
+}
+
+void ElectricityController::generatorExplode()
+{
+	ElectricGenerator *generator = (ElectricGenerator*)sender();
+	position pos = m_generators[generator];
+	emit generatorExploded(pos, 13);
 }
 
 void ElectricityController::turnOffEverythingBeforeRecalculating()
