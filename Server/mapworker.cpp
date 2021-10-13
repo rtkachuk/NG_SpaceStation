@@ -9,6 +9,7 @@ MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 
     connect (m_electricityController, &ElectricityController::updateGeneratorState, this, &MapWorker::generatorStateChanged);
     connect (m_electricityController, &ElectricityController::updateNodeState, this, &MapWorker::nodeStateChanged);
+	connect (m_electricityController, &ElectricityController::generatorExploded, this, &MapWorker::explode);
 }
 
 void MapWorker::processMap(QByteArray mapData)
@@ -373,10 +374,19 @@ void MapWorker::processUseAction(QTcpSocket *client, QString side)
     position pos = Utilities::getCoordsBySide(m_playerPositions[client], Utilities::getSideFromString(side));
 
     switch (m_electricityController->getObjectByCords(pos)) {
-        case electricityObjectType::generator: m_electricityController->switchGenerator(pos); break;
+		case electricityObjectType::generator: emit sendToPlayer(client, m_electricityController->getGeneratorStatus(pos)); break;
         case electricityObjectType::node: m_electricityController->switchNode(pos); break;
         default: log ("No electricity objects found!");
-    }
+	}
+}
+
+void MapWorker::processGeneratorChangeFromController(bool state, int power, position pos)
+{
+	switch (m_electricityController->getObjectByCords(pos)) {
+		case electricityObjectType::generator: m_electricityController->setGeneratorConfiguration(state, power, pos); break;
+		default: log ("No electricity objects found!");
+	}
+	log (QString::number(pos.x) + ":::" + QString::number(pos.y));
 }
 
 void MapWorker::explode(position pos, int radius)
@@ -406,6 +416,8 @@ void MapWorker::nodeStateChanged(position pos, QByteArray state)
 
 void MapWorker::explodeCell(position pos)
 {
+	if (m_map[pos.y][pos.x] == '*') return;
+
 	QByteArray element;
 	do {
 		element = m_itemController->getItemIdByPos(pos);

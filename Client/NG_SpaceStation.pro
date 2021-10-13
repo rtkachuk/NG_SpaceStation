@@ -16,6 +16,7 @@ SOURCES += \
     buildingdialog.cpp \
     connectdialog.cpp \
     connectionmanager.cpp \
+    generatorcontroller.cpp \
     inventorymenu.cpp \
     loaderprogress.cpp \
     main.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     connectdialog.h \
     connectionmanager.h \
     enums.h \
+    generatorcontroller.h \
     inventorymenu.h \
     loaderprogress.h \
     mapworker.h \
@@ -46,6 +48,7 @@ FORMS += \
     actionwindow.ui \
     buildingdialog.ui \
     connectdialog.ui \
+    generatorcontroller.ui \
     inventorymenu.ui \
     loaderprogress.ui \
     selectdirectiondialog.ui \

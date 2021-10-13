@@ -31,7 +31,9 @@ public:
     electricityObjectType getObjectByCords(position pos);
 	void clearCell(position pos);
 
-    void switchGenerator(position pos);
+	ElectricGenerator *findGenerator(position pos);
+	void setGeneratorConfiguration(bool status, int power, position pos);
+	QByteArray getGeneratorStatus(position pos);
     void switchNode(position pos);
 
     bool checkWireExist(position pos);
@@ -42,11 +44,14 @@ public slots:
 signals:
     void requiredElectricityUpdate();
     void updateGeneratorState(position pos, QByteArray state);
+	void generatorStatusReady(QByteArray generatorStatus);
     void updateNodeState(position pos, QByteArray state);
+	void generatorExploded(position pos, int radius);
 
 private slots:
     void updatedGeneratorState(QByteArray state);
     void updatedNodeState(QByteArray state);
+	void generatorExplode();
 
 private:
     void turnOffEverythingBeforeRecalculating();

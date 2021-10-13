@@ -26,6 +26,15 @@ void ElectricGenerator::start()
 	}
 }
 
+QByteArray ElectricGenerator::openGeneratorControlPanel()
+{
+	return QByteArray("GENCONT") + ":" +
+			QByteArray::number(m_started) + ":" +
+			QByteArray::number(m_currentTemperature) + ":" +
+			QByteArray::number(m_powerGeneration) + ":" +
+			QByteArray::number(m_powerConstrumption);
+}
+
 void ElectricGenerator::stop()
 {
 	m_started = false;
@@ -58,6 +67,7 @@ void ElectricGenerator::secondPassed()
 		m_broken = true;
         m_currentState = "EXPLODED";
         emit stateChanged(m_currentState);
+		emit explode();
 	}
     if (m_started == true) {
         log ("Generator temperature: " + QString::number(m_currentTemperature));

@@ -19,6 +19,7 @@
 #include "statewindow.h"
 #include "buildingdialog.h"
 #include "loaderprogress.h"
+#include "generatorcontroller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SpaceStation; }
@@ -73,6 +74,8 @@ private slots:
 
 	void buildItem();
     void processGeneratorUpdate(int x, int y, QByteArray state);
+	void processGeneratorChanges(bool started, int temperature, int generation, int construmption, int x, int y);
+	void updateGeneratorStateFromController();
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -111,6 +114,7 @@ private:
 	ItemLoader *m_itemLoader;
     StateWindow *m_stateWindow;
 	LoaderProgress *m_loaderProgress;
+	GeneratorController *m_generatorController;
 
 	QThread *m_networkingThread;
 };
