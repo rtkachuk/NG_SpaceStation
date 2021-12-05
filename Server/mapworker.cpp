@@ -49,7 +49,7 @@ void MapWorker::processItemPush(position pos, QTcpSocket *socket, playerMovement
     do {
         id = m_itemController->getItemIdByPos(pos, itemNumber);
         if (id.isEmpty())
-            break;
+            return;
         type = m_itemLoader->getItemById(id).getType();
         itemNumber++;
     } while (type != itemType::furniture);
