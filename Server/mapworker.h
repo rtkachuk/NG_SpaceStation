@@ -90,6 +90,9 @@ private:
 	char processOpen(position pos);
 	char processClose(position pos);
 
+	bool isThereAWall(position pos);
+	bool isThereAFurniture(position pos);
+
 	void log(QString msg);
 
 
