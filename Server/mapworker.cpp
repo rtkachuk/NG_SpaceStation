@@ -7,8 +7,8 @@ MapWorker::MapWorker(ItemLoader *loader, HealthControl *health)
 	m_healthController = health;
 	m_electricityController = new ElectricityController(this);
 
-    connect (m_electricityController, &ElectricityController::updateGeneratorState, this, &MapWorker::generatorStateChanged);
-    connect (m_electricityController, &ElectricityController::updateNodeState, this, &MapWorker::nodeStateChanged);
+	connect (m_electricityController, &ElectricityController::updateGeneratorState, this, &MapWorker::generatorStateChanged);
+	connect (m_electricityController, &ElectricityController::updateNodeState, this, &MapWorker::nodeStateChanged);
 	connect (m_electricityController, &ElectricityController::generatorExploded, this, &MapWorker::explode);
 }
 
@@ -28,38 +28,44 @@ void MapWorker::processMap(QByteArray mapData)
 		m_map.push_back(buffer);
 	}
 
-    log ("Map loading done! (" + QByteArray::number(mapData.size()) + " bytes)");
+	log ("Map loading done! (" + QByteArray::number(mapData.size()) + " bytes)");
 }
 
 void MapWorker::processPlayerPush(QTcpSocket *buffer, actions act, QString direction)
 {
 	playerMovements side = Utilities::getSideFromString(direction);
-    position pos= Utilities::getCoordsBySide(m_playerPositions[buffer],side);
+	position pos= Utilities::getCoordsBySide(m_playerPositions[buffer],side);
 	if (act == actions::push){
 		pushPlayer(side,buffer);
-        processItemPush(pos,buffer,side);
-    }
+		processItemPush(pos,buffer,side);
+	}
 }
 
 void MapWorker::processItemPush(position pos, QTcpSocket *socket, playerMovements side)
 {
-    int itemNumber = 0;
-    itemType type = itemType::notype;
-    QByteArray id;
-    do {
-        id = m_itemController->getItemIdByPos(pos, itemNumber);
-        if (id.isEmpty())
-            return;
-        type = m_itemLoader->getItemById(id).getType();
-        itemNumber++;
-    } while (type != itemType::furniture);
-    position pushes = m_playerPositions[socket];
-    position itemToPushCords=Utilities::getCoordsBySide(pushes,side);
-    position newPosItemToPush=Utilities::getCoordsBySide(itemToPushCords,side);
-    m_itemController->deleteItem(itemToPushCords,id);
-    emit sendToAll("ICLEAR:" + QByteArray::number(itemToPushCords.x) + ":" + QByteArray::number(itemToPushCords.y) + ":" + id + "|");
-    m_itemController->addItem(Utilities::getCoordsBySide(itemToPushCords,side),id);
-    emit sendToAll("IPLACE:" + QByteArray::number(newPosItemToPush.x) + ":" + QByteArray::number(newPosItemToPush.y) + ":" + id + "|");
+	int itemNumber = 0;
+	itemType type = itemType::notype;
+	QByteArray id;
+
+	do {
+		id = m_itemController->getItemIdByPos(pos, itemNumber);
+		if (id.isEmpty())
+			return;
+		type = m_itemLoader->getItemById(id).getType();
+		itemNumber++;
+	} while (type != itemType::furniture);
+
+	position pushes = m_playerPositions[socket];
+	position itemToPushCords=Utilities::getCoordsBySide(pushes,side);
+	position newPosItemToPush=Utilities::getCoordsBySide(itemToPushCords,side);
+
+	if (isThereAFurniture(newPosItemToPush)) return;
+	if (isThereAWall(newPosItemToPush)) return; // We found wall
+
+	m_itemController->deleteItem(itemToPushCords,id);
+	emit sendToAll("ICLEAR:" + QByteArray::number(itemToPushCords.x) + ":" + QByteArray::number(itemToPushCords.y) + ":" + id + "|");
+	m_itemController->addItem(Utilities::getCoordsBySide(itemToPushCords,side),id);
+	emit sendToAll("IPLACE:" + QByteArray::number(newPosItemToPush.x) + ":" + QByteArray::number(newPosItemToPush.y) + ":" + id + "|");
 }
 
 void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
@@ -70,18 +76,18 @@ void MapWorker::processPlayerKick(QTcpSocket *buffer, QString direction)
 
 	if (playerToPush == nullptr) return;
 
-    QByteArray id=m_inventoryController->getWear(playerWearable::holdable, buffer);
+	QByteArray id=m_inventoryController->getWear(playerWearable::holdable, buffer);
 
 	int damage=1;
-    if(id.isEmpty()==false){
-        damage=m_itemLoader->getItemById(id).getDamage();
-    }
+	if(id.isEmpty()==false){
+		damage=m_itemLoader->getItemById(id).getDamage();
+	}
 
 	m_healthController->makeDamage(playerToPush,damage);
 	m_itemController->addItem(playerToPushCords, "24"); // blood id
 	emit sendToPlayer(playerToPush, "HEALTH:" + QByteArray::number(m_healthController->getHealth(playerToPush)) + "|");
 	emit sendToAll("IPLACE:" + QByteArray::number(playerToPushCords.x) + ":" + QByteArray::number(playerToPushCords.y) + ":24|");
-    pushPlayer(side,buffer);
+	pushPlayer(side,buffer);
 }
 bool MapWorker::checkMovementPosition(position pos)
 {
@@ -100,19 +106,19 @@ bool MapWorker::checkMovementPosition(position pos)
 
 QTcpSocket *MapWorker::getPlayerByPosition(position pos)
 {
-    for(QTcpSocket* buffer : m_playerPositions.keys()){
-        if(m_playerPositions[buffer].x==pos.x && m_playerPositions[buffer].y==pos.y){
-            return buffer;
-        }
-    }
-    return nullptr;
+	for(QTcpSocket* buffer : m_playerPositions.keys()){
+		if(m_playerPositions[buffer].x==pos.x && m_playerPositions[buffer].y==pos.y){
+			return buffer;
+		}
+	}
+	return nullptr;
 }
 
 void MapWorker::pushPlayer(playerMovements side, QTcpSocket* buffer)
 {
 	if(buffer==nullptr) return;
 
-    position pushes = m_playerPositions[buffer];
+	position pushes = m_playerPositions[buffer];
 	position playerToPushCords=Utilities::getCoordsBySide(pushes,side);
 	QTcpSocket *playerToPush=getPlayerByPosition(playerToPushCords);
 	if (playerToPush == nullptr) return;
@@ -182,16 +188,16 @@ void MapWorker::formatMapChange(position pos, char object)
 		return;
 	}
 
-    m_map[pos.y][pos.x] = object;
-    updateMapData(pos, object);
-    emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
+	m_map[pos.y][pos.x] = object;
+	updateMapData(pos, object);
+	emit sendToAll(QByteArray("CHG:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + object + "|"));
 
-    if (object == '~') // If foundation should be placed
-    {
-        if (m_electricityController->checkWireExist(pos)) {
-            emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":41|"); // Place wire
-        }
-    }
+	if (object == '~') // If foundation should be placed
+	{
+		if (m_electricityController->checkWireExist(pos)) {
+			emit sendToAll("IPLACE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":41|"); // Place wire
+		}
+	}
 }
 
 QByteArray MapWorker::formatResponce(position pos, QTcpSocket *socket)
@@ -217,6 +223,29 @@ char MapWorker::processClose(position pos)
 		case 'S': return 's';
 		default: return m_map[pos.y][pos.x];
 	}
+}
+
+bool MapWorker::isThereAWall(position pos)
+{
+	return m_map.at(pos.y).at(pos.x) == '#'; // We found wall
+}
+
+bool MapWorker::isThereAFurniture(position pos)
+{
+	int itemNumber = 0;
+	itemType type = itemType::notype;
+	QByteArray id;
+
+	do {
+		id = m_itemController->getItemIdByPos(pos, itemNumber);
+		if (id.isEmpty() == false) {
+			type = m_itemLoader->getItemById(id).getType();
+			if (type == itemType::furniture)
+				return true;
+			itemNumber++;
+		}
+	} while (id.isEmpty() == false);
+	return false;
 }
 
 void MapWorker::processDrop(QTcpSocket *socket, QByteArray data, QByteArray bside)
@@ -361,22 +390,22 @@ void MapWorker::startDynamite(QTcpSocket *client, QString direction)
 
 	log ("Sleeping...");
 	QTimer::singleShot(10000, this, std::bind(&MapWorker::explode, this, side, 7));
-    log ("BOOOM");
+	log ("BOOOM");
 }
 
 void MapWorker::sendElectricToolsStatuses(QTcpSocket *client)
 {
-    sendToPlayer(client, m_electricityController->getNewPlayerInfo());
+	sendToPlayer(client, m_electricityController->getNewPlayerInfo());
 }
 
 void MapWorker::processUseAction(QTcpSocket *client, QString side)
 {
-    position pos = Utilities::getCoordsBySide(m_playerPositions[client], Utilities::getSideFromString(side));
+	position pos = Utilities::getCoordsBySide(m_playerPositions[client], Utilities::getSideFromString(side));
 
-    switch (m_electricityController->getObjectByCords(pos)) {
+	switch (m_electricityController->getObjectByCords(pos)) {
 		case electricityObjectType::generator: emit sendToPlayer(client, m_electricityController->getGeneratorStatus(pos)); break;
-        case electricityObjectType::node: m_electricityController->switchNode(pos); break;
-        default: log ("No electricity objects found!");
+		case electricityObjectType::node: m_electricityController->switchNode(pos); break;
+		default: log ("No electricity objects found!");
 	}
 }
 
@@ -401,17 +430,17 @@ void MapWorker::explode(position pos, int radius)
 				exPos.x = i;
 				exPos.y = j;
 				explodeCell(exPos);
-            }
+			}
 }
 
 void MapWorker::generatorStateChanged(position pos, QByteArray state)
 {
-    sendToAll("GEN:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
+	sendToAll("GEN:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
 }
 
 void MapWorker::nodeStateChanged(position pos, QByteArray state)
 {
-    sendToAll("NODE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
+	sendToAll("NODE:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + state + "|");
 }
 
 void MapWorker::explodeCell(position pos)
