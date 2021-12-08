@@ -27,7 +27,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="list_inventory"/>
+         <widget class="QTableWidget" name="table_inventory"/>
         </item>
        </layout>
       </item>
@@ -184,7 +184,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>19</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
