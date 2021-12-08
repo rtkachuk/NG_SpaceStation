@@ -101,8 +101,6 @@ void InventoryMenu::selectedItem(int row, int column)
 {
 	ui->text_description->clear();
 	int index = row*columns + column;
-	qDebug() << row << ":::" << column;
-	qDebug() << index;
 	if (m_items.size()-1 < index) return;
 	QString name = m_items[index];
 	ui->text_description->setText(m_itemLoader->getItemById(m_itemLoader->getIdByName(name)).getDescription());
