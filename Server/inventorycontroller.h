@@ -17,7 +17,7 @@ public:
 
 	void createPlayerInventory(QTcpSocket *player) { QVector<QByteArray> inventory; m_inventories[player] = inventory; m_wear[player] = PlayerWear(m_itemLoader); }
 	void destroyPlayerInventory(QTcpSocket *player) { m_inventories.remove(player); m_wear.remove(player); }
-	void addItemToInventory(QTcpSocket* player, QByteArray itemId) { m_inventories[player].push_back(itemId); }
+	bool addItemToInventory(QTcpSocket* player, QByteArray itemId);
 	void removeItemFromInventory(QTcpSocket* player, QByteArray itemId) { m_inventories[player].removeOne(itemId); }
 	int getItemsAmountInInventory(QTcpSocket* player, QByteArray itemId);
 
@@ -42,6 +42,8 @@ private:
 	QMap<QTcpSocket*,PlayerWear> m_wear;
 	ItemLoader* m_itemLoader;
 	RecipesLoader* m_recipesLoader;
+
+	int m_inventorySize = 45; // Rows * columns
 };
 
 #endif // INVENTORYCONTROLLER_H

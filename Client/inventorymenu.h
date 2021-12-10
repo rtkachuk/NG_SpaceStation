@@ -33,9 +33,10 @@ signals:
 
 private:
 	void clearWereable(QString name, QString text);
+	void redrawInventory();
 
 private slots:
-	void selectedItem(QListWidgetItem *item);
+	void selectedItem(int row, int column);
 	void wearItem();
 	void takeOffItem();
 
@@ -43,6 +44,11 @@ private:
 
     Ui::InventoryMenu *ui;
 	ItemLoader* m_itemLoader;
+
+	const int rows =5;
+	const int columns = 9;
+
+	QList<QString> m_items;
 
     void log(QString message);
 };
