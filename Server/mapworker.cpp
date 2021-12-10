@@ -281,7 +281,10 @@ void MapWorker::pickItem(position pos, QTcpSocket *player)
 	} while (type == itemType::furniture);
 
 	if (id.isEmpty() == false && type != itemType::furniture && type != itemType::notype) {
-		m_inventoryController->addItemToInventory(player, id);
+		if (!m_inventoryController->addItemToInventory(player, id)) {
+			emit sendToPlayer(player, "SAY:Client:Не смогу унести больше|");
+			return;
+		}
 		m_itemController->deleteItem(pos, id);
 		emit sendToPlayer(player, "PITEM:" + id + "|");
 		emit sendToAll("ICLEAR:" + QByteArray::number(pos.x) + ":" + QByteArray::number(pos.y) + ":" + id + "|");

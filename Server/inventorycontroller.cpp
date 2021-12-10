@@ -6,6 +6,16 @@ InventoryController::InventoryController(ItemLoader *loader)
 	m_recipesLoader = new RecipesLoader();
 }
 
+bool InventoryController::addItemToInventory(QTcpSocket *player, QByteArray itemId) {
+	if (m_inventories[player].size() < m_inventorySize) {
+		m_inventories[player].push_back(itemId);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 int InventoryController::getItemsAmountInInventory(QTcpSocket *player, QByteArray itemId)
 {
 	int amount = 0;
