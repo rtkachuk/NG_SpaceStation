@@ -37,11 +37,7 @@ InventoryMenu::~InventoryMenu()
 QByteArray InventoryMenu::getSelectedItem()
 {
 	if (ui->table_inventory->currentItem() != nullptr) {
-		int column = ui->table_inventory->currentItem()->column();
-		int row = ui->table_inventory->currentItem()->row();
-		int index = row*column + column;
-		if (m_items.size()-1 >= index)
-			return m_itemLoader->getIdByName(m_items[index].toUtf8());
+		return m_itemLoader->getIdByName(ui->table_inventory->currentItem()->text());
 	}
 	return "";
 }
@@ -89,7 +85,7 @@ void InventoryMenu::redrawInventory()
 	int currentItem = 0;
 	for (QString buffer : m_items) {
 		int row = currentItem/columns;
-		int column = currentItem - row;
+		int column = currentItem - row * columns;
 		if (column < 0) column = 0;
 
 		ui->table_inventory->setItem(row, column, new QTableWidgetItem(QIcon(":" + m_itemLoader->getItemById(m_itemLoader->getIdByName(buffer)).getPixmap()), buffer));
@@ -109,6 +105,7 @@ void InventoryMenu::selectedItem(int row, int column)
 void InventoryMenu::wearItem()
 {
 	QByteArray id = getSelectedItem();
+	log("Trying to wear: " + m_itemLoader->getItemById(id).getName());
 	emit sendWearItem(id);
 }
 
